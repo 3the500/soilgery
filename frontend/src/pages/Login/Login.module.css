@@ -98,3 +98,21 @@
 .registerLink a:hover {
   color: var(--color-accent);
 }
+
+/* 구분선 */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0;
+  color: var(--color-text-sub);
+  font-size: 12px;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+

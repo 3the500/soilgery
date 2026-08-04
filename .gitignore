@@ -9,6 +9,10 @@ env/
 venv/
 .venv/
 
+# SQLite 로컬 DB (배포 시 PostgreSQL 사용)
+*.db
+*.sqlite
+
 # Environment variables
 .env
 .env.local

@@ -3,6 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import styles from './Login.module.css'
 
+const MOCK_USER = {
+  id: 0, name: '테스트 청년', email: 'test@soilgery.com',
+  role: '청년', location: '충북 청주시', created_at: new Date().toISOString()
+}
+
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -10,6 +15,12 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const handleTestLogin = () => {
+    localStorage.setItem('token', 'mock-token')
+    localStorage.setItem('user', JSON.stringify(MOCK_USER))
+    navigate('/home')
+  }
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -83,6 +94,12 @@ export default function Login() {
             {loading ? '로그인 중...' : '로그인'}
           </button>
         </form>
+
+        {/* 테스트용 임시 버튼 — 배포 후 제거 */}
+        <div className={styles.divider}><span>또는</span></div>
+        <button type="button" className={`btn btn-outline`} onClick={handleTestLogin}>
+          🧪 백엔드 없이 테스트 입장
+        </button>
 
         <p className={styles.registerLink}>
           아직 계정이 없으신가요?{' '}

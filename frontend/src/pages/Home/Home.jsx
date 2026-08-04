@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { authAPI } from '../../api'
 import styles from './Home.module.css'
 
 // 임시 더미 매칭 카드 데이터
@@ -12,6 +14,16 @@ const DUMMY_MATCHES = [
 export default function Home() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const [allUsers, setAllUsers] = useState([])
+  const [loadingUsers, setLoadingUsers] = useState(true)
+
+  useEffect(() => {
+    // 가입된 전체 회원 목록 가져오기
+    authAPI.getUsers()
+      .then(({ data }) => setAllUsers(data))
+      .catch((err) => console.error('회원 목록 불러오기 실패:', err))
+      .finally(() => setLoadingUsers(false))
+  }, [])
 
   const handleLogout = () => {
     logout()
@@ -48,6 +60,46 @@ export default function Home() {
             <p className={styles.bannerSub}>AI가 분석한 최적의 매칭 결과예요</p>
           </div>
           <div className={styles.bannerDecor}>🌾</div>
+        </section>
+
+        {/* 👥 전체 가입 회원 현황 (관리) */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3>전체 회원 현황</h3>
+            <span className={styles.userCountBadge}>총 {allUsers.length}명</span>
+          </div>
+
+          <div className={`glass-card ${styles.userListCard}`}>
+            {loadingUsers ? (
+              <p className={styles.emptyText}>회원 목록을 불러오는 중...</p>
+            ) : allUsers.length === 0 ? (
+              <p className={styles.emptyText}>가입된 회원이 없습니다.</p>
+            ) : (
+              <div className={styles.userTable}>
+                {allUsers.map((u) => (
+                  <div key={u.id} className={styles.userRow}>
+                    <div className={styles.userInfo}>
+                      <span className={styles.userAvatar}>
+                        {u.role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
+                      </span>
+                      <div>
+                        <div className={styles.userNameGroup}>
+                          <strong>{u.name}</strong>
+                          <span className={`${styles.roleBadge} ${u.role === '농부' ? styles.farmerBadge : styles.youthBadge}`}>
+                            {u.role}
+                          </span>
+                        </div>
+                        <p className={styles.userSubInfo}>{u.email} {u.location ? `· 📍${u.location}` : ''}</p>
+                      </div>
+                    </div>
+                    <span className={styles.joinDate}>
+                      {new Date(u.created_at).toLocaleDateString('ko-KR')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </section>
 
         {/* 매칭 리스트 */}
@@ -116,3 +168,4 @@ export default function Home() {
     </div>
   )
 }
+
