@@ -4,12 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../../api'
 import styles from './Home.module.css'
 
-// 임시 더미 매칭 카드 데이터
-const DUMMY_MATCHES = [
-  { id: 1, name: '김철수', role: '농부', location: '충북 청주시', crop: '고구마', reward: '농산물', score: 92 },
-  { id: 2, name: '이영희', role: '농부', location: '충북 옥천군', crop: '사과', reward: '현금', score: 87 },
-  { id: 3, name: '박민준', role: '청년', location: '충북 충주시', crop: '-', reward: '-', score: 81 },
-]
+
 
 export default function Home() {
   const { user, logout } = useAuth()
@@ -108,43 +103,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 매칭 리스트 */}
+        {/* AI 자동매칭 버튼 섹션 */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3>추천 매칭</h3>
-            <span className={styles.badge}>AI 추천</span>
+            <h3>AI 자동매칭</h3>
+            <span className={styles.badge}>ML 기반</span>
           </div>
 
-          <div className={styles.matchList}>
-            {DUMMY_MATCHES.map((m) => (
-              <div key={m.id} className={`glass-card ${styles.matchCard}`}>
-                <div className={styles.matchTop}>
-                  <div className={styles.matchAvatar}>
-                    {m.role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
-                  </div>
-                  <div className={styles.matchInfo}>
-                    <strong>{m.name}</strong>
-                    <span className={styles.matchRole}>{m.role}</span>
-                    <span className={styles.matchLocation}>📍 {m.location}</span>
-                  </div>
-                  <div className={styles.matchScore}>
-                    <span className={styles.scoreNum}>{m.score}</span>
-                    <span className={styles.scoreLabel}>궁합</span>
-                  </div>
-                </div>
-
-                {m.role === '농부' && (
-                  <div className={styles.matchTags}>
-                    <span className={styles.tag}>🌱 {m.crop}</span>
-                    <span className={styles.tag}>💰 {m.reward}</span>
-                  </div>
-                )}
-
-                <button className={`btn btn-primary ${styles.matchBtn}`}>
-                  매칭 신청
-                </button>
+          <div className={`glass-card ${styles.aiMatchingCard}`}>
+            <div className={styles.aiMatchingInfo}>
+              <span className={styles.aiMatchingIcon}>🤖</span>
+              <div>
+                <strong>나에게 꼭 맞는 맞춤 일자리 찾기</strong>
+                <p>AI가 유형검사 결과와 위치를 바탕으로 매칭해 드립니다</p>
               </div>
-            ))}
+            </div>
+            <button
+              className={`btn btn-primary ${styles.aiMatchingBtn}`}
+              onClick={() => alert('AI 자동매칭 기능은 친구1이 구현 예정입니다! 🌱')}
+            >
+              ⚡ AI 자동매칭 시작하기
+            </button>
           </div>
         </section>
 

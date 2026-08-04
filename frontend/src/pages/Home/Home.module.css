@@ -84,56 +84,47 @@
   padding: 3px 8px; border-radius: var(--radius-full);
 }
 
-/* ── 매칭 카드 ────────────────────────────────── */
-.matchList { display: flex; flex-direction: column; gap: 12px; }
-
-.matchCard {
-  padding: 18px 18px 14px;
-  display: flex; flex-direction: column; gap: 12px;
-  transition: transform 0.2s, box-shadow 0.2s;
+/* ── AI 자동매칭 카드 ────────────────────────────── */
+.aiMatchingCard {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.matchCard:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
 
-.matchTop { display: flex; align-items: center; gap: 14px; }
+.aiMatchingInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
-.matchAvatar {
-  width: 48px; height: 48px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px;
-  background: var(--color-surface-2);
+.aiMatchingIcon {
+  font-size: 32px;
+  width: 52px; height: 52px;
+  background: rgba(82, 183, 136, 0.15);
+  border: 1px solid rgba(82, 183, 136, 0.3);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 
-.matchInfo {
-  flex: 1;
-  display: flex; flex-direction: column; gap: 2px;
+.aiMatchingInfo strong {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
 }
-.matchInfo strong { font-size: 15px; font-weight: 600; }
-.matchRole { font-size: 11px; color: var(--color-primary-light); font-weight: 500; }
-.matchLocation { font-size: 12px; color: var(--color-text-sub); }
 
-.matchScore {
-  display: flex; flex-direction: column; align-items: center;
-  background: rgba(82,183,136,0.12);
-  border: 1px solid rgba(82,183,136,0.25);
-  border-radius: var(--radius-md);
-  padding: 8px 12px;
-}
-.scoreNum { font-size: 22px; font-weight: 700; color: var(--color-primary-light); line-height: 1; }
-.scoreLabel { font-size: 10px; color: var(--color-text-sub); margin-top: 2px; }
-
-.matchTags { display: flex; gap: 8px; }
-.tag {
-  font-size: 12px; font-weight: 500;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  padding: 4px 10px; border-radius: var(--radius-full);
+.aiMatchingInfo p {
+  font-size: 12px;
   color: var(--color-text-sub);
 }
 
-.matchBtn { padding: 10px 16px; font-size: 14px; }
+.aiMatchingBtn {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+}
 
 /* ── 프로필 카드 ───────────────────────────────── */
 .profileCard { padding: 20px; display: flex; flex-direction: column; gap: 0; }

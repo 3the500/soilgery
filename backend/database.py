@@ -49,21 +49,4 @@ def get_db():
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
-    # 초기 샘플 유저 자동 등록 (비어있을 경우)
-    db = SessionLocal()
-    try:
-        if db.query(User).count() == 0:
-            import bcrypt
-            pwd1 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-            pwd2 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-            sample_users = [
-                User(name="홍길동", email="youth@soilgery.com", hashed_password=pwd1, role="청년", location="충북 청주시", strength=85, stamina=90, grit=80, intelligence=75, wage_pref=60, personality=88),
-                User(name="김농부", email="farmer@soilgery.com", hashed_password=pwd2, role="농부", location="충북 옥천군", strength=70, stamina=85, grit=95, intelligence=80, wage_pref=70, personality=90),
-            ]
-            db.add_all(sample_users)
-            db.commit()
-    except Exception as e:
-        print("샘플 유저 생성이 생략되었습니다:", e)
-    finally:
-        db.close()
 
