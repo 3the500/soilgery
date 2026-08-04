@@ -48,8 +48,8 @@ def create_tables():
             pwd1 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
             pwd2 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
             sample_users = [
-                User(name="홍길동 (기본 샘플)", email="youth@soilgery.com", hashed_password=pwd1, role="청년", location="충북 청주시"),
-                User(name="김농부 (기본 샘플)", email="farmer@soilgery.com", hashed_password=pwd2, role="농부", location="충북 옥천군"),
+                User(name="홍길동", email="youth@soilgery.com", hashed_password=pwd1, role="청년", location="충북 청주시"),
+                User(name="김농부", email="farmer@soilgery.com", hashed_password=pwd2, role="농부", location="충북 옥천군"),
             ]
             db.add_all(sample_users)
             db.commit()
