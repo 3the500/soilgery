@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database import get_db, User
-from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse
+from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse, UserStatsUpdate
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["인증"])
@@ -25,6 +25,12 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         name=body.name,
         role=body.role,
         location=body.location,
+        strength=0,
+        stamina=0,
+        grit=0,
+        intelligence=0,
+        wage_pref=0,
+        personality=0,
     )
     db.add(user)
     db.commit()
