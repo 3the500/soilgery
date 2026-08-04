@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './store/AuthContext'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Home from './pages/Home/Home'
+import Profile from './pages/Profile/Profile'
 
 // 로그인 안 했으면 /login으로 리다이렉트
 function PrivateRoute({ children }) {
@@ -23,6 +24,7 @@ function AppRoutes() {
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
     </Routes>
   )
 }

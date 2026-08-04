@@ -4,9 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import create_tables
 from routers import auth_router
 
-app = FastAPI(title="소일거리 API", version="1.0.0")
+app = FastAPI(
+    title="소일거리 API",
+    description="충북 청년 × 농부 AI 매칭 플랫폼 API 백엔드",
+    version="1.0.0"
+)
 
-# ── CORS (프론트엔드 연동) ──────────────────────────
+# ── CORS 설정 (프론트엔드 연동) ─────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,26 +19,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── DB 테이블 자동 생성 ───────────────────────────────
+
+# ── DB 테이블 자동 생성 ─────────────────────────────
 @app.on_event("startup")
 def startup():
     create_tables()
 
-from typing import List
-from sqlalchemy.orm import Session
-from fastapi import Depends
-from database import get_db, User
-from schemas import UserResponse
 
+# ── 라우터 등록 ─────────────────────────────────────
 app.include_router(auth_router.router)
 
 
-@app.get("/users", response_model=List[UserResponse])
-@app.get("/auth/users", response_model=List[UserResponse])
-def get_all_users_direct(db: Session = Depends(get_db)):
-    return db.query(User).all()
-
-
-@app.get("/")
+@app.get("/", tags=["기본"])
 def root():
     return {"message": "소일거리 API 서버 정상 작동 중 🌱"}

@@ -36,7 +36,7 @@ export default function Home() {
           <span className={styles.logo}>🌱 소일거리</span>
         </div>
         <div className={styles.headerRight}>
-          <div className={styles.userBadge}>
+          <div className={styles.userBadge} onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
             <span className={styles.userRole}>{user?.role}</span>
             <span className={styles.userName}>{user?.name}</span>
           </div>
@@ -45,10 +45,9 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        {/* 환영 배너 */}
+        {/* 배너 */}
         <section className={styles.banner}>
           <div className={styles.bannerText}>
-            <p className={styles.bannerGreet}>안녕하세요, {user?.name}님 👋</p>
             <h2 className={styles.bannerTitle}>
               오늘의 추천 매칭을<br />확인해보세요
             </h2>
@@ -130,8 +129,11 @@ export default function Home() {
 
         {/* 내 정보 카드 */}
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>내 정보</h3>
-          <div className={`glass-card ${styles.profileCard}`}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>내 정보</h3>
+            <span className={styles.detailLink} onClick={() => navigate('/profile')}>상세보기 →</span>
+          </div>
+          <div className={`glass-card ${styles.profileCard}`} onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
             <div className={styles.profileRow}>
               <span className={styles.profileLabel}>이름</span>
               <span>{user?.name}</span>
@@ -148,6 +150,39 @@ export default function Home() {
               <span className={styles.profileLabel}>지역</span>
               <span>{user?.location || '미설정'}</span>
             </div>
+          </div>
+        </section>
+
+        {/* 🧪 추가 예정 기능 테스트 버튼 목록 */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>🧪 개발 예정 기능 테스트</h3>
+          </div>
+          <div className={`glass-card ${styles.testButtonCard}`}>
+            <button
+              className={`btn btn-outline ${styles.testBtn}`}
+              onClick={() => alert('💬 채팅방 기능은 추가 개발 예정입니다!')}
+            >
+              [💬 채팅방 테스트 버튼]
+            </button>
+            <button
+              className={`btn btn-outline ${styles.testBtn}`}
+              onClick={() => alert('⭐ 리뷰 남기기 기능은 추가 개발 예정입니다!')}
+            >
+              [⭐ 리뷰 남기기 테스트 버튼]
+            </button>
+            <button
+              className={`btn btn-outline ${styles.testBtn}`}
+              onClick={() => alert('🤖 AI 고객센터 챗봇 기능은 추가 개발 예정입니다!')}
+            >
+              [🤖 AI 고객센터 테스트 버튼]
+            </button>
+            <button
+              className={`btn btn-outline ${styles.testBtn}`}
+              onClick={() => alert('🌾 일자리 매칭 기능은 추가 개발 예정입니다!')}
+            >
+              [🌾 일자리 매칭 테스트 버튼]
+            </button>
           </div>
         </section>
       </main>
