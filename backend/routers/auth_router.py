@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database import get_db, User
-from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse, UserStatsUpdate
+from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["인증"])
