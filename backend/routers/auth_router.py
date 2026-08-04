@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -45,8 +46,6 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 
-from typing import List
-
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
@@ -56,4 +55,5 @@ def get_me(current_user: User = Depends(get_current_user)):
 def get_all_users(db: Session = Depends(get_db)):
     """가입된 전체 회원 목록을 조회합니다."""
     return db.query(User).all()
+
 

@@ -30,8 +30,8 @@ class UserResponse(BaseModel):
     email: str
     name: str
     role: str
-    location: Optional[str]
-    created_at: datetime
+    location: Optional[str] = None
+    created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

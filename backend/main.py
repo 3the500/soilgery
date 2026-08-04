@@ -9,10 +9,7 @@ app = FastAPI(title="소일거리 API", version="1.0.0")
 # ── CORS (프론트엔드 연동) ──────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",          # 로컬 개발
-        "https://*.vercel.app",           # Vercel 배포
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,8 +20,19 @@ app.add_middleware(
 def startup():
     create_tables()
 
-# ── 라우터 등록 ───────────────────────────────────────
+from typing import List
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from database import get_db, User
+from schemas import UserResponse
+
 app.include_router(auth_router.router)
+
+
+@app.get("/users", response_model=List[UserResponse])
+@app.get("/auth/users", response_model=List[UserResponse])
+def get_all_users_direct(db: Session = Depends(get_db)):
+    return db.query(User).all()
 
 
 @app.get("/")

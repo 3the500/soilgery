@@ -93,7 +93,7 @@ export default function Home() {
                       </div>
                     </div>
                     <span className={styles.joinDate}>
-                      {new Date(u.created_at).toLocaleDateString('ko-KR')}
+                      {u.created_at ? new Date(u.created_at).toLocaleDateString('ko-KR') : '최근'}
                     </span>
                   </div>
                 ))}
