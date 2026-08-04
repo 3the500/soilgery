@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -28,7 +28,8 @@ class User(Base):
     role = Column(Enum("청년", "농부", name="user_role"), nullable=False)
     location = Column(String, nullable=True)        # 거주 지역
     
-    # ── 친구1 요청: AI 매칭용 스탯 (기본값 0) ───────
+    # ── AI 매칭용 스탯 & 평점 (기본값 0) ─────────
+    rating = Column(Float, default=0.0, nullable=False)        # 평점 (★ 0.0 ~ 5.0)
     strength = Column(Integer, default=0, nullable=False)      # 근력
     stamina = Column(Integer, default=0, nullable=False)       # 체력
     grit = Column(Integer, default=0, nullable=False)          # 근성

@@ -25,6 +25,7 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         name=body.name,
         role=body.role,
         location=body.location,
+        rating=0.0,
         strength=0,
         stamina=0,
         grit=0,

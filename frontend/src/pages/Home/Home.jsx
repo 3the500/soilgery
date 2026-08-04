@@ -83,6 +83,7 @@ export default function Home() {
                           <span className={`${styles.roleBadge} ${u.role === '농부' ? styles.farmerBadge : styles.youthBadge}`}>
                             {u.role}
                           </span>
+                          <span className={styles.ratingBadge}>⭐ {u.rating ? Number(u.rating).toFixed(1) : '0.0'}</span>
                         </div>
                         <p className={styles.userSubInfo}>{u.email} {u.location ? `· 📍${u.location}` : ''}</p>
                         <div className={styles.statBadges}>

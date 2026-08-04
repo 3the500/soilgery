@@ -32,7 +32,8 @@ class UserResponse(BaseModel):
     role: str
     location: Optional[str] = None
     
-    # ── 친구1 요청 스탯 ──────────────────
+    # ── AI 매칭용 스탯 & 평점 ───────────────
+    rating: float = 0.0
     strength: int = 0
     stamina: int = 0
     grit: int = 0
