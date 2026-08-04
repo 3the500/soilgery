@@ -61,17 +61,3 @@ def get_me(current_user: User = Depends(get_current_user)):
 def get_all_users(db: Session = Depends(get_db)):
     """가입된 전체 회원 목록을 조회합니다."""
     return db.query(User).all()
-
-
-@router.put("/me/stats", response_model=UserResponse, summary="내 스탯 업데이트 (친구1 연동용)")
-def update_user_stats(
-    stats: UserStatsUpdate,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """성격검사 결과 등으로 유저의 스탯(근력, 체력, 근성, 지성, 급여, 성격)을 업데이트합니다."""
-    for field, val in stats.dict(exclude_unset=True).items():
-        setattr(current_user, field, val)
-    db.commit()
-    db.refresh(current_user)
-    return current_user

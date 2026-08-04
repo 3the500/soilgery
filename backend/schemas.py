@@ -45,13 +45,3 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
-# ── 스탯 수정 요청 (친구1 성격검사/스탯 연동용) ─────
-class UserStatsUpdate(BaseModel):
-    strength: Optional[int] = None
-    stamina: Optional[int] = None
-    grit: Optional[int] = None
-    intelligence: Optional[int] = None
-    wage_pref: Optional[int] = None
-    personality: Optional[int] = None
-
