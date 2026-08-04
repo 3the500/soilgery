@@ -90,6 +90,12 @@ export default function Home() {
                           </span>
                         </div>
                         <p className={styles.userSubInfo}>{u.email} {u.location ? `· 📍${u.location}` : ''}</p>
+                        <div className={styles.statBadges}>
+                          <span>💪근력:{u.strength ?? 0}</span>
+                          <span>⚡체력:{u.stamina ?? 0}</span>
+                          <span>🔥근성:{u.grit ?? 0}</span>
+                          <span>🧠지성:{u.intelligence ?? 0}</span>
+                        </div>
                       </div>
                     </div>
                     <span className={styles.joinDate}>

@@ -27,6 +27,15 @@ class User(Base):
     name = Column(String, nullable=False)
     role = Column(Enum("청년", "농부", name="user_role"), nullable=False)
     location = Column(String, nullable=True)        # 거주 지역
+    
+    # ── 친구1 요청: AI 매칭용 스탯 (기본값 0) ───────
+    strength = Column(Integer, default=0, nullable=False)      # 근력
+    stamina = Column(Integer, default=0, nullable=False)       # 체력
+    grit = Column(Integer, default=0, nullable=False)          # 근성
+    intelligence = Column(Integer, default=0, nullable=False)  # 지성
+    wage_pref = Column(Integer, default=0, nullable=False)     # 급여
+    personality = Column(Integer, default=0, nullable=False)   # 성격
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
@@ -48,8 +57,8 @@ def create_tables():
             pwd1 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
             pwd2 = bcrypt.hashpw("password123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
             sample_users = [
-                User(name="홍길동", email="youth@soilgery.com", hashed_password=pwd1, role="청년", location="충북 청주시"),
-                User(name="김농부", email="farmer@soilgery.com", hashed_password=pwd2, role="농부", location="충북 옥천군"),
+                User(name="홍길동", email="youth@soilgery.com", hashed_password=pwd1, role="청년", location="충북 청주시", strength=85, stamina=90, grit=80, intelligence=75, wage_pref=60, personality=88),
+                User(name="김농부", email="farmer@soilgery.com", hashed_password=pwd2, role="농부", location="충북 옥천군", strength=70, stamina=85, grit=95, intelligence=80, wage_pref=70, personality=90),
             ]
             db.add_all(sample_users)
             db.commit()

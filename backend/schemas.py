@@ -31,7 +31,27 @@ class UserResponse(BaseModel):
     name: str
     role: str
     location: Optional[str] = None
+    
+    # ── 친구1 요청 스탯 ──────────────────
+    strength: int = 0
+    stamina: int = 0
+    grit: int = 0
+    intelligence: int = 0
+    wage_pref: int = 0
+    personality: int = 0
+
     created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
+
+
+# ── 스탯 수정 요청 (친구1 성격검사/스탯 연동용) ─────
+class UserStatsUpdate(BaseModel):
+    strength: Optional[int] = None
+    stamina: Optional[int] = None
+    grit: Optional[int] = None
+    intelligence: Optional[int] = None
+    wage_pref: Optional[int] = None
+    personality: Optional[int] = None
+
