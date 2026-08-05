@@ -41,6 +41,7 @@ class UserResponse(BaseModel):
     wage_pref: int = 0
     personality: int = 0
 
+    is_seeking: bool = True          # 구직 중 여부
     created_at: Optional[datetime] = None
 
     class Config:

@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -38,6 +38,7 @@ class User(Base):
     personality = Column(Integer, default=0, nullable=False)   # 성격
 
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_seeking = Column(Boolean, default=True, nullable=False)  # 구직 중 여부
 
 
 def get_db():
