@@ -46,7 +46,6 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
-<<<<<<< HEAD
 
 # ── 적성검사 ──────────────────────────────────────
 class QuestionResponse(BaseModel):
@@ -142,5 +141,3 @@ class AiAnswerResponse(BaseModel):
     type: str  # "answer" 또는 "report"
     message: str
 
-=======
->>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b

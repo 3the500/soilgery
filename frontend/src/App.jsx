@@ -26,7 +26,6 @@ function AppRoutes() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-<<<<<<< HEAD
       
       {/* 로그인한 사용자만 접근 가능한 인증된 페이지 목록 */}
       <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
@@ -37,10 +36,6 @@ function AppRoutes() {
       
       {/* 그 외 지정되지 않은 주소로 접속 시 /home으로 리다이렉트 */}
       <Route path="*" element={<Navigate to="/home" replace />} />
-=======
-      <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
->>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b
     </Routes>
   )
 }
@@ -53,8 +48,5 @@ export default function App() {
       </AuthProvider>
     </BrowserRouter>
   )
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b
