@@ -39,10 +39,16 @@ async def lifespan(app: FastAPI):
     yield
     # 앱 종료 시 필요한 작업이 있다면 여기에 작성
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from database import create_tables
+from routers import auth_router
 
 app = FastAPI(
     title="소일거리 API",
     description="충북 청년 × 농부 AI 매칭 플랫폼 API 백엔드",
+<<<<<<< HEAD
     version="1.0.0",
     lifespan=lifespan
 )
@@ -63,12 +69,22 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,            # 허용할 Origin 목록
     allow_origin_regex=r"https://.*", # https로 시작하는 모든 배포 URL 허용 (배포 테스트용)
+=======
+    version="1.0.0"
+)
+
+# ── CORS 설정 (프론트엔드 연동) ─────────────────────
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+>>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+<<<<<<< HEAD
 # ── 라우터 등록 ─────────────────────────────────────
 app.include_router(auth_router.router)
 app.include_router(aptitude_router.router)
@@ -76,8 +92,22 @@ app.include_router(matching_router.router)
 app.include_router(posting_router.router)
 app.include_router(chat_router.router)
 app.include_router(support_router.router)
+=======
+# ── DB 테이블 자동 생성 ─────────────────────────────
+@app.on_event("startup")
+def startup():
+    create_tables()
+
+
+# ── 라우터 등록 ─────────────────────────────────────
+app.include_router(auth_router.router)
+>>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b
 
 
 @app.get("/", tags=["기본"])
 def root():
+<<<<<<< HEAD
     return {"message": "소일거리 API 서버 정상 작동 중 🌱"}
+=======
+    return {"message": "소일거리 API 서버 정상 작동 중 🌱"}
+>>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b

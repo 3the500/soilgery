@@ -8,7 +8,6 @@ import os
 from dotenv import load_dotenv
 
 from database import get_db, User
-# import psycopg as psycopg2 #추가
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")

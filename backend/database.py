@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-# import psycopg as psycopg2 #추가
 load_dotenv()
 
 # Railway PostgreSQL 없으면 로컬 SQLite 사용
@@ -51,3 +50,7 @@ def get_db():
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b

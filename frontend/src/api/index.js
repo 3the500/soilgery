@@ -32,7 +32,7 @@ api.interceptors.response.use(
 
 export default api
 
-// ── 1. 인증(Auth) API ────────────────────────────
+// ── Auth API ────────────────────────────────────
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
