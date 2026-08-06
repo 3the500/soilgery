@@ -7,4 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',   // Capacitor가 읽는 기본 빌드 경로
   },
+  preview: {
+    allowedHosts: ["outstanding-celebration-production.up.railway.app"],
+  },
 })
