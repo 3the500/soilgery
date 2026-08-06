@@ -140,4 +140,3 @@ class AskAiRequest(BaseModel):
 class AiAnswerResponse(BaseModel):
     type: str  # "answer" 또는 "report"
     message: str
-

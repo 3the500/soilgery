@@ -33,7 +33,7 @@ function AppRoutes() {
       <Route path="/aptitude" element={<PrivateRoute><Aptitude /></PrivateRoute>} />
       <Route path="/matching" element={<PrivateRoute><Matching /></PrivateRoute>} />
       <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
-      
+
       {/* 그 외 지정되지 않은 주소로 접속 시 /home으로 리다이렉트 */}
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
@@ -48,5 +48,4 @@ export default function App() {
       </AuthProvider>
     </BrowserRouter>
   )
-
 }

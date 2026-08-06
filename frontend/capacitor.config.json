@@ -1,0 +1,11 @@
+{
+  "appId": "com.soilgery.app",
+  "appName": "소일거리",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "minWebViewVersion": 60
+  }
+}
