@@ -1,0 +1,85 @@
+.wrapper {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bgOrb1 {
+  position: fixed; top: -100px; right: -60px;
+  width: 340px; height: 340px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(82,183,136,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bgOrb2 {
+  position: fixed; bottom: -80px; left: -50px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,106,79,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.card {
+  width: 100%; max-width: 440px;
+  padding: 36px 32px;
+  position: relative; z-index: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.headerIcon { font-size: 36px; display: block; margin-bottom: 8px; }
+.header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.header p  { font-size: 13px; color: var(--color-text-sub); }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 역할 선택 */
+.roleSection { display: flex; flex-direction: column; gap: 10px; }
+.roleLabel { font-size: 13px; font-weight: 500; color: var(--color-text-sub); }
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.roleCard {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 16px 10px;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.roleCard:hover { border-color: var(--color-primary-light); background: rgba(82,183,136,0.08); }
+
+.roleCardActive {
+  border-color: var(--color-primary-light) !important;
+  background: rgba(82,183,136,0.14) !important;
+  box-shadow: 0 0 0 3px rgba(82,183,136,0.2);
+}
+
+.roleEmoji { font-size: 28px; margin-bottom: 2px; }
+.roleCard strong { font-size: 14px; font-weight: 600; }
+.roleDesc { font-size: 11px; color: var(--color-text-sub); text-align: center; }
+
+.optional { font-size: 11px; color: var(--color-text-sub); font-weight: 400; }
+
+.loading { opacity: 0.7; pointer-events: none; }
+
+.loginLink {
+  text-align: center; margin-top: 20px;
+  font-size: 14px; color: var(--color-text-sub);
+}
+.loginLink a { color: var(--color-primary-light); font-weight: 600; }
+.loginLink a:hover { color: var(--color-accent); }
