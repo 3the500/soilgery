@@ -50,7 +50,3 @@ def get_db():
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
-<<<<<<< HEAD
-=======
-
->>>>>>> 961d1165ef0da758f5b8c5a229170d9298f28e0b
