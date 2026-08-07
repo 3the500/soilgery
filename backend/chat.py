@@ -28,6 +28,29 @@ def _get_match_participants(match_id: int, db: Session) -> dict:
     posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first()
     return {"employee_id": match.employee_id, "employer_id": posting.employer_id}
 
+def get_match_info(match_id: int, requester_id: int, db: Session) -> dict:
+    """
+    채팅방 헤더/메시지 말풍선에 "상대방이 누구인지" 보여주기 위한 정보 조회.
+    (지금까지는 이 정보가 없어서 프론트엔드가 sender_id 숫자만으로
+    "상대방 (#3)" 처럼 표시할 수밖에 없었음)
+    본인이 이 매칭의 당사자(농부 또는 청년)일 때만 조회 가능.
+    """
+    participants = _get_match_participants(match_id, db)
+    employee_id = participants["employee_id"]
+    employer_id = participants["employer_id"]
+
+    if requester_id not in (employee_id, employer_id):
+        raise ValueError(f"requester_id={requester_id}는 match_id={match_id}의 당사자가 아닙니다.")
+
+    partner_id = employer_id if requester_id == employee_id else employee_id
+    partner = db.query(User).filter(User.id == partner_id).first()
+
+    return {
+        "match_id": match_id,
+        "partner_id": partner_id,
+        "partner_name": partner.name if partner else None,
+        "partner_role": partner.role if partner else None,
+    }
 
 def send_message(match_id: int, sender_id: int, content: str, db: Session) -> Message:
     """

@@ -73,18 +73,20 @@ class RecommendedTask(BaseModel):
     message: str
 
 
-class CandidateResponse(BaseModel):
-    user_id: int
-    stats: StatsResponse
-    fit_score: float
-
-
 class CreateMatchRequest(BaseModel):
     employee_id: int
 
 
 class MatchResponse(BaseModel):
     match_id: int
+
+
+class MyMatchResponse(BaseModel):
+    matched: bool
+    match_id: Optional[int] = None
+    task: Optional[str] = None
+    partner_name: Optional[str] = None
+    partner_role: Optional[str] = None
 
 
 # ── 공고 ──────────────────────────────────────────
@@ -140,3 +142,12 @@ class AskAiRequest(BaseModel):
 class AiAnswerResponse(BaseModel):
     type: str  # "answer" 또는 "report"
     message: str
+
+
+# ── 매칭(후보자) ──────────────────────────────────
+class CandidateResponse(BaseModel):
+    user_id: int
+    name: Optional[str] = None      # 지원자 이름 추가
+    location: Optional[str] = None  # 거주 지역 추가
+    stats: StatsResponse
+    fit_score: float

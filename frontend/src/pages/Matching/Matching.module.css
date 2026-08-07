@@ -1,0 +1,143 @@
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  font-size: 13px;
+  color: var(--color-primary-light);
+  font-weight: 500;
+}
+
+.actionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.secondaryBtn {
+  padding: 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.secondaryBtn:hover {
+  border-color: var(--color-primary-light);
+}
+
+.selectGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.selectGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+  white-space: nowrap;
+}
+
+.selectBox {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.selectBox:focus {
+  border-color: var(--color-primary-light);
+}
+
+.candidateList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.candidateCard {
+  background: rgba(23, 34, 24, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.candidateCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary-light);
+}
+
+.candidateName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.fitScore {
+  font-size: 13px;
+  color: var(--color-primary-light);
+  background: rgba(82, 183, 136, 0.12);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.matchBtn {
+  margin-top: 4px;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all var(--transition);
+  box-shadow: 0 4px 12px rgba(82, 183, 136, 0.3);
+}
+
+.matchBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(82, 183, 136, 0.45);
+}
+
+.emptyText {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--color-text-sub);
+  font-size: 14px;
+}

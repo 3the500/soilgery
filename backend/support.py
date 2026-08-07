@@ -1,21 +1,12 @@
 """
 AI 상담사 모듈
 ------------------
-두 가지 경로로 나뉩니다.
-
 1. 선택형 문의 (FAQ): 사용자가 화면에서 미리 정해진 질문 중 하나를 선택.
    -> AI를 호출하지 않고, 사람이 미리 작성해둔 "모범 답안"을 그대로 반환.
 
 2. 자유 질문: 사용자가 직접 텍스트로 입력.
-   -> AI(Claude API)가 FAQ 내용을 참고해서 가장 가까운 답을 판단해 답변.
-   -> "신고"로 판단되면 사람이 검토할 수 있도록 DB에 접수만 하고, AI가 임의로 조치하지 않음.
-
-[변경 사항 - soilgery 프로젝트 구조에 맞춰 수정]
-- pymysql/raw SQL 대신 SQLAlchemy ORM 사용 (models.Report)
-
-필요한 준비물:
-    pip install anthropic
-    환경변수 ANTHROPIC_API_KEY 설정
+   -> AI(Claude API)가 FAQ 및 서비스 정보를 참고해 답변.
+   -> "신고"로 판단되면 DB(Report)에 접수 후 안내 문구 반환.
 """
 
 import json
@@ -25,12 +16,11 @@ import anthropic
 from sqlalchemy.orm import Session
 
 from models import Report
-# import psycopg as psycopg2 #추가
 
 client = anthropic.Anthropic()  # ANTHROPIC_API_KEY 환경변수를 자동으로 읽음
 
 
-# ---- 1. 선택형 문의: 사람이 미리 작성한 FAQ와 모범 답안 ----
+# ---- 1. 선택형 문의: 확장된 FAQ 목록 ----
 FAQS = [
     {
         "id": "faq_matching",
@@ -45,24 +35,32 @@ FAQS = [
         "id": "faq_retest",
         "question": "적성검사를 다시 보고 싶어요.",
         "answer": (
-            "적성검사는 다시 응시하실 수 있어요. 재검사를 완료하면 이전 결과는 "
-            "새 결과로 갱신되고, 추천 업무도 다시 계산됩니다."
+            "적성검사는 상단 메뉴의 '적성검사' 탭에서 언제든지 다시 응시하실 수 있어요. "
+            "재검사를 완료하면 이전 결과는 새 결과로 갱신되고, 추천 업무도 다시 계산됩니다."
         ),
     },
     {
         "id": "faq_cancel_match",
         "question": "매칭 대기를 취소하고 싶어요.",
         "answer": (
-            "마이페이지에서 '매칭 대기 취소'를 누르시면 더 이상 농부님들의 후보자 "
+            "매칭 메뉴에서 '매칭 대기 취소' 버튼을 누르시면 더 이상 농부님들의 후보자 "
             "목록에 노출되지 않습니다. 언제든 다시 매칭을 신청하실 수 있어요."
+        ),
+    },
+    {
+        "id": "faq_wage_chat",
+        "question": "급여 조건 및 근무 시간은 어떻게 확인하나요?",
+        "answer": (
+            "근무 조건 및 급여는 농가 공고별로 상이하며, "
+            "농부님과 매칭이 완료된 후 생성되는 1:1 대화방(채팅)에서 자세히 협의하실 수 있습니다."
         ),
     },
     {
         "id": "faq_no_response",
         "question": "매칭된 상대방이 채팅에 답이 없어요.",
         "answer": (
-            "채팅으로 며칠간 응답이 없다면, 아래 '직접 질문하기'로 상황을 알려주시면 "
-            "저희가 확인 후 안내해드릴게요."
+            "채팅으로 며칠간 응답이 없다면 상대방의 닉네임과 함께 아래에 문의 내용을 남겨주시면 "
+            "담당자가 확인 후 안내해드릴게요."
         ),
     },
 ]
@@ -84,19 +82,25 @@ def get_faq_answer(faq_id: str) -> str:
 # ---- 2. 자유 질문: AI 분석 ----
 _FAQ_CONTEXT = "\n".join(f"- {f['question']}: {f['answer']}" for f in FAQS)
 
-SYSTEM_PROMPT = f"""당신은 소일거리(충북 청년 x 농부 AI 매칭 플랫폼)의 AI 상담사입니다.
+SYSTEM_PROMPT = f"""당신은 '충북 농촌 소일거리 매칭 플랫폼'의 AI 1:1 상담사입니다.
 
-아래는 자주 묻는 질문과 답변입니다. 사용자의 질문이 이 내용과 관련 있다면 이를 참고해서
-정확하고 간결하게(3문장 이내) 답변하세요.
+[서비스 주요 내용]
+1. 적성검사: 6가지 예/아니요 질문을 통해 사용자의 스텟(근력, 체력, 근성, 지성, 급여, 성격)을 측정합니다.
+2. 매칭 시스템: 청년은 스텟 기반 업무 추천을 받고 매칭 대기를 신청합니다. 농부는 업무별 후보자를 조회하여 원하는 청년과 매칭(1:1 채팅방 개설)을 진행합니다.
+3. 급여/근무조건: 공고 정보 및 매칭 후 1:1 채팅을 통해 농부와 청년이 직접 상의합니다.
+4. 역할 구분: '청년(구직자)'과 '농부(구인자)' 두 가지 역할로 회원가입 및 이용이 가능합니다.
 
-[자주 묻는 질문]
+[자주 묻는 질문(FAQ)]
 {_FAQ_CONTEXT}
 
-만약 사용자가 다른 사용자의 부적절한 행동, 사기, 폭언, 노쇼 등 "신고"에 해당하는 내용을
-전달하는 경우에는, 직접 판단하거나 조치하지 말고 반드시 아래 JSON 형식으로만 응답하세요:
-{{"type": "report", "category": "짧은 분류명", "summary": "신고 내용 한 줄 요약", "severity": "low|medium|high"}}
+[답변 지침]
+- 사용자가 질문을 하면 위 서비스 내용 및 FAQ를 바탕으로 친절하고 명확하게 답변하세요.
+- 답변은 가급적 핵심만 2~3문장 이내로 작성하세요.
+- 인사말(예: 안녕, 반가워 등)에는 친근하게 인사를 건네고 서비스 소개를 해주세요.
+- 만약 사용자가 폭언, 사기, 노쇼, 금전 요구, 성희롱, 불공정 거래 등 "신고"에 해당하는 내용을 전달하면, 직접 처리하려 하지 말고 반드시 아래 JSON 형식으로만 응답하세요:
+{{"type": "report", "category": "짧은 분류명(예: 노쇼/사기/폭언 등)", "summary": "신고 내용 한 줄 요약", "severity": "low|medium|high"}}
 
-신고가 아닌 일반 문의는 자유 텍스트로 답변하세요 (JSON을 쓰지 마세요).
+- 신고가 아닌 일반 문의/질문에는 자연스러운 일반 텍스트(JSON 금지)로 답변하세요.
 """
 
 
@@ -118,24 +122,24 @@ def save_report(user_id: int, category: str, summary: str, severity: str, db: Se
 def ask_ai(user_id: int, message: str, db: Session) -> Dict:
     """
     사용자가 자유롭게 입력한 질문을 AI가 분석해서 답변.
-    신고로 분류되면 사람이 검토하도록 접수만 하고, 사용자에게는 접수 안내만 전달.
-    반환값: {"type": "answer", "message": "..."} 또는 {"type": "report", "message": "..."}
     """
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-6",
+            model="claude-3-5-sonnet-20241022",  # 안정적인 최신 Claude 3.5 Sonnet 모델 사용
             max_tokens=500,
             temperature=0.3,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": message}],
         )
         text = response.content[0].text.strip()
-    except Exception:
+    except Exception as e:
+        print("Claude API 호출 실패:", e)
         return {
             "type": "answer",
             "message": "일시적으로 답변을 가져오지 못했어요. 잠시 후 다시 시도해주세요.",
         }
 
+    # 신고(JSON) 처리 검증
     try:
         parsed = json.loads(text)
         if isinstance(parsed, dict) and parsed.get("type") == "report":
@@ -149,7 +153,7 @@ def ask_ai(user_id: int, message: str, db: Session) -> Dict:
             return {
                 "type": "report",
                 "message": (
-                    "신고가 접수되었습니다. 담당자가 확인 후 조치할 예정이에요. "
+                    "🚨 신고가 접수되었습니다. 담당자가 내용 확인 후 조치할 예정이에요. "
                     f"(접수번호: {report_id})"
                 ),
             }

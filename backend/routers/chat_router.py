@@ -7,9 +7,22 @@ from sqlalchemy.orm import Session
 from database import get_db, User
 from auth import get_current_user
 from schemas import SendMessageRequest, MessageResponse
-from chat import send_message, get_conversation
+from chat import send_message, get_conversation, get_match_info
 
 router = APIRouter(prefix="/matches", tags=["채팅"])
+
+
+@router.get("/{match_id}/info")
+def read_match_info(
+    match_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """채팅방 상단/말풍선에 상대방이 누구인지(이름·역할) 보여줄 때 호출."""
+    try:
+        return get_match_info(match_id, current_user.id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/{match_id}/messages", response_model=MessageResponse)

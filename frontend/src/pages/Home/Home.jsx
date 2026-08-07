@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { authAPI } from '../../api'
+import { authAPI, matchingAPI } from '../../api'
 import styles from './Home.module.css'
 
 
 
 export default function Home() {
-  const { user, logout } = useAuth()
+  const { user, logout, refreshUser } = useAuth()
   const navigate = useNavigate()
   const [allUsers, setAllUsers] = useState([])
   const [loadingUsers, setLoadingUsers] = useState(true)
+  const [myMatch, setMyMatch] = useState(null) // { matched, match_id, task, partner_name, partner_role }
+
+  useEffect(() => {
+    // 로그인 시점에 캐시된 내 정보(user)는 스텟/매칭 상태가 최신이 아닐 수 있으므로
+    // 홈 화면에 들어올 때마다 서버 최신 값으로 갱신해준다.
+    refreshUser?.().catch((err) => console.error('내 정보 갱신 실패:', err))
+  }, [])
 
   useEffect(() => {
     // 가입된 전체 회원 목록 가져오기
@@ -20,9 +27,39 @@ export default function Home() {
       .finally(() => setLoadingUsers(false))
   }, [])
 
+  useEffect(() => {
+    // 내 매칭 연결 현황 조회 (매칭 표시 / 채팅방 입장 가능 여부 판단용)
+    matchingAPI.getMyMatch()
+      .then(({ data }) => setMyMatch(data))
+      .catch((err) => console.error('매칭 현황 조회 실패:', err))
+  }, [])
+
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  // 청년인데 적성검사를 아직 안 해서 스탯이 전부 0인 경우, 매칭 대신 적성검사 페이지로 보냄
+  const isStatsEmpty = (u) =>
+    !u?.strength && !u?.stamina && !u?.grit && !u?.intelligence &&
+    !u?.wage_pref && !u?.personality
+
+  const handleAutoMatching = () => {
+    if (user?.role === '청년' && isStatsEmpty(user)) {
+      alert('먼저 적성검사를 완료해주세요! 적성검사 페이지로 이동합니다.')
+      navigate('/aptitude')
+      return
+    }
+    navigate('/matching')
+  }
+
+  // 채팅방 입장: 매칭이 연결되지 않았으면 안내 알림, 연결되어 있으면 해당 채팅방으로 이동
+  const handleEnterChat = () => {
+    if (!myMatch?.matched) {
+      alert('매칭이 아직 안되어 연결할 수 없습니다.')
+      return
+    }
+    navigate(`/chat/${myMatch.match_id}`)
   }
 
   return (
@@ -120,12 +157,42 @@ export default function Home() {
             </div>
             <button
               className={`btn btn-primary ${styles.aiMatchingBtn}`}
-              onClick={() => navigate('/matching')}
+              onClick={handleAutoMatching}
             >
               ⚡ AI 자동매칭 시작하기
             </button>
           </div>
         </section>
+
+        {/* 매칭 연결 현황: 매칭이 성사된 경우에만 표시 */}
+        {myMatch?.matched && (
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h3>매칭 현황</h3>
+            </div>
+            <div
+              className={`glass-card ${styles.aiMatchingCard}`}
+              onClick={handleEnterChat}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className={styles.aiMatchingInfo}>
+                <span className={styles.aiMatchingIcon}>🤝</span>
+                <div>
+                  <strong>
+                    매칭이 연결되었습니다! {myMatch.partner_name ? `· ${myMatch.partner_name}(${myMatch.partner_role})` : ''}
+                  </strong>
+                  <p>{myMatch.task ? `업무: ${myMatch.task} · ` : ''}채팅방을 눌러 대화를 시작해보세요</p>
+                </div>
+              </div>
+              <button
+                className={`btn btn-primary ${styles.aiMatchingBtn}`}
+                onClick={(e) => { e.stopPropagation(); handleEnterChat() }}
+              >
+                💬 채팅방 입장하기
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* 내 정보 카드 */}
         <section className={styles.section}>
@@ -167,7 +234,7 @@ export default function Home() {
             </button>
             <button
               className={`btn btn-outline ${styles.testBtn}`}
-              onClick={() => navigate('/matching')}
+              onClick={handleAutoMatching}
             >
               🌾 매칭 보러가기
             </button>
@@ -179,7 +246,7 @@ export default function Home() {
             </button>
             <button
               className={`btn btn-outline ${styles.testBtn}`}
-              onClick={() => alert('💬 채팅방 기능은 추가 개발 예정입니다!')}
+              onClick={handleEnterChat}
             >
               [💬 채팅방 테스트 버튼]
             </button>
