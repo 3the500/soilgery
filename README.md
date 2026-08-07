@@ -17,6 +17,13 @@ soilgery/
 
 ## 🚀 빠른 시작 가이드
 
+### 0. 환경변수(.env) 설정 — 로컬 DB로 회원가입/로그인 테스트하기
+`backend/.env.example`을 복사해 `backend/.env`를 만드세요. (Windows에서 `start_backend.bat`/`start_all.bat`을 실행하면 `.env`가 없을 때 자동으로 복사해줍니다.)
+
+기본값 그대로 두면 `DATABASE_URL=sqlite:///./soilgery.db`로 설정되어 있어서, **별도 DB 서버 설치 없이** 로컬 SQLite 파일(`backend/soilgery.db`)이 자동 생성되고 바로 회원가입/로그인 테스트가 가능합니다. 실제 배포(Railway)에서는 이 파일이 아니라 Railway 대시보드에 등록된 PostgreSQL `DATABASE_URL`이 우선 적용되므로 로컬 설정과 충돌하지 않습니다.
+
+AI 매칭/AI 상담사 기능까지 테스트하려면 `ANTHROPIC_API_KEY`에 실제 Anthropic API 키를 넣어야 합니다.
+
 ### 1. 백엔드 (FastAPI) 실행
 ```powershell
 cd backend

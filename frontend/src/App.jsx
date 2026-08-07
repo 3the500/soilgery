@@ -7,6 +7,7 @@ import Profile from './pages/Profile/Profile'
 import Aptitude from './pages/Aptitude/Aptitude'
 import Matching from './pages/Matching/Matching'
 import Support from './pages/Support/Support'
+import Chat from './pages/Chat/Chat' // Chat 컴포넌트 불러오기
 
 // 로그인 안 했으면 /login으로 리다이렉트
 function PrivateRoute({ children }) {
@@ -33,6 +34,10 @@ function AppRoutes() {
       <Route path="/aptitude" element={<PrivateRoute><Aptitude /></PrivateRoute>} />
       <Route path="/matching" element={<PrivateRoute><Matching /></PrivateRoute>} />
       <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
+
+      {/* 채팅 관련 라우트 추가 */}
+      <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
+      <Route path="/chat/:matchId" element={<PrivateRoute><Chat /></PrivateRoute>} />
 
       {/* 그 외 지정되지 않은 주소로 접속 시 /home으로 리다이렉트 */}
       <Route path="*" element={<Navigate to="/home" replace />} />

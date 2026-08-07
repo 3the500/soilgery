@@ -1,0 +1,106 @@
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.progressBar {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary-light);
+  margin-bottom: 14px;
+}
+
+.questionCard {
+  background: rgba(23, 34, 24, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.questionText {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--color-text);
+  margin-bottom: 20px;
+}
+
+.optionsGroup {
+  display: flex;
+  gap: 16px;
+}
+
+.optionLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.optionLabel:hover {
+  border-color: var(--color-primary-light);
+  background: rgba(82, 183, 136, 0.1);
+}
+
+.radioInput {
+  accent-color: var(--color-primary-light);
+}
+
+.btnGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.navBtn {
+  padding: 12px 20px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.navBtn:hover {
+  background: rgba(82, 183, 136, 0.15);
+  border-color: var(--color-primary-light);
+}
+
+/* 결과 표시 카드 */
+.resultGrid {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.resultRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}

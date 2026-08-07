@@ -57,8 +57,18 @@ def request_match(user: User, db: Session) -> str:
     청년(피고용인)이 '매칭 원해요' 버튼을 눌렀을 때 호출.
     현재 스텟으로 추천 업무를 계산해서 반환하고, is_seeking을 True로 설정.
     (추천 업무 자체는 DB에 저장하지 않고, 필요할 때 매번 재계산함)
+
+    적성검사를 한 번도 하지 않은 사용자(스텟이 전부 0)는 모든 스텟이 0인
+    지점에서 가장 가까운 업무로 "정상적으로" 계산되어 버리기 때문에,
+    본인도 농부도 의도하지 않은 업무로 조용히 매칭 대기 등록이 될 수 있다.
+    (예: 물어보지도 않았는데 '트렉터 운용' 희망자로 등록되어, 정작 농부가
+    '밭일' 후보자를 찾을 때는 보이지 않는 문제로 이어짐)
+    그래서 매칭 신청 시점에 스텟이 전부 0이면 적성검사부터 완료하도록 막는다.
     """
     stats = extract_stats(user)
+    if all(v == 0 for v in stats.values()):
+        raise ValueError("적성검사를 먼저 완료해야 매칭을 신청할 수 있습니다.")
+
     top_task = recommend_farm_task(stats, top_n=1)[0]["task"]
     user.is_seeking = True
     db.commit()
@@ -95,10 +105,99 @@ def get_candidates_for_posting(posting_id: int, db: Session) -> List[Dict]:
         if top_task != posting.task:
             continue
         fit_score = math.sqrt(sum((stats[k] - ideal_profile[k]) ** 2 for k in stats))
-        candidates.append({"user_id": user.id, "stats": stats, "fit_score": fit_score})
+        candidates.append({"user_id": user.id, "user": user, "stats": stats, "fit_score": fit_score})
 
     candidates.sort(key=lambda c: c["fit_score"])
     return candidates
+
+
+# ---- 6. 내 최신 매칭 정보 조회 (홈 화면의 '매칭 연결됨' 표시 / 채팅 입장용) ----
+def get_my_latest_match(user: User, db: Session):
+    """
+    로그인한 사용자(청년 또는 농부) 기준으로 가장 최근에 성사된 매칭 1건을 찾아
+    상대방 이름/역할, 매칭된 업무, match_id를 함께 반환.
+    매칭이 하나도 없으면 None 반환.
+    """
+    if user.role == "청년":
+        match = (
+            db.query(MatchRequest)
+            .filter(MatchRequest.employee_id == user.id)
+            .order_by(MatchRequest.created_at.desc())
+            .first()
+        )
+        if match is None:
+            return None
+        posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first()
+        partner = (
+            db.query(User).filter(User.id == posting.employer_id).first()
+            if posting is not None else None
+        )
+    else:
+        match = (
+            db.query(MatchRequest)
+            .join(JobPosting, MatchRequest.job_posting_id == JobPosting.id)
+            .filter(JobPosting.employer_id == user.id)
+            .order_by(MatchRequest.created_at.desc())
+            .first()
+        )
+        if match is None:
+            return None
+        posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first()
+        partner = db.query(User).filter(User.id == match.employee_id).first()
+
+    return {
+        "match_id": match.id,
+        "task": posting.task if posting is not None else None,
+        "partner_name": partner.name if partner is not None else None,
+        "partner_role": partner.role if partner is not None else None,
+    }
+
+
+# ---- 7. 내 채팅방(매칭) 전체 목록 조회 ----
+def get_my_matches(user: User, db: Session) -> List[Dict]:
+    """
+    로그인한 사용자(청년 또는 농부) 기준으로 "본인이 아직 나가지 않은" 채팅방을
+    전부 반환한다. (get_my_latest_match와 달리 최신 1건이 아니라 전체 목록)
+
+    예: 농부가 청년1과 대화 중에 청년2와도 매칭되어도, 청년1이 채팅을 나가지 않는
+    한 농부 목록에는 청년1·청년2와의 채팅방이 모두 남아 있어야 한다.
+    """
+    if user.role == "청년":
+        matches = (
+            db.query(MatchRequest)
+            .filter(MatchRequest.employee_id == user.id, MatchRequest.employee_left == False)  # noqa: E712
+            .order_by(MatchRequest.created_at.desc())
+            .all()
+        )
+    else:
+        matches = (
+            db.query(MatchRequest)
+            .join(JobPosting, MatchRequest.job_posting_id == JobPosting.id)
+            .filter(JobPosting.employer_id == user.id, MatchRequest.employer_left == False)  # noqa: E712
+            .order_by(MatchRequest.created_at.desc())
+            .all()
+        )
+
+    results = []
+    for match in matches:
+        posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first()
+        if user.role == "청년":
+            partner = db.query(User).filter(User.id == posting.employer_id).first() if posting else None
+            partner_left = match.employer_left
+        else:
+            partner = db.query(User).filter(User.id == match.employee_id).first()
+            partner_left = match.employee_left
+
+        results.append({
+            "match_id": match.id,
+            "task": posting.task if posting is not None else None,
+            "partner_name": partner.name if partner is not None else None,
+            "partner_role": partner.role if partner is not None else None,
+            "partner_left": bool(partner_left),
+            "created_at": match.created_at,
+        })
+
+    return results
 
 
 # ---- 5. 농부: 후보자 선택 -> 매칭 생성 (버튼 클릭 시 호출될 함수) ----

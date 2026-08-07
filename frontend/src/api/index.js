@@ -54,12 +54,22 @@ export const matchingAPI = {
   // 청년: 매칭 신청 / 취소
   requestMatch: () => api.post('/users/me/request-match'),
   cancelMatchRequest: () => api.post('/users/me/cancel-match-request'),
+  // 내 매칭 연결 현황 조회 (매칭 여부, 상대방 정보, match_id)
+  getMyMatch: () => api.get('/users/me/match'),
+  // 내가 아직 나가지 않은 채팅방(매칭) 전체 목록 조회
+  getMyMatches: () => api.get('/users/me/matches'),
   // 농부: 특정 공고의 후보자 목록 조회
   getCandidates: (postingId, useAi = true) => 
     api.get(`/job-postings/${postingId}/candidates?use_ai=${useAi}`),
   // 농부: 매칭 생성
   createMatch: (postingId, employeeId) => 
     api.post(`/job-postings/${postingId}/match`, { employee_id: employeeId }),
+  // 업무별 후보자 조회(26.08.07 추영현)
+  getCandidatesByTask: (taskName) => 
+    api.get(`/candidates/by-task/${encodeURIComponent(taskName)}`),
+  // 업무별 매칭 생성 (신규)
+  createMatchByTask: (taskName, employeeId) => 
+    api.post(`/match/by-task?task_name=${encodeURIComponent(taskName)}`, { employee_id: employeeId }),
 }
 
 // ── 4. 공고(Job Postings) API ─────────────────────
@@ -75,6 +85,10 @@ export const chatAPI = {
   sendMessage: (matchId, content) => 
     api.post(`/matches/${matchId}/messages`, { content }),
   getMessages: (matchId) => api.get(`/matches/${matchId}/messages`),
+  // 채팅방 상대방 정보(이름/역할) 조회
+  getMatchInfo: (matchId) => api.get(`/matches/${matchId}/info`),
+  // 채팅나가기
+  leaveChat: (matchId) => api.post(`/matches/${matchId}/leave`),
 }
 
 // ── 6. AI 상담사(Support) API ─────────────────────

@@ -11,7 +11,7 @@ main.py에서 이 파일이 import된 상태로 create_tables()가 호출되면
 
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 
 from database import Base
 # import psycopg as psycopg2 #추가
@@ -38,6 +38,14 @@ class MatchRequest(Base):
     employee_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     status = Column(String, default="matched", nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    # ── 채팅 나가기 상태 ─────────────────────────
+    # 농부/청년 각자 "채팅나가기"를 눌렀는지 여부를 따로 저장한다.
+    # 한쪽만 나가면: 나간 사람 목록에서는 이 매칭(채팅방)이 사라지고,
+    #               남은 사람 화면에는 "상대방이 채팅을 나갔습니다" 안내가 뜬다.
+    # 남은 사람도 나가면(뒤로가기 포함): 그때 이 채팅방은 양쪽 모두에게서 사라진다.
+    employer_left = Column(Boolean, default=False, nullable=False)
+    employee_left = Column(Boolean, default=False, nullable=False)
 
 
 class Message(Base):

@@ -4,7 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 try:
-    from backend.database import create_tables
+    from backend.database import create_tables, engine
+    from backend.migrations import run_migrations
     from backend.routers import (
         auth_router,
         aptitude_router,
@@ -14,7 +15,8 @@ try:
         support_router,
     )
 except ImportError:
-    from database import create_tables
+    from database import create_tables, engine
+    from migrations import run_migrations
     from routers import (
         auth_router,
         aptitude_router,
@@ -33,6 +35,11 @@ async def lifespan(app: FastAPI):
         print("[OK] DB 테이블 생성/검증 완료")
     except Exception as e:
         print(f"[ERROR] DB 테이블 생성 실패: {e}")
+
+    try:
+        run_migrations(engine)
+    except Exception as e:
+        print(f"[ERROR] DB 마이그레이션 실패: {e}")
     yield
 
 

@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { authAPI } from '../../api'
+import { authAPI, matchingAPI } from '../../api'
 import styles from './Home.module.css'
 
 
 
 export default function Home() {
-  const { user, logout } = useAuth()
+  const { user, logout, refreshUser } = useAuth()
   const navigate = useNavigate()
   const [allUsers, setAllUsers] = useState([])
   const [loadingUsers, setLoadingUsers] = useState(true)
+  const [myMatches, setMyMatches] = useState([]) // [{ match_id, task, partner_name, partner_role, partner_left }]
+  const [loadingMatches, setLoadingMatches] = useState(true)
+
+  useEffect(() => {
+    // 로그인 시점에 캐시된 내 정보(user)는 스텟/매칭 상태가 최신이 아닐 수 있으므로
+    // 홈 화면에 들어올 때마다 서버 최신 값으로 갱신해준다.
+    refreshUser?.().catch((err) => console.error('내 정보 갱신 실패:', err))
+  }, [])
 
   useEffect(() => {
     // 가입된 전체 회원 목록 가져오기
@@ -20,9 +28,40 @@ export default function Home() {
       .finally(() => setLoadingUsers(false))
   }, [])
 
+  useEffect(() => {
+    // 내 채팅방(매칭) 목록 조회 - 내가 아직 나가지 않은 채팅방은 전부 보여준다
+    matchingAPI.getMyMatches()
+      .then(({ data }) => setMyMatches(data || []))
+      .catch((err) => console.error('채팅목록 조회 실패:', err))
+      .finally(() => setLoadingMatches(false))
+  }, [])
+
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  // 청년인데 적성검사를 아직 안 해서 스탯이 전부 0인 경우, 매칭 대신 적성검사 페이지로 보냄
+  const isStatsEmpty = (u) =>
+    !u?.strength && !u?.stamina && !u?.grit && !u?.intelligence &&
+    !u?.wage_pref && !u?.personality
+
+  const handleAutoMatching = () => {
+    if (user?.role === '청년' && isStatsEmpty(user)) {
+      alert('먼저 적성검사를 완료해주세요! 적성검사 페이지로 이동합니다.')
+      navigate('/aptitude')
+      return
+    }
+    navigate('/matching')
+  }
+
+  // 채팅방 입장: 매칭된 채팅방이 하나도 없으면 안내 알림, 있으면 첫 번째 채팅방으로 이동
+  const handleEnterChat = () => {
+    if (myMatches.length === 0) {
+      alert('매칭이 아직 안되어 연결할 수 없습니다.')
+      return
+    }
+    navigate(`/chat/${myMatches[0].match_id}`)
   }
 
   return (
@@ -120,10 +159,49 @@ export default function Home() {
             </div>
             <button
               className={`btn btn-primary ${styles.aiMatchingBtn}`}
-              onClick={() => navigate('/matching')}
+              onClick={handleAutoMatching}
             >
               ⚡ AI 자동매칭 시작하기
             </button>
+          </div>
+        </section>
+
+        {/* 채팅방 목록: 내가 아직 나가지 않은 매칭(채팅방) 전부 표시 */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3>채팅방 목록</h3>
+            {myMatches.length > 0 && (
+              <span className={styles.userCountBadge}>{myMatches.length}개</span>
+            )}
+          </div>
+
+          <div className={`glass-card ${styles.chatListCard}`}>
+            {loadingMatches ? (
+              <p className={styles.emptyText}>채팅방을 불러오는 중...</p>
+            ) : myMatches.length === 0 ? (
+              <p className={styles.emptyText}>아직 연결된 매칭(채팅방)이 없습니다.</p>
+            ) : (
+              myMatches.map((m) => (
+                <div
+                  key={m.match_id}
+                  className={styles.chatListItem}
+                  onClick={() => navigate(`/chat/${m.match_id}`)}
+                >
+                  <span className={styles.aiMatchingIcon}>🤝</span>
+                  <div className={styles.chatListItemBody}>
+                    <strong>
+                      {m.partner_name || '상대방'}{m.partner_role ? `(${m.partner_role})` : ''}
+                    </strong>
+                    <p>
+                      {m.task ? `업무: ${m.task}` : '채팅방'}
+                      {m.partner_left && (
+                        <span className={styles.partnerLeftTag}> · 상대방이 채팅을 나갔습니다</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </section>
 
@@ -167,7 +245,7 @@ export default function Home() {
             </button>
             <button
               className={`btn btn-outline ${styles.testBtn}`}
-              onClick={() => navigate('/matching')}
+              onClick={handleAutoMatching}
             >
               🌾 매칭 보러가기
             </button>
@@ -179,7 +257,7 @@ export default function Home() {
             </button>
             <button
               className={`btn btn-outline ${styles.testBtn}`}
-              onClick={() => alert('💬 채팅방 기능은 추가 개발 예정입니다!')}
+              onClick={handleEnterChat}
             >
               [💬 채팅방 테스트 버튼]
             </button>

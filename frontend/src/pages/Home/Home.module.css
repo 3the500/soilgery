@@ -173,6 +173,47 @@
   font-size: 13px;
 }
 
+/* ── 채팅방 목록 ───────────────────────────────── */
+.chatListCard {
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatListItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: opacity var(--transition, 0.2s);
+}
+
+.chatListItem:last-child {
+  border-bottom: none;
+}
+
+.chatListItem:hover {
+  opacity: 0.85;
+}
+
+.chatListItemBody strong {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.chatListItemBody p {
+  font-size: 12px;
+  color: var(--color-text-sub);
+}
+
+.partnerLeftTag {
+  color: var(--color-error, #ff6b6b);
+}
+
 .userTable {
   display: flex;
   flex-direction: column;

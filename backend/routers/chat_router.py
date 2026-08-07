@@ -6,10 +6,23 @@ from sqlalchemy.orm import Session
 #backend. 추가하여 경로지정
 from database import get_db, User
 from auth import get_current_user
-from schemas import SendMessageRequest, MessageResponse
-from chat import send_message, get_conversation
+from schemas import SendMessageRequest, MessageResponse, LeaveChatResponse
+from chat import send_message, get_conversation, get_match_info, leave_chat
 
 router = APIRouter(prefix="/matches", tags=["채팅"])
+
+
+@router.get("/{match_id}/info")
+def read_match_info(
+    match_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """채팅방 상단/말풍선에 상대방이 누구인지(이름·역할) 보여줄 때 호출."""
+    try:
+        return get_match_info(match_id, current_user.id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/{match_id}/messages", response_model=MessageResponse)
@@ -36,5 +49,21 @@ def read_conversation(
     """매칭 당사자(농부 또는 청년)가 채팅방 대화 내역을 볼 때 호출."""
     try:
         return get_conversation(match_id, current_user.id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{match_id}/leave", response_model=LeaveChatResponse)
+def leave_chat_room(
+    match_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    '채팅나가기' 버튼(또는 상대방이 이미 나간 상태에서의 '뒤로가기') 눌렀을 때 호출.
+    본인 쪽에서 이 채팅방을 나간다. 상대방도 이미 나간 상태였다면 채팅방 자체가 삭제된다.
+    """
+    try:
+        return leave_chat(match_id, current_user.id, db)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

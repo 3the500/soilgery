@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { aptitudeAPI } from '../../api/index'
+import { useAuth } from '../../store/AuthContext'
+import styles from './Aptitude.module.css'
 
-// 백엔드(aptitude_test.py)의 질문은 모두 "예" / "아니요" 두 가지 답만 존재하고,
-// GET /aptitude-test/questions 응답에는 id, text만 내려온다 (선택지는 내려오지 않음)
 const OPTIONS = ['예', '아니요']
 
-// 스텟 응답(StatsResponse)의 영문 필드명 -> 화면에 보여줄 한글 라벨
 const STAT_LABELS = {
   strength: '근력',
   stamina: '체력',
@@ -16,14 +16,16 @@ const STAT_LABELS = {
 }
 
 export default function Aptitude() {
+  const navigate = useNavigate()
+  const { refreshUser } = useAuth()
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadError, setLoadError] = useState(null)
 
   useEffect(() => {
-    // 질문 목록 로드 (응답은 [{id, text}, ...] 형태의 배열 그 자체)
     aptitudeAPI.getQuestions()
       .then((res) => setQuestions(res.data))
       .catch((err) => {
@@ -36,6 +38,18 @@ export default function Aptitude() {
     setAnswers((prev) => ({ ...prev, [qId]: option }))
   }
 
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1)
+    }
+  }
+
+  const handleNext = () => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1)
+    }
+  }
+
   const allAnswered = questions.length > 0 && questions.every((q) => answers[q.id])
 
   const handleSubmit = async (e) => {
@@ -46,9 +60,11 @@ export default function Aptitude() {
     }
     setLoading(true)
     try {
-      // 백엔드 AnswerSubmission: { answers: { q1: "예", q2: "아니요", ... } }
       const res = await aptitudeAPI.submitTest({ answers })
-      setResult(res.data) // StatsResponse: { strength, stamina, grit, intelligence, wage_pref, personality }
+      setResult(res.data)
+      // 새로 계산된 스텟을 캐시된 로그인 정보에도 반영 (안 그러면 홈 화면 등에서
+      // "스텟이 전부 0"이라고 잘못 판단해 매칭 시 적성검사를 또 요구하게 됨)
+      await refreshUser?.()
     } catch (err) {
       alert('검사 제출 실패: ' + (err.response?.data?.detail || '오류 발생'))
     } finally {
@@ -58,51 +74,88 @@ export default function Aptitude() {
 
   if (result) {
     return (
-      <div style={{ padding: '20px' }}>
-        <h2>🌱 적성검사 결과</h2>
-        <p>검사가 완료됐어요! 나의 스텟은 다음과 같습니다.</p>
-        <div style={{ display: 'grid', gap: '8px', maxWidth: '360px' }}>
+      <div className={styles.container}>
+        <h2 className={styles.title}>🌱 적성검사 결과</h2>
+        <p style={{ textAlign: 'center', marginBottom: '16px' }}>검사가 완료됐어요! 나의 스텟은 다음과 같습니다.</p>
+        <div className={styles.resultGrid}>
           {Object.entries(STAT_LABELS).map(([field, label]) => (
-            <div key={field} style={{ display: 'flex', justifyContent: 'space-between', border: '1px solid #eee', padding: '8px 12px', borderRadius: '6px' }}>
+            <div key={field} className={styles.resultRow}>
               <span>{label}</span>
               <strong>{result[field]}</strong>
             </div>
           ))}
         </div>
-        <button onClick={() => { setResult(null); setAnswers({}) }} style={{ marginTop: '16px' }}>
-          다시 검사하기
-        </button>
+        <div className={styles.btnGroup}>
+          <button className={styles.navBtn} onClick={() => { setResult(null); setAnswers({}); setCurrentIndex(0); }}>
+            다시 검사하기
+          </button>
+          <button className={styles.navBtn} onClick={() => navigate('/matching')}>
+            🌾 매칭하러 가기
+          </button>
+        </div>
       </div>
     )
   }
 
+  const currentQuestion = questions[currentIndex]
+  const isFirst = currentIndex === 0
+  const isLast = questions.length > 0 && currentIndex === questions.length - 1
+
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>농촌 소일거리 적성검사</h1>
-      {loadError && <p style={{ color: 'red' }}>{loadError}</p>}
-      <form onSubmit={handleSubmit}>
-        {questions.map((q, idx) => (
-          <div key={q.id} style={{ marginBottom: '20px' }}>
-            <p><strong>{idx + 1}. {q.text}</strong></p>
-            {OPTIONS.map((opt) => (
-              <label key={opt} style={{ display: 'inline-block', marginRight: '20px' }}>
-                <input
-                  type="radio"
-                  name={`q_${q.id}`}
-                  checked={answers[q.id] === opt}
-                  onChange={() => handleSelect(q.id, opt)}
-                />
-                {' '}{opt}
-              </label>
-            ))}
+    <div className={styles.container}>
+      <h1 className={styles.title}>농촌 소일거리 적성검사</h1>
+      {loadError && <p style={{ color: '#ff6b6b', textAlign: 'center' }}>{loadError}</p>}
+
+      {questions.length > 0 && currentQuestion && (
+        <form onSubmit={handleSubmit}>
+          <div className={styles.progressBar}>
+            {currentIndex + 1} / {questions.length}
           </div>
-        ))}
-        {questions.length > 0 && (
-          <button type="submit" disabled={loading || !allAnswered}>
-            {loading ? '분석 중...' : '결과 제출하기'}
-          </button>
-        )}
-      </form>
+
+          <div className={styles.questionCard}>
+            <p className={styles.questionText}>
+              {currentIndex + 1}. {currentQuestion.text}
+            </p>
+
+            <div className={styles.optionsGroup}>
+              {OPTIONS.map((opt) => (
+                <label key={opt} className={styles.optionLabel}>
+                  <input
+                    type="radio"
+                    className={styles.radioInput}
+                    name={`q_${currentQuestion.id}`}
+                    checked={answers[currentQuestion.id] === opt}
+                    onChange={() => handleSelect(currentQuestion.id, opt)}
+                  />
+                  {opt}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.btnGroup}>
+            <div>
+              {!isFirst && (
+                <button type="button" className={styles.navBtn} onClick={handlePrev}>
+                  &lt; 이전
+                </button>
+              )}
+            </div>
+
+            <div>
+              {!isLast ? (
+                <button type="button" className={styles.navBtn} onClick={handleNext}>
+                  다음 &gt;
+                </button>
+              ) : (
+                <button type="submit" className={styles.navBtn} disabled={loading || !allAnswered}>
+                  {loading ? '분석 중...' : '결과 제출하기'}
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+      )}
     </div>
   )
 }
