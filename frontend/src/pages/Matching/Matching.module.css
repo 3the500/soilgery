@@ -4,13 +4,15 @@
   padding: 24px 20px 60px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
+  background: var(--color-bg);
 }
 
 .title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: var(--color-text);
+  letter-spacing: -0.4px;
 }
 
 .topBar {
@@ -20,29 +22,208 @@
 
 .backBtn {
   font-size: 13px;
-  color: var(--color-primary-light);
-  font-weight: 500;
+  color: var(--color-brown);
+  font-weight: 800;
+  padding: 6px 14px;
+  background: var(--color-primary-pale);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.actionRow {
+.backBtn:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
+}
+
+.matchContentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 💡 추천 농업 분야 안내 카드 */
+.recommendTaskCard {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+  border: 1.5px solid rgba(255, 193, 7, 0.6);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+}
+
+.taskCardBadge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--color-brown);
+  background: #ffffff;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.taskCardTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #3D2612;
+}
+
+.taskCardDesc {
+  font-size: 13.5px;
+  color: #5D4037;
+  line-height: 1.5;
+}
+
+/* 💡 AI 매칭 진행 중 상태 카드 */
+.seekingNoticeCard {
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary-light);
+  border-radius: var(--radius-xl);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 16px 48px rgba(139, 81, 41, 0.12);
+}
+
+.seekingHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.seekingIcon {
+  font-size: 34px;
+  width: 58px;
+  height: 58px;
+  background: var(--color-primary-pale);
+  border: 2px solid var(--color-primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.seekingTitleGroup h3 {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.seekingBadge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+
+.seekingInfoBox {
+  background: var(--color-surface-2);
+  border: 1.5px solid #E2D9C3;
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.secondaryBtn {
-  padding: 12px;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  border-radius: var(--radius-full);
+.seekingMainText {
   font-size: 14px;
-  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.seekingSubText {
+  font-size: 13px;
+  color: var(--color-text-sub);
+  line-height: 1.55;
+  border-top: 1px dashed #EDE8D5;
+  padding-top: 8px;
+}
+
+.actionRowVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.primaryHomeBtn {
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.cancelMatchBtn {
+  width: 100%;
+  padding: 13px;
+  background: rgba(229, 57, 53, 0.06);
+  border: 1.5px solid rgba(229, 57, 53, 0.3);
+  color: var(--color-error);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
   transition: all var(--transition);
+}
+
+.cancelMatchBtn:hover {
+  background: rgba(229, 57, 53, 0.12);
+  border-color: var(--color-error);
+}
+
+.readyNoticeCard {
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+}
+
+.readyText {
+  font-size: 14.5px;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.startMatchBtn {
+  width: 100%;
+  padding: 16px;
+  font-size: 15.5px;
+  font-weight: 800;
+}
+
+.secondaryBtn {
+  padding: 14px;
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
+  color: var(--color-brown);
+  border-radius: var(--radius-full);
+  font-size: 14.5px;
+  font-weight: 700;
+  transition: all var(--transition);
+  width: 100%;
 }
 
 .secondaryBtn:hover {
   border-color: var(--color-primary-light);
+  background: var(--color-primary-pale);
 }
 
 .selectGroup {
@@ -50,26 +231,28 @@
   align-items: center;
   gap: 12px;
   background: var(--color-surface);
-  padding: 14px 18px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  padding: 16px 20px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .selectGroup label {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-sub);
   white-space: nowrap;
 }
 
 .selectBox {
   flex: 1;
-  padding: 10px 14px;
+  padding: 12px 16px;
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1.5px solid #E2D9C3;
+  border-radius: var(--radius-md);
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 14.5px;
+  font-weight: 600;
   outline: none;
   cursor: pointer;
   transition: border-color var(--transition);
@@ -77,24 +260,24 @@
 
 .selectBox:focus {
   border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3.5px rgba(255, 193, 7, 0.2);
 }
 
 .candidateList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .candidateCard {
-  background: rgba(23, 34, 24, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 18px;
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  border-radius: var(--radius-xl);
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  box-shadow: var(--shadow-card);
+  gap: 14px;
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
   transition: transform var(--transition), border-color var(--transition);
 }
 
@@ -104,40 +287,42 @@
 }
 
 .candidateName {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--color-text);
 }
 
 .fitScore {
-  font-size: 13px;
-  color: var(--color-primary-light);
-  background: rgba(82, 183, 136, 0.12);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-brown);
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
   width: fit-content;
 }
 
 .matchBtn {
   margin-top: 4px;
-  padding: 12px;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  color: #fff;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
   border-radius: var(--radius-full);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   transition: all var(--transition);
-  box-shadow: 0 4px 12px rgba(82, 183, 136, 0.3);
+  box-shadow: 0 4px 18px rgba(245, 176, 0, 0.35);
 }
 
 .matchBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(82, 183, 136, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(245, 176, 0, 0.45);
 }
 
 .emptyText {
   text-align: center;
-  padding: 30px 0;
+  padding: 36px 0;
   color: var(--color-text-sub);
   font-size: 14px;
 }

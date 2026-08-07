@@ -13,6 +13,7 @@ try:
         posting_router,
         chat_router,
         support_router,
+        review_router,
     )
 except ImportError:
     from database import create_tables, engine
@@ -24,6 +25,7 @@ except ImportError:
         posting_router,
         chat_router,
         support_router,
+        review_router,
     )
 
 
@@ -62,8 +64,8 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,            # 허용할 Origin 목록
-    allow_origin_regex=r"https://.*", # https로 시작하는 모든 배포 URL 허용 (배포 테스트용)
+    allow_origins=origins,
+    allow_origin_regex=r"https://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -77,6 +79,7 @@ app.include_router(matching_router.router)
 app.include_router(posting_router.router)
 app.include_router(chat_router.router)
 app.include_router(support_router.router)
+app.include_router(review_router.router)
 
 
 @app.get("/", tags=["기본"])

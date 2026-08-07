@@ -1,10 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supportAPI } from '../../api/index'
 import styles from './Support.module.css'
 
 export default function Support() {
+  const navigate = useNavigate()
   const [messages, setMessages] = useState([
-    { sender: 'ai', text: '안녕하세요! 충북 농촌 소일거리 AI 상담사입니다. 😊\n아래 자주 묻는 질문을 선택하거나, 궁금한 내용을 자유롭게 입력해보세요.' }
+    {
+      sender: 'ai',
+      text: '안녕하세요! 충북 농촌 소일거리 AI 상담사입니다. 🌱\n\n농가 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요.',
+      time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+    }
   ])
   const [faqs, setFaqs] = useState([])
   const [input, setInput] = useState('')
@@ -21,16 +27,22 @@ export default function Support() {
       .catch((err) => console.error('FAQ 목록 조회 실패:', err))
   }, [])
 
+  const getCurrentTime = () => {
+    return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+  }
+
   const handleSelectFaq = async (faq) => {
-    setMessages((prev) => [...prev, { sender: 'user', text: faq.question }])
+    if (loading) return
+    const userTime = getCurrentTime()
+    setMessages((prev) => [...prev, { sender: 'user', text: faq.question, time: userTime }])
     setLoading(true)
     try {
       const res = await supportAPI.getFaqAnswer(faq.id)
-      setMessages((prev) => [...prev, { sender: 'ai', text: res.data.message }])
+      setMessages((prev) => [...prev, { sender: 'ai', text: res.data.message, time: getCurrentTime() }])
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { sender: 'ai', text: '죄송합니다. 답변을 가져오지 못했습니다: ' + (err.response?.data?.detail || '연결 실패') }
+        { sender: 'ai', text: '죄송합니다. 답변을 가져오지 못했습니다: ' + (err.response?.data?.detail || '연결 실패'), time: getCurrentTime() }
       ])
     } finally {
       setLoading(false)
@@ -41,18 +53,19 @@ export default function Support() {
     e.preventDefault()
     if (!input.trim() || loading) return
 
-    const userMsg = input
-    setMessages((prev) => [...prev, { sender: 'user', text: userMsg }])
+    const userMsg = input.trim()
+    const userTime = getCurrentTime()
+    setMessages((prev) => [...prev, { sender: 'user', text: userMsg, time: userTime }])
     setInput('')
     setLoading(true)
 
     try {
       const res = await supportAPI.askAi(userMsg)
-      setMessages((prev) => [...prev, { sender: 'ai', text: res.data.message }])
+      setMessages((prev) => [...prev, { sender: 'ai', text: res.data.message, time: getCurrentTime() }])
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { sender: 'ai', text: '죄송합니다. 오류가 발생했습니다: ' + (err.response?.data?.detail || '연결 실패') }
+        { sender: 'ai', text: '죄송합니다. 오류가 발생했습니다: ' + (err.response?.data?.detail || '연결 실패'), time: getCurrentTime() }
       ])
     } finally {
       setLoading(false)
@@ -60,39 +73,85 @@ export default function Support() {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>🤖 AI 1:1 상담사</h1>
-      </div>
+    <div className={styles.wrapper}>
+      {/* 🔝 토스 스타일 상단 헤더 */}
+      <header className={styles.header}>
+        <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>
+          ← 메인화면
+        </button>
+        <div className={styles.headerCenter}>
+          <h1 className={styles.headerTitle}>🤖 AI 1:1 고객센터</h1>
+        </div>
+      </header>
 
-      <div className={styles.chatBox}>
+      {/* 💬 토스 챗봇 메인 메세지 스크롤 영역 */}
+      <main className={styles.chatContainer}>
+        {/* 날짜 분리 칩 */}
+        <div className={styles.dateHeaderChip}>
+          <span>오늘</span>
+        </div>
+
         {messages.map((m, idx) => {
           const isUser = m.sender === 'user'
           return (
-            <div key={idx} className={`${styles.msgRow} ${isUser ? styles.userMsgRow : styles.aiMsgRow}`}>
-              <div className={`${styles.msgBubble} ${isUser ? styles.userMsgBubble : styles.aiMsgBubble}`}>
-                {m.text}
+            <div
+              key={idx}
+              className={`${styles.msgGroup} ${isUser ? styles.userMsgGroup : styles.aiMsgGroup}`}
+            >
+              {!isUser && (
+                <div className={styles.aiAvatar}>
+                  <span>🤖</span>
+                </div>
+              )}
+
+              <div className={styles.msgContentArea}>
+                {!isUser && <span className={styles.aiNameLabel}>소일거리 AI 챗봇</span>}
+                <div className={styles.bubbleRow}>
+                  {isUser && <span className={styles.msgTime}>{m.time}</span>}
+                  <div className={`${styles.msgBubble} ${isUser ? styles.userBubble : styles.aiBubble}`}>
+                    <p>{m.text}</p>
+                  </div>
+                  {!isUser && <span className={styles.msgTime}>{m.time}</span>}
+                </div>
               </div>
             </div>
           )
         })}
+
         {loading && (
-          <div className={styles.loadingText}>
-            🤖 AI가 답변을 작성 중입니다...
+          <div className={`${styles.msgGroup} ${styles.aiMsgGroup}`}>
+            <div className={styles.aiAvatar}>
+              <span>🤖</span>
+            </div>
+            <div className={styles.msgContentArea}>
+              <span className={styles.aiNameLabel}>소일거리 AI 챗봇</span>
+              <div className={styles.typingIndicator}>
+                <span>AI가 답변을 작성 중입니다...</span>
+                <div className={styles.dots}>
+                  <div className={styles.dot} />
+                  <div className={styles.dot} />
+                  <div className={styles.dot} />
+                </div>
+              </div>
+            </div>
           </div>
         )}
-        <div ref={chatBottomRef} />
-      </div>
 
+        <div ref={chatBottomRef} />
+      </main>
+
+      {/* 💡 자주 묻는 질문 토스 퀵 칩 스크롤 바 */}
       {faqs.length > 0 && (
-        <div className={styles.faqSection}>
-          <span className={styles.faqLabel}>💡 자주 묻는 질문</span>
-          <div className={styles.faqChips}>
+        <div className={styles.faqQuickBar}>
+          <div className={styles.faqQuickBarHeader}>
+            <span>💡 자주 묻는 질문</span>
+          </div>
+          <div className={styles.faqChipScrollRow}>
             {faqs.map((faq) => (
               <button
                 key={faq.id}
                 type="button"
-                className={styles.faqChip}
+                className={styles.faqQuickChip}
                 onClick={() => handleSelectFaq(faq)}
                 disabled={loading}
               >
@@ -103,18 +162,25 @@ export default function Support() {
         </div>
       )}
 
-      <form onSubmit={handleSend} className={styles.inputForm}>
-        <input
-          type="text"
-          className={styles.inputField}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="질문이나 궁금한 점을 입력하세요 (예: 급여 조건 등)"
-        />
-        <button type="submit" className={styles.submitBtn} disabled={loading || !input.trim()}>
-          전송
-        </button>
-      </form>
+      {/* 💊 토스 캡슐형 하단 입력 바 */}
+      <footer className={styles.footer}>
+        <form onSubmit={handleSend} className={styles.capsuleInputForm}>
+          <input
+            type="text"
+            className={styles.capsuleInputField}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="궁금한 내용을 입력하세요 (예: 매칭 방법)"
+          />
+          <button
+            type="submit"
+            className={styles.capsuleSubmitBtn}
+            disabled={loading || !input.trim()}
+          >
+            전송
+          </button>
+        </form>
+      </footer>
     </div>
   )
 }

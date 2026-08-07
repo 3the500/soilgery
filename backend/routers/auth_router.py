@@ -3,10 +3,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database import get_db, User
-from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse
+from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse, UserUpdateRequest
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["인증"])
+
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
@@ -58,7 +59,24 @@ def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+@router.put("/me", response_model=UserResponse, summary="내 정보 수정")
+def update_me(
+    body: UserUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """현재 로그인된 사용자의 프로필 정보(이름, 거주지역, 구직여부, 스탯 등)를 수정합니다."""
+    update_data = body.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(current_user, field, value)
+
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
 @router.get("/users", response_model=List[UserResponse], summary="전체 회원 목록 조회")
 def get_all_users(db: Session = Depends(get_db)):
     """가입된 전체 회원 목록을 조회합니다."""
     return db.query(User).all()
+

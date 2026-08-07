@@ -9,9 +9,17 @@ export function AuthProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null
   })
 
-  // 회원가입
+  // 💡 회원가입 완료 즉시 자동 로그인 수행
   const register = async (formData) => {
+    // 1. 회원가입 요청
     const response = await authAPI.register(formData)
+    
+    // 2. 가입 완료 즉시 로그인 API 호출 및 세션 토큰 저장
+    await login({
+      email: formData.email,
+      password: formData.password
+    })
+
     return response.data
   }
 
@@ -38,10 +46,6 @@ export function AuthProvider({ children }) {
   }
 
   // 내 정보 새로고침
-  // 로그인 시점에만 user를 저장해두면, 적성검사 재응시로 스텟이 바뀌거나
-  // 매칭 신청/취소로 is_seeking이 바뀌어도 캐시된 값이 그대로 남아있게 된다.
-  // 스텟/매칭 상태가 바뀔 수 있는 액션(적성검사 제출, 매칭 신청/취소 등) 이후에는
-  // 반드시 이 함수로 서버의 최신 값을 다시 받아와 갱신해야 한다.
   const refreshUser = async () => {
     const token = localStorage.getItem('token')
     if (!token) return null

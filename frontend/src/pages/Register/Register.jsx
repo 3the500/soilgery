@@ -4,8 +4,8 @@ import { useAuth } from '../../store/AuthContext'
 import styles from './Register.module.css'
 
 const ROLES = [
-  { value: '청년', emoji: '🧑‍🌾', label: '청년', desc: '농촌 체험·부업을 원해요' },
-  { value: '농부', emoji: '👨‍🌾', label: '농부', desc: '일손이 필요해요' },
+  { value: '청년', emoji: '🧑‍🌾', label: '청년', desc: '농촌 체험·부업을 원해요', key: 'youth' },
+  { value: '농부', emoji: '👨‍🌾', label: '농부', desc: '일손이 필요해요', key: 'farmer' },
 ]
 
 export default function Register() {
@@ -56,18 +56,27 @@ export default function Register() {
           <div className={styles.roleSection}>
             <p className={styles.roleLabel}>나는 어떤 사람인가요?</p>
             <div className={styles.roleGrid}>
-              {ROLES.map((r) => (
-                <button
-                  key={r.value}
-                  type="button"
-                  className={`${styles.roleCard} ${form.role === r.value ? styles.roleCardActive : ''}`}
-                  onClick={() => selectRole(r.value)}
-                >
-                  <span className={styles.roleEmoji}>{r.emoji}</span>
-                  <strong>{r.label}</strong>
-                  <span className={styles.roleDesc}>{r.desc}</span>
-                </button>
-              ))}
+              {ROLES.map((r) => {
+                const isActive = form.role === r.value
+                const activeClass = isActive
+                  ? r.key === 'farmer'
+                    ? styles.roleCardActiveFarmer
+                    : styles.roleCardActiveYouth
+                  : ''
+
+                return (
+                  <button
+                    key={r.value}
+                    type="button"
+                    className={`${styles.roleCard} ${activeClass}`}
+                    onClick={() => selectRole(r.value)}
+                  >
+                    <span className={styles.roleEmoji}>{r.emoji}</span>
+                    <strong>{r.label}</strong>
+                    <span className={styles.roleDesc}>{r.desc}</span>
+                  </button>
+                )
+              })}
             </div>
           </div>
 
@@ -116,7 +125,7 @@ export default function Register() {
             className={`btn btn-primary ${loading ? styles.loading : ''}`}
             disabled={loading}
           >
-            {loading ? '가입 중...' : '가입하기'}
+            {loading ? '가입 및 로그인 처리 중...' : '가입하고 바로 시작하기'}
           </button>
         </form>
 

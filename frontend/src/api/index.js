@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// 백엔드 기본 URL 설정 (배포 주소가 있으면 최우선, 로컬 테스트 시 8000 포트 지정)
+// 백엔드 기본 URL 설정 (배포 주소가 있으면 최우선, 로컬 테스트 시 8080 포트 지정)
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 const api = axios.create({
@@ -37,6 +37,7 @@ export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
   me: () => api.get('/auth/me'),
+  updateMe: (data) => api.put('/auth/me', data),
   getUsers: () => api.get('/auth/users'),
 }
 
@@ -49,25 +50,17 @@ export const aptitudeAPI = {
 
 // ── 3. 매칭(Matching) API ─────────────────────────
 export const matchingAPI = {
-  // 청년: 추천 업무 조회
   getRecommendedTasks: (topN = 3) => api.get(`/users/me/recommended-task?top_n=${topN}`),
-  // 청년: 매칭 신청 / 취소
   requestMatch: () => api.post('/users/me/request-match'),
   cancelMatchRequest: () => api.post('/users/me/cancel-match-request'),
-  // 내 매칭 연결 현황 조회 (매칭 여부, 상대방 정보, match_id)
   getMyMatch: () => api.get('/users/me/match'),
-  // 내가 아직 나가지 않은 채팅방(매칭) 전체 목록 조회
   getMyMatches: () => api.get('/users/me/matches'),
-  // 농부: 특정 공고의 후보자 목록 조회
   getCandidates: (postingId, useAi = true) => 
     api.get(`/job-postings/${postingId}/candidates?use_ai=${useAi}`),
-  // 농부: 매칭 생성
   createMatch: (postingId, employeeId) => 
     api.post(`/job-postings/${postingId}/match`, { employee_id: employeeId }),
-  // 업무별 후보자 조회(26.08.07 추영현)
   getCandidatesByTask: (taskName) => 
     api.get(`/candidates/by-task/${encodeURIComponent(taskName)}`),
-  // 업무별 매칭 생성 (신규)
   createMatchByTask: (taskName, employeeId) => 
     api.post(`/match/by-task?task_name=${encodeURIComponent(taskName)}`, { employee_id: employeeId }),
 }
@@ -85,9 +78,7 @@ export const chatAPI = {
   sendMessage: (matchId, content) => 
     api.post(`/matches/${matchId}/messages`, { content }),
   getMessages: (matchId) => api.get(`/matches/${matchId}/messages`),
-  // 채팅방 상대방 정보(이름/역할) 조회
   getMatchInfo: (matchId) => api.get(`/matches/${matchId}/info`),
-  // 채팅나가기
   leaveChat: (matchId) => api.post(`/matches/${matchId}/leave`),
 }
 
@@ -96,4 +87,10 @@ export const supportAPI = {
   getFaqs: () => api.get('/support/faqs'),
   getFaqAnswer: (faqId) => api.get(`/support/faqs/${faqId}`),
   askAi: (message) => api.post('/support/ask', { message }),
+}
+
+// ⭐️ 7. 평점 및 리뷰(Review) API ──────────────────
+export const reviewAPI = {
+  createReview: (data) => api.post('/reviews', data),
+  getMyReviews: () => api.get('/reviews/my'),
 }

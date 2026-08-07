@@ -47,6 +47,20 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+# ── 유저 정보 수정 ─────────────────────────────────
+class UserUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    location: Optional[str] = None
+    is_seeking: Optional[bool] = None
+    strength: Optional[int] = None
+    stamina: Optional[int] = None
+    grit: Optional[int] = None
+    intelligence: Optional[int] = None
+    wage_pref: Optional[int] = None
+    personality: Optional[int] = None
+
+
+
 # ── 적성검사 ──────────────────────────────────────
 class QuestionResponse(BaseModel):
     id: str
@@ -169,3 +183,26 @@ class CandidateResponse(BaseModel):
     location: Optional[str] = None  # 거주 지역 추가
     stats: StatsResponse
     fit_score: float
+
+
+# ⭐️ 리뷰 & 평점 ─────────────────────────────────
+class ReviewCreateRequest(BaseModel):
+    reviewee_id: int               # 리뷰 대상 유저 ID
+    match_id: Optional[int] = None # 선택적 매칭 ID
+    rating: float                  # 1.0 ~ 5.0
+    comment: Optional[str] = None  # 한줄 후기
+
+
+class ReviewResponse(BaseModel):
+    id: int
+    reviewer_id: int
+    reviewer_name: Optional[str] = None
+    reviewee_id: int
+    reviewee_name: Optional[str] = None
+    match_id: Optional[int] = None
+    rating: float
+    comment: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

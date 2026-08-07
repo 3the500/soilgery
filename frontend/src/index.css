@@ -1,32 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ── 색상 변수 ─────────────────────────────────── */
+/* ── Honeycomb 토스풍 미니멀 디자인 시스템 ────────────────────────── */
 :root {
-  --color-primary:      #2d6a4f;
-  --color-primary-light:#52b788;
-  --color-primary-pale: #d8f3dc;
-  --color-accent:       #74c69d;
-  --color-bg:           #0f1a14;
-  --color-surface:      #172218;
-  --color-surface-2:    #1e2e21;
-  --color-border:       #2a3d2e;
-  --color-text:         #e8f5e9;
-  --color-text-sub:     #8aab8e;
-  --color-error:        #ef5350;
-  --color-warning:      #ffd166;
+  --color-primary:       #E6A800;     /* 짙은 Amber Gold — 주 포인트 */
+  --color-primary-light: #FFC107;     /* Honeycomb 노랑 — 버튼/강조 */
+  --color-primary-pale:  #FFF8DC;     /* 크림 연노랑 — 배지/호버 배경 */
+  --color-accent:        #F9E076;     /* 라이트 골드 — 보조 accent */
 
-  --radius-sm:  8px;
-  --radius-md:  14px;
-  --radius-lg:  22px;
+  --color-bg:            #FAFAF5;     /* 따뜻한 크림 미색 배경 */
+  --color-surface:       #FFFFFF;     /* 카드 순백 */
+  --color-surface-2:     #F5F2E8;     /* 보조 서피스 — 인풋 배경 */
+  --color-border:        #E2D9C3;     /* 선명하고 따뜻한 베이지 보더 */
+
+  --color-text:          #1A1209;     /* 가독성 높은 다크 텍스트 */
+  --color-text-sub:      #7A6E65;     /* 보조 텍스트 — 웜 그레이브라운 */
+  --color-error:         #E53935;
+  --color-warning:       #F9E076;
+
+  --color-brown:         #895129;     /* 브랜드 브라운 — 로고/헤더 포인트 */
+  --color-brown-light:   #B5783A;
+
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   22px;
+  --radius-xl:   30px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow: 0 0 20px rgba(82,183,136,0.18);
+  --shadow-card:  0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-float: 0 16px 48px rgba(139, 81, 41, 0.12), 0 2px 8px rgba(0, 0, 0, 0.03);
+  --shadow-glow:  0 0 20px rgba(255, 193, 7, 0.25);
 
-  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── 리셋 ───────────────────────────────────────── */
+/* ── 리셋 ────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { font-size: 16px; scroll-behavior: smooth; }
@@ -41,10 +48,10 @@ body {
 
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
-input, textarea { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
 img { display: block; max-width: 100%; }
 
-/* ── 유틸 ───────────────────────────────────────── */
+/* ── 레이아웃 유틸 ────────────────────────────────── */
 .container {
   width: 100%;
   max-width: 480px;
@@ -64,52 +71,58 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
 }
 
-/* ── 공통 버튼 ──────────────────────────────────── */
+/* ── 공통 버튼 (미세 그라데이션 적용) ───────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 14px 24px;
+  padding: 15px 24px;
   border-radius: var(--radius-full);
   font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   transition: all var(--transition);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(82,183,136,0.35);
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  box-shadow: 0 4px 18px rgba(245, 176, 0, 0.35);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(82,183,136,0.45); }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 176, 0, 0.45); }
+.btn-primary:active { transform: scale(0.98); }
 
 .btn-outline {
-  background: transparent;
-  color: var(--color-primary-light);
-  border: 1.5px solid var(--color-primary-light);
+  background: var(--color-primary-pale);
+  color: var(--color-brown);
+  border: 1.5px solid rgba(255, 193, 7, 0.5);
 }
-.btn-outline:hover { background: rgba(82,183,136,0.1); }
+.btn-outline:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
+  border-color: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+.btn-outline:active { transform: scale(0.98); }
 
-/* ── 공통 인풋 ──────────────────────────────────── */
+/* ── 공통 인풋 (패딩, 포커스링, 대비 강화) ───────────── */
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 .input-group label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 600;
   color: var(--color-text-sub);
 }
 .input-field {
   width: 100%;
-  padding: 13px 16px;
+  padding: 15px 18px;
   background: var(--color-surface-2);
-  border: 1.5px solid var(--color-border);
+  border: 1.5px solid #E2D9C3;
   border-radius: var(--radius-md);
   color: var(--color-text);
   font-size: 15px;
@@ -118,30 +131,31 @@ img { display: block; max-width: 100%; }
 }
 .input-field:focus {
   border-color: var(--color-primary-light);
-  box-shadow: 0 0 0 3px rgba(82,183,136,0.15);
+  box-shadow: 0 0 0 3.5px rgba(255, 193, 7, 0.2);
 }
-.input-field::placeholder { color: #4a6650; }
+.input-field::placeholder { color: #9E9080; }
 
-/* ── 글래스 카드 ─────────────────────────────────── */
+/* ── 카드 ─────────────────────────────────────────── */
 .glass-card {
-  background: rgba(23, 34, 24, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
 }
 
-/* ── 에러 메시지 ─────────────────────────────────── */
+/* ── 에러 메시지 ───────────────────────────────────── */
 .error-msg {
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 600;
   color: var(--color-error);
-  padding: 10px 14px;
-  background: rgba(239, 83, 80, 0.1);
+  padding: 12px 16px;
+  background: rgba(229, 57, 53, 0.08);
   border-radius: var(--radius-sm);
-  border-left: 3px solid var(--color-error);
+  border-left: 3.5px solid var(--color-error);
 }
 
-/* ── 스크롤바 ───────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
+/* ── 스크롤바 ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #DCD4C0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-light); }

@@ -1,110 +1,174 @@
 .chatContainer {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
   max-width: 480px;
   margin: 0 auto;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--color-bg);
   position: relative;
-  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
+/* 🔝 헤더 */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
-  background: rgba(15, 26, 20, 0.85);
+  padding: 12px 16px;
+  background: rgba(250, 250, 245, 0.95);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.headerLeftGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  border-bottom: 1px solid rgba(226, 217, 195, 0.85);
+  z-index: 50;
+  flex-shrink: 0;
 }
 
 .backButton {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-primary-light);
-  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-brown);
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  padding: 6px 14px;
   border-radius: var(--radius-full);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
 .backButton:hover {
-  background: rgba(82, 183, 136, 0.15);
-  border-color: var(--color-primary-light);
+  background: var(--color-primary-light);
+  color: #1A1209;
+}
+
+.partnerProfileHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.partnerAvatarEmoji {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  background: var(--color-primary-pale);
+  border: 1.5px solid var(--color-primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+}
+
+.partnerNameCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.partnerNameText {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.3px;
+}
+
+.partnerRoleBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-brown);
 }
 
 .leaveButton {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-error, #ff6b6b);
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  transition: all var(--transition);
-}
-
-.leaveButton:hover:not(:disabled) {
-  background: rgba(255, 107, 107, 0.15);
-  border-color: var(--color-error, #ff6b6b);
-}
-
-.leaveButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.partnerLeftNotice {
-  text-align: center;
   font-size: 12px;
-  color: var(--color-error, #ff6b6b);
-  background: rgba(255, 107, 107, 0.1);
-  border-bottom: 1px solid var(--color-border);
-  padding: 8px 12px;
-}
-
-.headerTitle {
-  font-size: 16px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-error);
+  background: rgba(229, 57, 53, 0.06);
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
 }
 
-.messageListArea {
-  flex: 1;
-  padding: 20px 16px;
-  overflow-y: auto;
+.leaveButton:hover {
+  background: rgba(229, 57, 53, 0.12);
+  border-color: var(--color-error);
+}
+
+/* 📌 상단 AI 매칭 핀 카드 */
+.contextPinCard {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+  border-bottom: 1px solid rgba(255, 193, 7, 0.5);
+  font-size: 12.5px;
+  flex-shrink: 0;
+}
+
+.contextPinBadge {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--color-brown);
+  background: #ffffff;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.contextPinText {
+  color: #5D4037;
 }
 
 .emptyNotice {
   text-align: center;
-  margin: auto auto;
   color: var(--color-text-sub);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  padding: 20px;
-  border-radius: var(--radius-md);
+  margin: auto 0;
+  padding: 30px;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
+/* 💬 메시지 리스트 스크롤 영역 */
+.messageListArea {
+  flex: 1;
+  padding: 16px 16px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 📅 날짜 구분선 */
+.dateSeparatorRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0 6px;
+}
+
+.dateSeparatorChip {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-brown);
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+}
+
+/* 💬 말풍선 행 및 애니메이션 */
 .messageRow {
   display: flex;
   align-items: flex-end;
   gap: 8px;
+  animation: fadeInUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .myRow {
@@ -116,16 +180,17 @@
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  font-size: 20px;
+  width: 34px;
+  height: 34px;
+  background: var(--color-primary-pale);
+  border: 1px solid var(--color-primary-light);
   border-radius: 50%;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
 .messageWrapper {
@@ -134,91 +199,292 @@
   max-width: 72%;
 }
 
+.myRow .messageWrapper {
+  align-items: flex-end;
+}
+
+.otherRow .messageWrapper {
+  align-items: flex-start;
+}
+
 .senderLabel {
   font-size: 11px;
   color: var(--color-text-sub);
-  margin-bottom: 4px;
-  margin-left: 2px;
+  margin-bottom: 3px;
+  font-weight: 600;
 }
 
 .bubble {
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 14px;
+  padding: 11px 16px;
+  font-size: 14.5px;
   line-height: 1.5;
   word-break: break-word;
-  white-space: pre-wrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .myBubble {
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  color: #ffffff;
-  border-bottom-right-radius: 2px;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  font-weight: 600;
+  border-radius: 18px 18px 2px 18px;
 }
 
 .otherBubble {
-  background: var(--color-surface-2);
+  background: var(--color-surface);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-bottom-left-radius: 2px;
+  border: 1.5px solid #E2D9C3;
+  border-radius: 18px 18px 18px 2px;
 }
 
 .timestamp {
-  font-size: 10px;
-  color: var(--color-text-sub);
+  font-size: 10.5px;
+  color: #9E9080;
   margin-top: 4px;
   padding: 0 2px;
 }
 
+/* ⚡ 빠른 인사말 퀵 칩 */
+.quickReplyContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.quickReplyContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.quickReplyChip {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-brown);
+  background: #ffffff;
+  border: 1px solid rgba(255, 193, 7, 0.6);
+  border-radius: var(--radius-full);
+  padding: 6px 13px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(139, 81, 41, 0.06);
+  transition: all 0.2s;
+}
+
+.quickReplyChip:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
+  transform: translateY(-1px);
+}
+
+/* ⌨️ 둥근 캡슐 DM 입력 하단 바 */
 .inputArea {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: rgba(15, 26, 20, 0.95);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid var(--color-border);
-  gap: 10px;
+  gap: 8px;
+  padding: 10px 16px 20px;
+  background: var(--color-bg);
+  flex-shrink: 0;
 }
 
-.textInput {
+.capsuleInput {
   flex: 1;
-  padding: 12px 16px;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
+  padding: 12px 18px;
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
+  border-radius: 24px;
+  font-size: 14.5px;
   color: var(--color-text);
-  font-size: 14px;
   outline: none;
-  resize: none;
-  transition: border-color var(--transition);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.textInput:focus {
+.capsuleInput:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
+.sendButtonCapsule {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.4);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sendButtonCapsule:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.sendButtonCapsule:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* 🥕 당근마켓 스타일 화면 중앙 커스텀 퇴장 모달 팝업 */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 340px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 26px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modalIconArea {
+  width: 54px;
+  height: 54px;
+  background: #FFF9E6;
+  border: 2px solid var(--color-primary-light);
+  border-radius: 50%;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+
+.modalBodyText {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.modalHighlight {
+  font-size: 14px;
+  color: #3D2612;
+  line-height: 1.4;
+}
+
+/* ⭐️ 5성 별점 인터랙터 */
+.starRatingSelector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--color-primary-pale);
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+}
+
+.starBtn {
+  font-size: 26px;
+  color: #E2D9C3;
+  transition: all 0.15s;
+}
+
+.starBtn:hover {
+  transform: scale(1.2);
+}
+
+.starActive {
+  color: #F5B000;
+  text-shadow: 0 2px 8px rgba(245, 176, 0, 0.4);
+}
+
+.ratingNumText {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-brown);
+  margin-left: 6px;
+}
+
+.modalReviewInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--color-surface-2);
+  border: 1.5px solid #E2D9C3;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-text);
+  outline: none;
+}
+
+.modalReviewInput:focus {
   border-color: var(--color-primary-light);
 }
 
-.textInput::placeholder {
-  color: #4a6650;
+.modalBtnGroup {
+  display: flex;
+  gap: 8px;
+  width: 100%;
 }
 
-.sendButton {
-  padding: 10px 18px;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  color: #fff;
-  border-radius: var(--radius-full);
+.modalCancelBtn {
+  flex: 1;
+  padding: 13px;
   font-size: 14px;
-  font-weight: 600;
-  transition: all var(--transition);
-  box-shadow: 0 2px 10px rgba(82, 183, 136, 0.3);
+  font-weight: 700;
+  background: #F0EDE5;
+  color: #5D4037;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
 }
 
-.sendButton:hover:not(:disabled) {
+.modalCancelBtn:hover {
+  background: #E2D9C3;
+}
+
+.modalConfirmBtn {
+  flex: 1.4;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 16px rgba(245, 176, 0, 0.35);
+  transition: all 0.2s;
+}
+
+.modalConfirmBtn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(82, 183, 136, 0.45);
+  box-shadow: 0 6px 20px rgba(245, 176, 0, 0.45);
 }
 
-.sendButton:disabled {
-  opacity: 0.4;
+.modalConfirmBtn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }

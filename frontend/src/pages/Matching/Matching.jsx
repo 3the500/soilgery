@@ -21,7 +21,6 @@ export default function Matching() {
     if (!user) return
 
     if (user.role === '청년') {
-      // 나에게 맞는 업무는 1순위 1개만 보여준다
       Promise.all([
         matchingAPI.getRecommendedTasks(1),
         aptitudeAPI.getMyStats(),
@@ -44,7 +43,6 @@ export default function Matching() {
       await matchingAPI.requestMatch()
       setSeeking(true)
       await refreshUser?.()
-      alert('매칭 대기 등록이 완료됐어요!')
     } catch (err) {
       alert('매칭 신청 실패: ' + (err.response?.data?.detail || '오류 발생'))
     }
@@ -108,54 +106,90 @@ export default function Matching() {
     return <div className={styles.emptyText}>매칭 정보를 불러오는 중입니다...</div>
   }
 
+  // 🧑‍🌾 청년 회원 전용 매칭 화면
   if (user.role === '청년') {
     return (
       <div className={styles.container}>
         <div className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => navigate('/home')}>← 메인화면으로</button>
+          <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
         </div>
-        <h1 className={styles.title}>👨‍🌾 나에게 맞는 농사 업무</h1>
+        <h1 className={styles.title}>🌾 AI 추천 농사 업무 & 매칭</h1>
 
         {statsEmpty ? (
           <div className={styles.candidateList}>
-            <p className={styles.emptyText}>먼저 적성검사를 완료해주세요.</p>
-            <button className={styles.matchBtn} onClick={() => navigate('/aptitude')}>적성검사 하러가기</button>
+            <p className={styles.emptyText}>먼저 적성검사를 완료해 주세요.</p>
+            <button className={styles.matchBtn} onClick={() => navigate('/aptitude')}>🌱 적성검사 하러가기</button>
           </div>
         ) : (
-          <>
-            <div className={styles.candidateList}>
-              {/* 스텟 기반으로 가장 잘 맞는 업무 1개만 표시 */}
-              {tasks.slice(0, 1).map((item) => (
-                <div key={item.task} className={styles.candidateCard}>
-                  <div className={styles.candidateName}>{item.task}</div>
-                  <p>{item.message}</p>
+          <div className={styles.matchContentBox}>
+            {/* 스텟 기반으로 가장 잘 맞는 업무 1개 표시 */}
+            {tasks.slice(0, 1).map((item) => (
+              <div key={item.task} className={styles.recommendTaskCard}>
+                <span className={styles.taskCardBadge}>✨ 추천 농업 분야</span>
+                <h3 className={styles.taskCardTitle}>{item.task}</h3>
+                <p className={styles.taskCardDesc}>{item.message}</p>
+              </div>
+            ))}
+
+            {/* seeking(매칭 신청/대기) 상태에 따른 안내 및 버튼 */}
+            {seeking ? (
+              <div className={styles.seekingNoticeCard}>
+                <div className={styles.seekingHeader}>
+                  <span className={styles.seekingIcon}>🤖</span>
+                  <div className={styles.seekingTitleGroup}>
+                    <h3>⚡ AI 매칭 진행 중...</h3>
+                    <span className={styles.seekingBadge}>농부 회원의 구직 선택을 기다리고 있어요</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div className={styles.actionRow}>
-              {seeking ? (
-                <button className={styles.matchBtn} onClick={handleCancelMatch}>매칭 대기 취소하기</button>
-              ) : (
-                <>
-                  <button className={styles.matchBtn} onClick={handleRequestMatch} disabled={tasks.length === 0}>매칭 신청하기</button>
-                  <button className={styles.secondaryBtn} onClick={() => navigate('/home')}>메인화면으로</button>
-                </>
-              )}
-            </div>
-          </>
+
+                <div className={styles.seekingInfoBox}>
+                  <p className={styles.seekingMainText}>
+                    현재 농부 회원이 일손을 찾을 수 있도록 <strong>구직(매칭 대기)</strong> 상태로 활성화되어 있습니다!
+                  </p>
+                  <p className={styles.seekingSubText}>
+                    💬 <strong>안내:</strong> 매칭을 기다리는 동안 메인 화면에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
+                  </p>
+                </div>
+
+                <div className={styles.actionRowVertical}>
+                  <button className={`btn btn-primary ${styles.primaryHomeBtn}`} onClick={() => navigate('/home?tab=matching')}>
+                    🌱 메인화면으로 이동하기
+                  </button>
+                  <button className={styles.cancelMatchBtn} onClick={handleCancelMatch}>
+                    매칭 대기 취소하기
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.readyNoticeCard}>
+                <p className={styles.readyText}>
+                  위 추천 분야 조건으로 나를 찾아줄 농부 회원에게 <strong>구직(매칭)</strong>을 신청하시겠습니까?
+                </p>
+                <div className={styles.actionRowVertical}>
+                  <button className={`btn btn-primary ${styles.startMatchBtn}`} onClick={handleRequestMatch}>
+                    ⚡ 이 조건으로 매칭 신청하기 ⚡
+                  </button>
+                  <button className={styles.secondaryBtn} onClick={() => navigate('/home?tab=matching')}>
+                    메인화면으로 돌아가기
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
     )
   }
 
+  // 👨‍🌾 농부 회원 전용 구인 매칭 화면
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate('/home')}>← 메인화면으로</button>
+        <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
       </div>
-      <h1 className={styles.title}>👨‍🌾 업무별 추천 후보자 조회</h1>
+      <h1 className={styles.title}>👨‍🌾 업무별 추천 청년 후보자 조회</h1>
       <div className={styles.selectGroup}>
-        <label>업무 선택:</label>
+        <label>필요한 업무 선택:</label>
         <select 
           className={styles.selectBox}
           value={selectedTask} 
@@ -179,7 +213,7 @@ export default function Matching() {
             <div className={styles.fitScore}>
               💡 적합도 거리(낮을수록 우수): {typeof c.fit_score === 'number' ? c.fit_score.toFixed(2) : c.fit_score}
             </div>
-            <button className={styles.matchBtn} onClick={() => handleCreateMatch(c.user_id)}>이 후보자와 매칭하기</button>
+            <button className={styles.matchBtn} onClick={() => handleCreateMatch(c.user_id)}>이 청년과 매칭하기 (대화방 개설)</button>
           </div>
         ))}
         {selectedTask && candidates.length === 0 && (

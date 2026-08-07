@@ -2,39 +2,212 @@
   max-width: 480px;
   margin: 0 auto;
   padding: 24px 20px 60px;
+  background: var(--color-bg);
 }
 
 .title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
   margin-bottom: 20px;
   text-align: center;
+  letter-spacing: -0.4px;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.backBtn {
+  font-size: 13px;
+  color: var(--color-brown);
+  font-weight: 800;
+  padding: 6px 14px;
+  background: var(--color-primary-pale);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
+}
+
+/* 💡 검사 시작 안내 카드 */
+.introCard {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1.5px solid rgba(255, 193, 7, 0.45);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 48px rgba(139, 81, 41, 0.12);
+  margin-top: 10px;
+}
+
+.introIconBadge {
+  width: 72px;
+  height: 72px;
+  font-size: 38px;
+  background: var(--color-primary-pale);
+  border: 2px solid var(--color-primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+}
+
+.introTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 6px;
+  letter-spacing: -0.4px;
+}
+
+.introDesc {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-brown);
+  margin-bottom: 24px;
+}
+
+.introFeatureList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.introFeatureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--color-surface-2);
+  border: 1.5px solid #E2D9C3;
+  border-radius: var(--radius-md);
+}
+
+.featureEmoji {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.introFeatureItem strong {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.introFeatureItem p {
+  font-size: 12.5px;
+  color: var(--color-text-sub);
+  line-height: 1.45;
+}
+
+.startBtn {
+  width: 100%;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  border-radius: var(--radius-full);
+  box-shadow: 0 6px 24px rgba(245, 176, 0, 0.4);
+}
+
+/* 💡 추천 분야 안내 카드 */
+.recommendNoticeBox {
+  width: 100%;
+  padding: 22px 20px;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+  border: 1.5px solid rgba(255, 193, 7, 0.6);
+  border-radius: var(--radius-lg);
+  margin: 18px 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.recommendBadge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--color-brown);
+  background: #ffffff;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+}
+
+.recommendTaskTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: #3D2612;
+  letter-spacing: -0.3px;
+}
+
+.recommendTaskDesc {
+  font-size: 13px;
+  color: #5D4037;
+  line-height: 1.5;
+}
+
+.btnGroupFull {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reTestBtn {
+  width: 100%;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: var(--radius-full);
 }
 
 .progressBar {
   text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-primary-light);
-  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-brown);
+  margin-bottom: 16px;
 }
 
 .questionCard {
-  background: rgba(23, 34, 24, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 24px 20px;
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  border-radius: var(--radius-xl);
+  padding: 28px 22px;
   margin-bottom: 24px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .questionText {
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.45;
+  font-size: 17.5px;
+  font-weight: 700;
+  line-height: 1.5;
   color: var(--color-text);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .optionsGroup {
@@ -48,18 +221,19 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px;
+  padding: 15px;
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid #E2D9C3;
   border-radius: var(--radius-md);
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .optionLabel:hover {
   border-color: var(--color-primary-light);
-  background: rgba(82, 183, 136, 0.1);
+  background: var(--color-primary-pale);
 }
 
 .radioInput {
@@ -73,34 +247,44 @@
 }
 
 .navBtn {
-  padding: 12px 20px;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  padding: 13px 22px;
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
   color: var(--color-text);
   border-radius: var(--radius-full);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   transition: all var(--transition);
 }
 
 .navBtn:hover {
-  background: rgba(82, 183, 136, 0.15);
+  background: var(--color-primary-pale);
   border-color: var(--color-primary-light);
+  color: var(--color-brown);
 }
 
 /* 결과 표시 카드 */
 .resultGrid {
   display: grid;
-  gap: 10px;
-  margin: 20px 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 0 10px;
+  width: 100%;
 }
 
 .resultRow {
   display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 6px;
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid #E2D9C3;
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.resultRow strong {
+  font-size: 16px;
+  color: var(--color-brown);
+  margin-top: 2px;
 }
