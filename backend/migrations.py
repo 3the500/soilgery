@@ -24,8 +24,8 @@ def run_migrations(engine) -> None:
 
     existing_columns = {col["name"] for col in inspector.get_columns("match_requests")}
     columns_to_add = {
-        "employer_left": "BOOLEAN NOT NULL DEFAULT 0",
-        "employee_left": "BOOLEAN NOT NULL DEFAULT 0",
+        "employer_left": "BOOLEAN NOT NULL DEFAULT FALSE",
+        "employee_left": "BOOLEAN NOT NULL DEFAULT FALSE",
     }
 
     with engine.begin() as conn:
