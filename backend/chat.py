@@ -61,6 +61,8 @@ def get_match_info(match_id: int, requester_id: int, db: Session) -> dict:
         "partner_id": partner_id,
         "partner_name": partner.name if partner else None,
         "partner_role": partner.role if partner else None,
+        "partner_location": partner.location if partner else None,
+        "partner_rating": float(partner.rating) if (partner and partner.rating) else 0.0,
         "partner_left": bool(partner_left),
     }
 
@@ -80,8 +82,9 @@ def send_message(match_id: int, sender_id: int, content: str, db: Session) -> Me
 
     is_employee = sender_id == participants["employee_id"]
     already_left = match.employee_left if is_employee else match.employer_left
-    if already_left:
-        raise ValueError("이미 나간 채팅방에는 메시지를 보낼 수 없습니다.")
+    partner_left = match.employer_left if is_employee else match.employee_left
+    if already_left or partner_left:
+        raise ValueError("상대방 또는 본인이 퇴장한 채팅방에서는 더 이상 메시지를 보낼 수 없습니다.")
 
     message = Message(match_id=match_id, sender_id=sender_id, content=content.strip())
     db.add(message)

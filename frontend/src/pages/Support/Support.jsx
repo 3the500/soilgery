@@ -8,7 +8,7 @@ export default function Support() {
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: '안녕하세요! 충북 농촌 소일거리 AI 상담사입니다. 🌱\n\n농가 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요.',
+      text: '안녕하세요! 충주 청정 농원 소일거리 AI 마스코트 \'소일이\'입니다. 🌱🍎\n\n충주 명품 사과 과수원 일손 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요!',
       time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
     }
   ])
@@ -80,7 +80,7 @@ export default function Support() {
           ← 메인화면
         </button>
         <div className={styles.headerCenter}>
-          <h1 className={styles.headerTitle}>🤖 AI 1:1 고객센터</h1>
+          <h1 className={styles.headerTitle}>🤖 AI 소일이 1:1 상담실</h1>
         </div>
       </header>
 
@@ -105,7 +105,7 @@ export default function Support() {
               )}
 
               <div className={styles.msgContentArea}>
-                {!isUser && <span className={styles.aiNameLabel}>소일거리 AI 챗봇</span>}
+                {!isUser && <span className={styles.aiNameLabel}>소일거리 마스코트 소일이</span>}
                 <div className={styles.bubbleRow}>
                   {isUser && <span className={styles.msgTime}>{m.time}</span>}
                   <div className={`${styles.msgBubble} ${isUser ? styles.userBubble : styles.aiBubble}`}>

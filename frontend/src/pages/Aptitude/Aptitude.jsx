@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { aptitudeAPI } from '../../api/index'
 import { useAuth } from '../../store/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import styles from './Aptitude.module.css'
 
 const OPTIONS = ['예', '아니요']
@@ -18,6 +19,8 @@ const STAT_LABELS = {
 export default function Aptitude() {
   const navigate = useNavigate()
   const { user, refreshUser } = useAuth()
+  const { showToast } = useToast()
+
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -31,7 +34,7 @@ export default function Aptitude() {
   // 🚫 농부 회원 접근 차단 가이드
   useEffect(() => {
     if (user?.role === '농부') {
-      alert('농부 회원은 적성검사 대상이 아닙니다.')
+      showToast('농부 회원은 적성검사 대상이 아닙니다.', 'info')
       navigate('/home')
     }
   }, [user, navigate])
@@ -66,7 +69,7 @@ export default function Aptitude() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!allAnswered) {
-      alert('모든 질문에 답해주세요.')
+      showToast('모든 질문에 답해주세요.', 'error')
       return
     }
     setLoading(true)
@@ -74,8 +77,9 @@ export default function Aptitude() {
       const res = await aptitudeAPI.submitTest({ answers })
       setResult(res.data)
       await refreshUser?.()
+      showToast('적성검사가 완료되었습니다! 스탯 카드가 업데이트되었어요. 🎉', 'success')
     } catch (err) {
-      alert('검사 제출 실패: ' + (err.response?.data?.detail || '오류 발생'))
+      showToast('검사 제출 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     } finally {
       setLoading(false)
     }

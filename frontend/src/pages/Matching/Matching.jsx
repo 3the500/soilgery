@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { matchingAPI, aptitudeAPI } from '../../api/index'
 import { useAuth } from '../../store/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import styles from './Matching.module.css'
 
 export default function Matching() {
   const { user, refreshUser } = useAuth()
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [tasks, setTasks] = useState([])
   const [statsEmpty, setStatsEmpty] = useState(false)
@@ -43,8 +45,9 @@ export default function Matching() {
       await matchingAPI.requestMatch()
       setSeeking(true)
       await refreshUser?.()
+      showToast('AI 매칭 신청이 성공적으로 완료되었습니다! ⚡', 'success')
     } catch (err) {
-      alert('매칭 신청 실패: ' + (err.response?.data?.detail || '오류 발생'))
+      showToast('매칭 신청 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     }
   }
 
@@ -53,9 +56,9 @@ export default function Matching() {
       await matchingAPI.cancelMatchRequest()
       setSeeking(false)
       await refreshUser?.()
-      alert('매칭 대기를 취소했어요.')
+      showToast('매칭 대기를 취소했어요.', 'info')
     } catch (err) {
-      alert('매칭 취소 실패: ' + (err.response?.data?.detail || '오류 발생'))
+      showToast('매칭 취소 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     }
   }
 
@@ -77,7 +80,7 @@ export default function Matching() {
 
   const handleCreateMatch = async (employeeId) => {
     if (!selectedTask) {
-      alert('선택된 업무가 없습니다.')
+      showToast('선택된 업무가 없습니다.', 'error')
       return
     }
 
@@ -85,7 +88,7 @@ export default function Matching() {
       const res = await matchingAPI.createMatchByTask(selectedTask, employeeId)
       const matchId = res.data?.match_id || res.data?.id
       
-      alert(`선택하신 지원자 #${employeeId}님과 매칭이 완료되었습니다! 대화방으로 이동합니다.`)
+      showToast(`지원자 #${employeeId}님과 매칭 대화방이 개설되었습니다! 🎉`, 'success')
       setCandidates((prev) => prev.filter((c) => c.user_id !== employeeId))
       
       if (matchId) {
@@ -94,7 +97,7 @@ export default function Matching() {
         navigate('/chat')
       }
     } catch (err) {
-      alert('매칭 생성 실패: ' + (err.response?.data?.detail || '오류 발생'))
+      showToast('매칭 생성 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     }
   }
 

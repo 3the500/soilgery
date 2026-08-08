@@ -1,178 +1,233 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import api, { chatAPI, reviewAPI } from '../../api/index'
+import { useToast } from '../../context/ToastContext'
 import styles from './Chat.module.css'
 
 const toLocalDate = (isoString) => {
-  if (!isoString) return null
-  const hasTimezone = /Z$|[+-]\d{2}:?\d{2}$/.test(isoString)
-  return new Date(hasTimezone ? isoString : `${isoString}Z`)
+  if (!isoString) return new Date()
+  const d = new Date(isoString)
+  return isNaN(d.getTime()) ? new Date() : d
 }
 
 const formatKoreanTime = (isoString) => {
-  const date = toLocalDate(isoString)
-  if (!date) return ''
-  return date.toLocaleTimeString('ko-KR', {
+  const d = toLocalDate(isoString)
+  return d.toLocaleTimeString('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
-    timeZone: 'Asia/Seoul',
   })
 }
 
 const formatKoreanDateHeader = (isoString) => {
-  const date = toLocalDate(isoString)
-  if (!date) return ''
-  return date.toLocaleDateString('ko-KR', {
+  const d = toLocalDate(isoString)
+  return d.toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: 'short',
+    weekday: 'long',
   })
 }
 
-// ⚡ 인스타그램 DM 스타일 빠른 인사말 칩
-const QUICK_REPLIES = [
-  '👋 안녕하세요!',
-  '📍 작업 위치가 어디인가요?',
-  '⏰ 근무 시간 문의 드려요',
-  '💰 시급 및 조건이 궁금해요',
+const YOUTH_QUICK_REPLIES = [
+  '안녕하세요! 어떤 일을 주로 하게 되나요? 🌾',
+  '상세 작업 일정이 궁금합니다!',
+  '거주 지역 근처 소일거리 맞나요?',
+  '감사합니다. 잘 부탁드립니다! 🙏',
+]
+
+const FARMER_QUICK_REPLIES = [
+  '안녕하세요! 소일거리 세부 내용 안내해 드립니다 🌾',
+  '작업 일정 및 일당 조건 확인해 주세요!',
+  '언제부터 근무 시작 가능하신가요?',
+  '반갑습니다! 모르는 점은 질문해 주세요. 😊',
 ]
 
 export default function Chat() {
-  const { matchId: paramMatchId } = useParams()
+  const { matchId } = useParams()
   const navigate = useNavigate()
   const { user, refreshUser } = useAuth()
+  const { showToast } = useToast()
 
-  const [matchId, setMatchId] = useState(paramMatchId || null)
+  const isFarmer = user?.role === '농부'
+  const activeQuickReplies = isFarmer ? FARMER_QUICK_REPLIES : YOUTH_QUICK_REPLIES
+
   const [messages, setMessages] = useState([])
-  const [partner, setPartner] = useState(null)
   const [inputText, setInputText] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [leaving, setLeaving] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [partner, setPartner] = useState(null)
+  const [partnerLoading, setPartnerLoading] = useState(true)
 
-  // 🥕 당근마켓 스타일 화면 중앙 커스텀 퇴장 & 평점 작성 모달 제어 상태
+  // 🔒 중복 전송 방지 및 퇴장 처리 상태
+  const [isSending, setIsSending] = useState(false)
+  const [leaving, setLeaving] = useState(false)
   const [showLeaveModal, setShowLeaveModal] = useState(false)
-  const [selectedRating, setSelectedRating] = useState(5.0)
+  const [selectedRating, setSelectedRating] = useState(5)
   const [reviewComment, setReviewComment] = useState('')
 
   const messagesEndRef = useRef(null)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  // 📜 하단 자동 스크롤 함수 (smooth/auto 옵션)
+  const scrollToBottom = (smooth = true) => {
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: smooth ? 'smooth' : 'auto',
+        block: 'end',
+      })
+    })
   }
 
-  const fetchMessages = async (targetMatchId) => {
-    if (!targetMatchId) return
+  // 1. 상대방 프로필 정보 및 대화방 정보 조회
+  const fetchPartnerInfo = async () => {
+    if (!matchId) return
     try {
-      const res = await api.get(`/matches/${targetMatchId}/messages`)
-      setMessages(res.data || [])
-      setError('')
-      localStorage.setItem('last_seen_chat_time', new Date().toISOString())
-    } catch (err) {
-      console.error('메시지 로딩 실패:', err)
-      setError(err.response?.data?.detail || '채팅 내역을 불러오는데 실패했습니다.')
-    }
-  }
-
-  const fetchPartnerInfo = async (targetMatchId) => {
-    if (!targetMatchId) return
-    try {
-      const res = await chatAPI.getMatchInfo(targetMatchId)
+      const res = await chatAPI.getMatchInfo(matchId)
       setPartner(res.data)
     } catch (err) {
       console.error('상대방 정보 조회 실패:', err)
+      setError('채팅방 정보를 불러올 수 없습니다.')
+    } finally {
+      setPartnerLoading(false)
     }
   }
 
-  useEffect(() => {
-    if (!user) return
-
-    const currentMatchId = paramMatchId || matchId
-    if (paramMatchId) {
-      setMatchId(paramMatchId)
+  // 2. 대화 내역 조회
+  const fetchMessages = async (isInitial = false) => {
+    if (!matchId) return
+    try {
+      const res = await chatAPI.getMessages(matchId)
+      setMessages((prev) => {
+        // 메시지 수가 변경되었을 때만 스크롤 하단 이동
+        if (prev.length !== res.data.length) {
+          setTimeout(() => scrollToBottom(!isInitial), 60)
+        }
+        return res.data
+      })
+      localStorage.setItem('last_seen_chat_time', new Date().toISOString())
+    } catch (err) {
+      console.error('메시지 대화 내역 조회 실패:', err)
+      if (isInitial) {
+        setError('대화 내역을 불러오지 못했습니다.')
+      }
+    } finally {
+      if (isInitial) setLoading(false)
     }
+  }
 
-    if (!currentMatchId) {
-      setLoading(false)
+  // ⚡ 3초 실시간 자동 수신 폴링 & 초기화
+  useEffect(() => {
+    if (!matchId) return
+
+    setLoading(true)
+    setPartnerLoading(true)
+    setError(null)
+
+    fetchPartnerInfo()
+    fetchMessages(true)
+
+    // 3초 주기로 메시지 및 상대방 상태(퇴장 여부) 자동 동기화
+    const intervalId = setInterval(() => {
+      fetchMessages(false)
+      fetchPartnerInfo()
+    }, 3000)
+
+    return () => clearInterval(intervalId)
+  }, [matchId])
+
+  // 메시지 렌더링 후 스크롤 하단 밀림 보완
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom(true)
+    }
+  }, [messages.length])
+
+  // ✉️ 메시지 전송 처리 (공백 검증, 중복 전송 방지)
+  const handleSendMessage = async (textToSend) => {
+    const rawContent = textToSend || inputText
+    const content = rawContent ? rawContent.trim() : ''
+
+    if (!content || !matchId || isSending) return
+    if (partner?.partner_left) {
+      showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
       return
     }
 
-    setLoading(true)
-    fetchMessages(currentMatchId).finally(() => setLoading(false))
-    fetchPartnerInfo(currentMatchId)
-
-    const interval = setInterval(() => {
-      fetchMessages(currentMatchId)
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [paramMatchId, matchId, user])
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSendMessage = async (textToSend) => {
-    const content = textToSend || inputText.trim()
-    if (!content || !matchId) return
-
+    setIsSending(true)
     if (!textToSend) {
       setInputText('')
     }
 
     try {
-      const res = await api.post(`/matches/${matchId}/messages`, {
-        content
-      })
+      const res = await api.post(`/matches/${matchId}/messages`, { content })
       setMessages((prev) => [...prev, res.data])
       localStorage.setItem('last_seen_chat_time', new Date().toISOString())
+      setTimeout(() => scrollToBottom(true), 60)
     } catch (err) {
-      alert('메시지 전송 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'))
+      showToast('메시지 전송 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+    } finally {
+      setIsSending(false)
     }
   }
 
+  // 한글 IME 이중 입력 및 엔터키 전송 방지
   const handleKeyDown = (e) => {
+    if (e.nativeEvent.isComposing) return
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
     }
   }
 
-  // 🥕 당근마켓 스타일 모달에서 [평점 제출 & 나가기] 수행
+  // 🥕 당근마켓 스타일 모달에서 [⭐ 평점 제출 & 나가기] 수행 (실시간 동기화 포함)
   const confirmLeaveChatWithReview = async () => {
     if (!matchId || leaving) return
     setLeaving(true)
     setShowLeaveModal(false)
 
     try {
-      // 1. 상대방 유저 ID가 있으면 리뷰 API 전송
       if (partner?.partner_id) {
         await reviewAPI.createReview({
           reviewee_id: partner.partner_id,
           match_id: Number(matchId),
           rating: selectedRating,
-          comment: reviewComment.trim() || '소일거리 매칭 대화 후 퇴장하였습니다.'
+          comment: reviewComment.trim() || '소일거리 매칭 대화 후 퇴장하였습니다.',
         })
+        showToast('소중한 평점과 후기가 성공적으로 전달되었습니다! ⭐', 'success')
       }
     } catch (err) {
       console.error('리뷰 작성 처리 중 예외 (무시 후 나가기 진행):', err)
     }
 
     try {
-      // 2. 채팅나가기 수행
       await chatAPI.leaveChat(matchId)
       await refreshUser?.()
-      navigate('/home?tab=chat')
+      navigate('/home?tab=review')
     } catch (err) {
-      alert('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'))
+      showToast('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
       setLeaving(false)
     }
   }
 
-  const handleBack = async () => {
+  // 👋 [별점 없이 단순 나가기] 수행 (분기 옵션)
+  const confirmLeaveChatWithoutReview = async () => {
+    if (!matchId || leaving) return
+    setLeaving(true)
+    setShowLeaveModal(false)
+
+    try {
+      await chatAPI.leaveChat(matchId)
+      await refreshUser?.()
+      showToast('별점 작성 없이 채팅방을 나갔습니다.', 'info')
+      navigate('/home?tab=chat')
+    } catch (err) {
+      showToast('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+      setLeaving(false)
+    }
+  }
+
+  const handleBack = () => {
     navigate('/home?tab=chat')
   }
 
@@ -189,22 +244,40 @@ export default function Chat() {
         <button className={styles.backButton} onClick={handleBack} title="메인화면으로 이동">
           ← 메인화면
         </button>
+
         <div className={styles.partnerProfileHeader}>
-          <span className={styles.partnerAvatarEmoji}>
-            {partner?.partner_role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
-          </span>
-          <div className={styles.partnerNameCol}>
-            <strong className={styles.partnerNameText}>
-              {partner?.partner_name || '대화 상대방'}
-            </strong>
-            <span className={styles.partnerRoleBadge}>
-              {partner?.partner_role || '소일거리 회원'}
-            </span>
-          </div>
+          {partnerLoading ? (
+            <div className={styles.partnerSkeleton}>상대방 정보 확인 중...</div>
+          ) : (
+            <>
+              <span className={styles.partnerAvatarEmoji}>
+                {partner?.partner_role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
+              </span>
+              <div className={styles.partnerNameCol}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <strong className={styles.partnerNameText}>
+                    {partner?.partner_name || '대화 상대방'}
+                  </strong>
+                  <span className={styles.partnerRoleBadge}>
+                    {partner?.partner_role || '소일거리 회원'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--color-text-sub)', marginTop: '2px' }}>
+                  <span>📍 {partner?.partner_location || '거주지 미설정'}</span>
+                  <span>·</span>
+                  <span>⭐ {partner?.partner_rating ? Number(partner.partner_rating).toFixed(1) : '0.0'}</span>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {matchId && (
-          <button className={styles.leaveButton} onClick={() => setShowLeaveModal(true)} disabled={leaving}>
+          <button
+            className={styles.leaveButton}
+            onClick={() => setShowLeaveModal(true)}
+            disabled={leaving}
+          >
             채팅나가기
           </button>
         )}
@@ -238,7 +311,7 @@ export default function Chat() {
           messages.map((msg) => {
             const isMyMessage = String(msg.sender_id) === String(user.id)
             const currentDateStr = msg.created_at ? formatKoreanDateHeader(msg.created_at) : ''
-            
+
             let showDateHeader = false
             if (currentDateStr && currentDateStr !== lastDateStr) {
               showDateHeader = true
@@ -268,7 +341,7 @@ export default function Chat() {
                       </span>
                     )}
                     <div className={`${styles.bubble} ${isMyMessage ? styles.myBubble : styles.otherBubble}`}>
-                      {msg.content}
+                      <p className={styles.bubbleText}>{msg.content}</p>
                     </div>
                     <span className={styles.timestamp}>
                       {msg.created_at ? formatKoreanTime(msg.created_at) : ''}
@@ -279,18 +352,34 @@ export default function Chat() {
             )
           })
         )}
+
+        {/* ⛔ 상대방 퇴장 알림 시스템 뱃지 */}
+        {partner?.partner_left && (
+          <div className={styles.partnerLeftNoticeBox}>
+            <span>⛔ 상대방이 채팅방을 나가 더 이상 대화를 할 수 없습니다.</span>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
       {/* ⚡ 빠른 인사말 퀵 칩 */}
       {matchId && (
-        <div className={styles.quickReplyContainer}>
-          {QUICK_REPLIES.map((chipText, i) => (
+        <div
+          className={styles.quickReplyContainer}
+          onClick={() => {
+            if (partner?.partner_left) {
+              showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
+            }
+          }}
+        >
+          {activeQuickReplies.map((chipText, i) => (
             <button
               key={i}
               type="button"
               className={styles.quickReplyChip}
               onClick={() => handleSendMessage(chipText)}
+              disabled={partner?.partner_left || isSending}
             >
               {chipText}
             </button>
@@ -299,39 +388,54 @@ export default function Chat() {
       )}
 
       {/* ⌨️ 둥근 캡슐 DM 입력 하단 바 */}
-      <form className={styles.inputArea} onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}>
-        <input
-          type="text"
+      <form
+        className={styles.inputArea}
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSendMessage()
+        }}
+        onClick={() => {
+          if (partner?.partner_left) {
+            showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
+          }
+        }}
+      >
+        <textarea
           className={styles.capsuleInput}
+          rows={1}
           placeholder={
-            !matchId ? '대화방을 선택하세요.' : '메시지를 입력하세요...'
+            !matchId
+              ? '대화방을 선택하세요.'
+              : partner?.partner_left
+              ? '상대방이 나가 대화를 입력할 수 없습니다.'
+              : '메시지를 입력하세요...'
           }
           value={inputText}
-          disabled={!matchId}
+          disabled={!matchId || partner?.partner_left || isSending}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
           type="submit"
           className={styles.sendButtonCapsule}
-          disabled={!inputText.trim() || !matchId}
+          disabled={!inputText.trim() || !matchId || partner?.partner_left || isSending}
         >
-          ⬆
+          {isSending ? '...' : '⬆'}
         </button>
       </form>
 
       {/* 🥕 당근마켓 스타일 화면 중앙 별점 & 한줄후기 평점 남기기 커스텀 모달 팝업 */}
       {showLeaveModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowLeaveModal(false)}>
+        <div className={styles.modalOverlay}>
           <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalIconArea}>⭐</div>
             <h3 className={styles.modalTitle}>채팅방 나가기 & 평점 남기기</h3>
-            
+
             <div className={styles.modalBodyText}>
               <p className={styles.modalHighlight}>
                 <strong>{partner?.partner_name || '상대방'}</strong>님과의 소일거리 대화는 어떠하셨나요?
               </p>
-              
+
               {/* ⭐️ 별점 1~5점 선택 인터랙션 */}
               <div className={styles.starRatingSelector}>
                 {[1, 2, 3, 4, 5].map((starVal) => (
@@ -357,19 +461,27 @@ export default function Chat() {
               />
             </div>
 
-            <div className={styles.modalBtnGroup}>
+            <div className={styles.modalBtnGroupVertical}>
               <button
-                className={styles.modalCancelBtn}
-                onClick={() => setShowLeaveModal(false)}
-              >
-                취소
-              </button>
-              <button
-                className={styles.modalConfirmBtn}
+                className={`btn ${styles.modalConfirmBtn}`}
                 onClick={confirmLeaveChatWithReview}
                 disabled={leaving}
               >
-                {leaving ? '제출 중...' : '평점 제출 및 나가기'}
+                {leaving ? '처리 중...' : '⭐ 평점 제출하고 대화 종료하기'}
+              </button>
+              <button
+                className={`btn ${styles.modalSkipBtn}`}
+                onClick={confirmLeaveChatWithoutReview}
+                disabled={leaving}
+              >
+                👋 별점 없이 단순 나가기
+              </button>
+              <button
+                className={styles.modalCancelLinkBtn}
+                onClick={() => setShowLeaveModal(false)}
+                disabled={leaving}
+              >
+                취소 (대화 계속하기)
               </button>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { authAPI, matchingAPI, reviewAPI } from '../../api'
+import { useToast } from '../../context/ToastContext'
 import styles from './Home.module.css'
 
 export default function Home() {
@@ -71,11 +72,13 @@ export default function Home() {
     setIsEditProfileOpen(true)
   }
 
+  const { showToast } = useToast()
+
   // ✏️ 내 정보 수정 저장 처리
   const handleSubmitEditProfile = async (e) => {
     e.preventDefault()
     if (!editFormData.name.trim()) {
-      alert('이름을 입력해주세요.')
+      showToast('이름을 입력해주세요.', 'error')
       return
     }
 
@@ -89,10 +92,10 @@ export default function Home() {
 
       await refreshUser()
       setIsEditProfileOpen(false)
-      alert('내 정보가 성공적으로 수정되었습니다! 🎉')
+      showToast('내 정보가 성공적으로 수정되었습니다! 🎉', 'success')
     } catch (err) {
       console.error('내 정보 수정 실패:', err)
-      alert(err.response?.data?.detail || '내 정보 수정 중 오류가 발생했습니다.')
+      showToast(err.response?.data?.detail || '내 정보 수정 중 오류가 발생했습니다.', 'error')
     } finally {
       setSubmittingEdit(false)
     }
@@ -272,17 +275,19 @@ export default function Home() {
 
   const handleGoAptitude = () => {
     if (isFarmer) {
-      alert('농부 회원은 적성검사 대상이 아닙니다.')
+      showToast('농부 회원은 적성검사 대상이 아닙니다.', 'info')
       return
     }
     setActiveHeaderTab(null)
     navigate('/aptitude')
   }
 
+  // 💡 적성검사 안내 모달 제어 상태
+  const [showAptitudeNoticeModal, setShowAptitudeNoticeModal] = useState(false)
+
   const handleAutoMatching = () => {
     if (!isFarmer && isStatsEmpty(user)) {
-      alert('먼저 적성검사를 완료해주세요! 적성검사 페이지로 이동합니다.')
-      navigate('/aptitude')
+      setShowAptitudeNoticeModal(true)
       return
     }
     navigate('/matching')
@@ -725,24 +730,24 @@ export default function Home() {
             <section className={styles.aiMatchingHeroSection}>
               <div className={`glass-card ${styles.aiMatchingHeroCard}`}>
                 <div className={styles.aiMatchingHeroHeader}>
-                  <span className={styles.aiMatchingHeroBadge}>ML 기반 AI 추천 시스템</span>
+                  <span className={styles.aiMatchingHeroBadge}>✨ AI Smart Match</span>
                   <div className={styles.aiMatchingHeroIconArea}>
-                    <span className={styles.aiMatchingHeroIcon}>🤖</span>
+                    <span className={styles.aiMatchingHeroIcon} title="AI 마스코트 소일이">🤖</span>
                   </div>
                   <h3 className={styles.aiMatchingHeroTitle}>
                     {isFarmer ? '⚡ 최적의 청년 일손 찾기' : '⚡ 나에게 딱 맞는 농부(일자리) 찾기'}
                   </h3>
                   <p className={styles.aiMatchingHeroSub}>
                     {isFarmer ? (
-                      <>AI가 농가의 거주 지역과 조건에 맞는<br />최적의 청년 일손을 매칭해 드립니다</>
+                      <>AI 도우미 '소일이'가 충주 등 청정 농가의 조건에 맞는<br />최적의 청년 일손을 매칭해 드립니다</>
                     ) : (
-                      <>AI가 내 유형검사 결과와 거주 지역을 분석하여<br />최적의 농가 일자리를 매칭해 드립니다</>
+                      <>AI 도우미 '소일이'가 내 유형검사 결과와 거주 지역을 분석하여<br />최적의 농가 일자리를 매칭해 드립니다</>
                     )}
                   </p>
                 </div>
 
                 <button
-                  className={`btn ${styles.aiMatchingHeroBtn}`}
+                  className={`btn shine-effect ${styles.aiMatchingHeroBtn}`}
                   onClick={handleAutoMatching}
                 >
                   {isFarmer ? '⚡ AI 청년 자동매칭 시작하기 ⚡' : '⚡ AI 농부 자동매칭 시작하기 ⚡'}
@@ -943,6 +948,39 @@ export default function Home() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 🌱 적성검사 안내 당근/토스 럭셔리 모달 팝업 */}
+      {showAptitudeNoticeModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowAptitudeNoticeModal(false)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ padding: '26px 20px', textAlign: 'center' }}>
+            <div className={styles.noticeModalIcon}>🌱</div>
+            <h3 className={styles.noticeModalTitle}>맞춤 적성검사 안내</h3>
+            <p className={styles.noticeModalDesc}>
+              나에게 딱 맞는 농가 일자리를 AI 추천받기 위해<br />
+              <strong>적성검사 (1분 소요)</strong>를 먼저 진행해 주세요!
+            </p>
+            <div className={styles.modalActionGroup} style={{ marginTop: '18px' }}>
+              <button
+                type="button"
+                className={`btn btn-outline ${styles.modalCancelBtn}`}
+                onClick={() => setShowAptitudeNoticeModal(false)}
+              >
+                닫기
+              </button>
+              <button
+                type="button"
+                className={`btn btn-primary ${styles.modalSubmitBtn}`}
+                onClick={() => {
+                  setShowAptitudeNoticeModal(false);
+                  navigate('/aptitude');
+                }}
+              >
+                🌱 적성검사 시작하기
+              </button>
+            </div>
           </div>
         </div>
       )}

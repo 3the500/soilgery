@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './store/AuthContext'
+import { ToastProvider } from './context/ToastContext'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Home from './pages/Home/Home'
@@ -7,7 +8,7 @@ import Profile from './pages/Profile/Profile'
 import Aptitude from './pages/Aptitude/Aptitude'
 import Matching from './pages/Matching/Matching'
 import Support from './pages/Support/Support'
-import Chat from './pages/Chat/Chat' // Chat 컴포넌트 불러오기
+import Chat from './pages/Chat/Chat'
 
 // 로그인 안 했으면 /login으로 리다이렉트
 function PrivateRoute({ children }) {
@@ -49,7 +50,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <ToastProvider>
+          <AppRoutes />
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   )
