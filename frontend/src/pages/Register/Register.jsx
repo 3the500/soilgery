@@ -26,14 +26,18 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.role) { setError('역할을 선택해주세요'); return }
+    if (!form.role) { setError('나는 어떤 사람인지(청년/농부) 선택해 주세요'); return }
+    if (form.password.length < 8) { setError('비밀번호는 8자 이상이어야 합니다'); return }
     setError('')
     setLoading(true)
     try {
       await register(form)
       navigate('/home')
     } catch (err) {
-      setError(err.response?.data?.detail || '회원가입에 실패했습니다')
+      console.error('회원가입 에러:', err)
+      const detail = err.response?.data?.detail
+      const msg = typeof detail === 'string' ? detail : (Array.isArray(detail) ? detail[0]?.msg : '회원가입에 실패했습니다.')
+      setError(msg)
     } finally {
       setLoading(false)
     }
