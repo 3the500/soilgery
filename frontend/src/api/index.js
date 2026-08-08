@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// 백엔드 기본 URL 설정 (배포 주소가 있으면 최우선, 로컬 테스트 시 8080 포트 지정)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+// 백엔드 기본 URL 설정 (배포 주소가 있으면 최우선, 기본값은 Railway 클라우드 백엔드 주소)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://outstanding-celebration-production.up.railway.app'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
