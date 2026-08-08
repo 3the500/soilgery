@@ -49,14 +49,22 @@ app = FastAPI(
     title="소일거리 API",
     description="충북 청년 × 농부 AI 매칭 플랫폼 API 백엔드",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    redirect_slashes=False
 )
 
 
-# ── CORS 설정 (모바일 APK 및 웹 연동) ─────────────────────
+# ── CORS 설정 (모바일 APK 및 안드로이드 전용 Origin 명시 연동) ─────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "*",
+        "http://localhost",
+        "https://localhost",
+        "capacitor://localhost",
+        "http://localhost:5173",
+        "https://outstanding-celebration-production.up.railway.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
