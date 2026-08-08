@@ -222,12 +222,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.bubbleText {
-  white-space: pre-wrap;
-  word-break: break-word;
-  margin: 0;
-}
-
 .myBubble {
   background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
   color: #1A1209;
@@ -240,22 +234,6 @@
   color: var(--color-text);
   border: 1.5px solid #E2D9C3;
   border-radius: 18px 18px 18px 2px;
-}
-
-.partnerSkeleton {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--color-brown);
-  background: var(--color-primary-pale);
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  border: 1px dashed rgba(255, 193, 7, 0.5);
-  animation: pulseSkeleton 1.5s infinite ease-in-out;
-}
-
-@keyframes pulseSkeleton {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
 }
 
 .timestamp {
@@ -468,15 +446,29 @@
   border-color: var(--color-primary-light);
 }
 
-.modalBtnGroupVertical {
+.modalBtnGroup {
   display: flex;
-  flex-direction: column;
   gap: 8px;
   width: 100%;
 }
 
+.modalCancelBtn {
+  flex: 1;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 700;
+  background: #F0EDE5;
+  color: #5D4037;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+}
+
+.modalCancelBtn:hover {
+  background: #E2D9C3;
+}
+
 .modalConfirmBtn {
-  width: 100%;
+  flex: 1.4;
   padding: 13px;
   font-size: 14px;
   font-weight: 800;
@@ -497,52 +489,53 @@
   cursor: not-allowed;
 }
 
+.modalBtnGroupVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
 .modalSkipBtn {
   width: 100%;
-  padding: 11px;
+  padding: 12px;
   font-size: 13.5px;
   font-weight: 700;
-  background: var(--color-primary-pale);
-  color: var(--color-brown);
-  border: 1px solid rgba(255, 193, 7, 0.5);
+  background: #F2EFE9;
+  color: #5D4037;
   border-radius: var(--radius-full);
   transition: all 0.2s;
+  border: 1px solid #E0D9CB;
 }
 
 .modalSkipBtn:hover:not(:disabled) {
-  background: var(--color-primary-light);
-  color: #1A1209;
+  background: #E5E0D5;
 }
 
 .modalCancelLinkBtn {
+  background: none;
+  border: none;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--color-text-sub);
-  background: transparent;
-  border: none;
+  color: #8C7866;
   padding: 6px;
   cursor: pointer;
-  transition: color 0.2s;
-}
-
-.modalCancelLinkBtn:hover:not(:disabled) {
-  color: var(--color-text);
   text-decoration: underline;
+  margin-top: 2px;
 }
 
-/* ⛔ 상대방 퇴장 알림 시스템 뱃지 */
+/* ⛔ 상대방 퇴장 알림 뱃지 */
 .partnerLeftNoticeBox {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 14px 0;
-  padding: 10px 16px;
-  background: rgba(229, 57, 53, 0.08);
-  border: 1.5px solid rgba(229, 57, 53, 0.3);
-  border-radius: var(--radius-full);
-  color: var(--color-error);
+  justify-content: center;
+  background: #FFF0F0;
+  border: 1px solid #FFCACC;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  color: #D32F2F;
   font-size: 12.5px;
-  font-weight: 800;
+  font-weight: 700;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.1);
 }
