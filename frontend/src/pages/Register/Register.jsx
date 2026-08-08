@@ -36,7 +36,10 @@ export default function Register() {
     } catch (err) {
       console.error('회원가입 에러:', err)
       const detail = err.response?.data?.detail
-      const msg = typeof detail === 'string' ? detail : (Array.isArray(detail) ? detail[0]?.msg : '회원가입에 실패했습니다.')
+      let msg = typeof detail === 'string' ? detail : (Array.isArray(detail) ? detail[0]?.msg : null)
+      if (!msg) {
+        msg = err.message ? `통신 에러: ${err.message}` : '회원가입에 실패했습니다.'
+      }
       setError(msg)
     } finally {
       setLoading(false)

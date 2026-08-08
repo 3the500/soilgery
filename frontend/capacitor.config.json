@@ -3,6 +3,7 @@
   "appName": "소일거리",
   "webDir": "dist",
   "server": {
+    "url": "https://outstanding-celebration-production.up.railway.app",
     "androidScheme": "https",
     "cleartext": true,
     "allowNavigation": [

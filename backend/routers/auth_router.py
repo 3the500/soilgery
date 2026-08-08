@@ -11,6 +11,7 @@ router = APIRouter(prefix="/auth", tags=["인증"])
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
+@router.post("/register/", response_model=UserResponse, status_code=201)
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     # 이메일 중복 확인
     if db.query(User).filter(User.email == body.email).first():
@@ -41,6 +42,7 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
+@router.post("/login/", response_model=TokenResponse)
 def login(body: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email).first()
 
