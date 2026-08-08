@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// 백엔드 기본 URL 설정 (배포 주소가 있으면 최우선, 기본값은 Railway 클라우드 백엔드 주소)
+// 백엔드 기본 URL 설정 (Railway 24시간 클라우드 백엔드 주소)
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://outstanding-celebration-production.up.railway.app'
 
 const api = axios.create({
