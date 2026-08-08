@@ -8,6 +8,8 @@ load_dotenv()
 
 # Railway PostgreSQL 없으면 로컬 SQLite 사용
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./soilgery.db")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 # SQLite는 connect_args 필요
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
