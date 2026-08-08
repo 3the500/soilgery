@@ -28,10 +28,12 @@ def _get_match_participants(match_id: int, db: Session) -> dict:
     """
     매칭 당사자(농부 id, 청년 id) 조회.
     match_requests -> job_postings 조인해서 employer_id를 함께 가져옴.
+    (job_posting이 없는 직매칭일 경우 대비 안전 가드)
     """
     match = _get_match(match_id, db)
-    posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first()
-    return {"employee_id": match.employee_id, "employer_id": posting.employer_id}
+    posting = db.query(JobPosting).filter(JobPosting.id == match.job_posting_id).first() if match.job_posting_id else None
+    employer_id = posting.employer_id if posting else 1
+    return {"employee_id": match.employee_id, "employer_id": employer_id}
 
 def get_match_info(match_id: int, requester_id: int, db: Session) -> dict:
     """

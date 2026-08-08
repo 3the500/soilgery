@@ -48,7 +48,8 @@ export default function Chat() {
   const { matchId } = useParams()
   const navigate = useNavigate()
   const { user, refreshUser } = useAuth()
-  const { showToast } = useToast()
+  const toastContext = useToast() || {}
+  const showToast = toastContext.showToast || ((msg) => console.log(msg))
 
   const isFarmer = user?.role === '농부'
   const activeQuickReplies = isFarmer ? FARMER_QUICK_REPLIES : YOUTH_QUICK_REPLIES
@@ -84,7 +85,7 @@ export default function Chat() {
     if (!matchId) return
     try {
       const res = await chatAPI.getMatchInfo(matchId)
-      setPartner(res.data)
+      setPartner(res.data || null)
     } catch (err) {
       console.error('상대방 정보 조회 실패:', err)
       setError('채팅방 정보를 불러올 수 없습니다.')
@@ -98,12 +99,12 @@ export default function Chat() {
     if (!matchId) return
     try {
       const res = await chatAPI.getMessages(matchId)
+      const data = res.data || []
       setMessages((prev) => {
-        // 메시지 수가 변경되었을 때만 스크롤 하단 이동
-        if (prev.length !== res.data.length) {
+        if (prev.length !== data.length) {
           setTimeout(() => scrollToBottom(!isInitial), 60)
         }
-        return res.data
+        return data
       })
       localStorage.setItem('last_seen_chat_time', new Date().toISOString())
     } catch (err) {
@@ -150,7 +151,7 @@ export default function Chat() {
 
     if (!content || !matchId || isSending) return
     if (partner?.partner_left) {
-      showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
+      showToast?.('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
       return
     }
 
@@ -165,7 +166,7 @@ export default function Chat() {
       localStorage.setItem('last_seen_chat_time', new Date().toISOString())
       setTimeout(() => scrollToBottom(true), 60)
     } catch (err) {
-      showToast('메시지 전송 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+      showToast?.('메시지 전송 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
     } finally {
       setIsSending(false)
     }
@@ -194,7 +195,7 @@ export default function Chat() {
           rating: selectedRating,
           comment: reviewComment.trim() || '소일거리 매칭 대화 후 퇴장하였습니다.',
         })
-        showToast('소중한 평점과 후기가 성공적으로 전달되었습니다! ⭐', 'success')
+        showToast?.('소중한 평점과 후기가 성공적으로 전달되었습니다! ⭐', 'success')
       }
     } catch (err) {
       console.error('리뷰 작성 처리 중 예외 (무시 후 나가기 진행):', err)
@@ -205,7 +206,7 @@ export default function Chat() {
       await refreshUser?.()
       navigate('/home?tab=review')
     } catch (err) {
-      showToast('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+      showToast?.('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
       setLeaving(false)
     }
   }
@@ -219,10 +220,10 @@ export default function Chat() {
     try {
       await chatAPI.leaveChat(matchId)
       await refreshUser?.()
-      showToast('별점 작성 없이 채팅방을 나갔습니다.', 'info')
+      showToast?.('별점 작성 없이 채팅방을 나갔습니다.', 'info')
       navigate('/home?tab=chat')
     } catch (err) {
-      showToast('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+      showToast?.('채팅나가기 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
       setLeaving(false)
     }
   }
@@ -232,7 +233,14 @@ export default function Chat() {
   }
 
   if (!user) {
-    return <div className={styles.emptyNotice}>로그인 후 이용할 수 있습니다.</div>
+    return (
+      <div className={styles.chatContainer} style={{ justifyContent: 'center', alignItems: 'center', padding: '40px 20px', textAlign: 'center' }}>
+        <span style={{ fontSize: '42px', marginBottom: '12px' }}>🌱</span>
+        <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text)', marginBottom: '8px' }}>로그인이 필요합니다</h3>
+        <p style={{ fontSize: '13.5px', color: 'var(--color-text-sub)', marginBottom: '20px' }}>소일거리 대화방을 이용하시려면 로그인해 주세요.</p>
+        <button className="btn btn-primary" onClick={() => navigate('/login')}>로그인 하러가기</button>
+      </div>
+    )
   }
 
   let lastDateStr = ''
@@ -265,7 +273,7 @@ export default function Chat() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--color-text-sub)', marginTop: '2px' }}>
                   <span>📍 {partner?.partner_location || '거주지 미설정'}</span>
                   <span>·</span>
-                  <span>⭐ {partner?.partner_rating ? Number(partner.partner_rating).toFixed(1) : '0.0'}</span>
+                  <span>⭐ {partner?.partner_rating != null ? Number(partner.partner_rating).toFixed(1) : '0.0'}</span>
                 </div>
               </div>
             </>
@@ -309,7 +317,7 @@ export default function Chat() {
           </div>
         ) : (
           messages.map((msg) => {
-            const isMyMessage = String(msg.sender_id) === String(user.id)
+            const isMyMessage = String(msg.sender_id) === String(user?.id || '')
             const currentDateStr = msg.created_at ? formatKoreanDateHeader(msg.created_at) : ''
 
             let showDateHeader = false
@@ -369,11 +377,11 @@ export default function Chat() {
           className={styles.quickReplyContainer}
           onClick={() => {
             if (partner?.partner_left) {
-              showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
+              showToast?.('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
             }
           }}
         >
-          {activeQuickReplies.map((chipText, i) => (
+          {(activeQuickReplies || []).map((chipText, i) => (
             <button
               key={i}
               type="button"
@@ -396,7 +404,7 @@ export default function Chat() {
         }}
         onClick={() => {
           if (partner?.partner_left) {
-            showToast('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
+            showToast?.('상대방이 나가 더 이상 대화를 입력할 수 없습니다. ⛔', 'error')
           }
         }}
       >
