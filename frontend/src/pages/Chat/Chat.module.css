@@ -61,6 +61,17 @@
   box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
 }
 
+/* 🖼️ [피드백 반영] 채팅방 상단 헤더의 실제 프로필 사진 */
+.partnerAvatarImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--color-primary-light);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+  flex-shrink: 0;
+}
+
 .partnerNameCol {
   display: flex;
   flex-direction: column;
@@ -119,6 +130,40 @@
 
 .contextPinText {
   color: #5D4037;
+}
+
+/* 🚨 [피드백 반영] 채팅방 최초 입장 시 노출되는 "캡처 후 신고" 안내 배너 */
+.reportNoticeBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #FFF4E5;
+  border-bottom: 1px solid rgba(255, 152, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.reportNoticeText {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #8B5129;
+  font-weight: 600;
+}
+
+.reportNoticeCloseBtn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #8B5129;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reportNoticeCloseBtn:hover {
+  background: rgba(255, 152, 0, 0.15);
 }
 
 .emptyNotice {
@@ -191,6 +236,15 @@
   justify-content: center;
   flex-shrink: 0;
   margin-bottom: 2px;
+  overflow: hidden;
+}
+
+/* 🖼️ [피드백 반영] 말풍선 옆 아바타의 실제 프로필 사진 */
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .messageWrapper {
@@ -220,6 +274,22 @@
   line-height: 1.5;
   word-break: break-word;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* 🖼️🎬 [피드백 반영] 채팅 이미지/동영상 첨부 말풍선 */
+.attachmentImage {
+  display: block;
+  max-width: 220px;
+  max-height: 260px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.attachmentVideo {
+  display: block;
+  max-width: 240px;
+  max-height: 260px;
+  border-radius: 12px;
 }
 
 .myBubble {
@@ -324,6 +394,28 @@
 }
 
 .sendButtonCapsule:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* 🖼️🎬 [피드백 반영] 사진/동영상 첨부 버튼 */
+.attachButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.attachButton:hover:not(:disabled) {
+  background: var(--color-primary-pale);
+}
+.attachButton:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }

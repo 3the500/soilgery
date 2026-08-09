@@ -67,16 +67,42 @@
 }
 
 .avatarArea {
+  position: relative;
   width: 80px; height: 80px;
   background: var(--color-primary-pale);
   border: 2.5px solid var(--color-primary-light);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+  cursor: pointer;
+  overflow: hidden;
 }
 .avatarEmoji { font-size: 42px; }
+.avatarImg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.avatarEditBadge {
+  position: absolute;
+  right: -2px; bottom: -2px;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary-light);
+  border-radius: 50%;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(139, 81, 41, 0.2);
+}
 
 .userName { font-size: 23px; font-weight: 800; color: var(--color-text); letter-spacing: -0.4px; }
+
+/* [피드백 반영] 직업(청년) 배지 바로 오른쪽에 AI 추천 업무 배지 배치 */
+.roleTaskRow {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
 .userRoleTag {
   font-size: 12.5px; font-weight: 700;
@@ -84,6 +110,15 @@
   color: var(--color-brown);
   border: 1px solid rgba(255, 193, 7, 0.45);
   padding: 4px 16px; border-radius: var(--radius-full);
+}
+
+.recommendedTaskTag {
+  font-size: 12px; font-weight: 700;
+  background: #FFF3C4;
+  color: #8B5129;
+  border: 1px solid rgba(255, 193, 7, 0.6);
+  padding: 4px 14px; border-radius: var(--radius-full);
+  white-space: nowrap;
 }
 
 .ratingBox {
@@ -127,6 +162,28 @@
   border: 1px solid rgba(237, 232, 213, 0.8);
   border-radius: var(--radius-xl);
   box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* 🔧 [버그 수정] 육각형 지표를 위, 숫자 지표를 아래로 세로 배치하여
+   오른쪽 숫자 지표에 밀려 육각형 라벨이 잘리는 문제를 해소. */
+.statsRow {
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.8);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.statsNumeric {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .statBox {

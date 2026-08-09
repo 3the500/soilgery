@@ -4,7 +4,7 @@ import { useAuth } from '../../store/AuthContext'
 import styles from './Register.module.css'
 
 const ROLES = [
-  { value: '청년', emoji: '🧑‍🌾', label: '청년', desc: '농촌 체험·부업을 원해요', key: 'youth' },
+  { value: '청년', emoji: '🌱', label: '청년', desc: '농촌 체험·부업을 원해요', key: 'youth' },
   { value: '농부', emoji: '👨‍🌾', label: '농부', desc: '일손이 필요해요', key: 'farmer' },
 ]
 

@@ -41,6 +41,7 @@ class UserResponse(BaseModel):
     personality: int = 0
 
     is_seeking: bool = True          # 구직 중 여부
+    profile_image: Optional[str] = None  # 프로필 사진 (base64 data URL)
     created_at: Optional[datetime] = None
 
     class Config:
@@ -85,6 +86,7 @@ class RecommendedTask(BaseModel):
     task: str
     distance: float
     message: str
+    ai_reason: Optional[str] = None  # "상세하게 보기"를 눌렀을 때 노출되는 AI 상세 분석 문구
 
 
 class CreateMatchRequest(BaseModel):
@@ -155,6 +157,9 @@ class MessageResponse(BaseModel):
     match_id: int
     sender_id: int
     content: str
+    message_type: str = "text"        # "text" | "image" | "video"
+    file_url: Optional[str] = None    # 이미지/동영상 첨부 시 다운로드 URL
+    file_name: Optional[str] = None
     created_at: datetime
 
     class Config:

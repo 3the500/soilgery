@@ -494,16 +494,42 @@
 }
 
 .avatarArea {
+  position: relative;
   width: 76px; height: 76px;
   background: var(--color-primary-pale);
   border: 2.5px solid var(--color-primary-light);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+  cursor: pointer;
+  overflow: hidden;
 }
 .avatarEmoji { font-size: 40px; }
+.avatarImg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.avatarEditBadge {
+  position: absolute;
+  right: -2px; bottom: -2px;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary-light);
+  border-radius: 50%;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(139, 81, 41, 0.2);
+}
 
 .userName { font-size: 22px; font-weight: 800; color: var(--color-text); letter-spacing: -0.4px; }
+
+/* [피드백 반영] 직업(청년) 배지 바로 오른쪽에 AI 추천 업무 배지 배치 */
+.roleTaskRow {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
 .userRoleTag {
   font-size: 12.5px; font-weight: 700;
@@ -511,6 +537,27 @@
   color: var(--color-brown);
   border: 1px solid rgba(255, 193, 7, 0.45);
   padding: 4px 16px; border-radius: var(--radius-full);
+}
+
+.recommendedTaskTag {
+  font-size: 12px; font-weight: 700;
+  background: #FFF3C4;
+  color: #8B5129;
+  border: 1px solid rgba(255, 193, 7, 0.6);
+  padding: 4px 14px; border-radius: var(--radius-full);
+  white-space: nowrap;
+  font-family: inherit;
+  cursor: default;
+}
+
+button.recommendedTaskTag {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button.recommendedTaskTag:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
 }
 
 .ratingBox {
@@ -532,6 +579,30 @@
   border: 1px solid rgba(237, 232, 213, 0.85);
   border-radius: var(--radius-xl);
   box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* 🔧 [버그 수정] 기존에는 육각형 지표와 숫자 지표를 좌우로 나란히 배치했는데,
+   화면 폭이 넉넉하지 않으면 오른쪽 숫자 지표에 밀려 육각형 오른쪽 라벨이
+   잘려 보이는 문제가 있었다. 육각형을 위, 숫자 지표를 아래로 세로 배치해서
+   각 영역이 항상 전체 폭을 넉넉히 쓸 수 있도록 변경. */
+.statsRow {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-surface);
+  border: 1px solid rgba(237, 232, 213, 0.85);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.statsNumeric {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
 .statBox {
@@ -1108,6 +1179,21 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* 🔍 [피드백 반영] 추천업무 AI 분석 상세보기 팝업 전용 텍스트 스타일 */
+.recommendedTaskModalTitle {
+  font-size: 15px;
+  color: var(--color-brown);
+}
+
+.recommendedTaskModalText {
+  font-size: 13.5px;
+  color: #5D4037;
+  line-height: 1.65;
+  white-space: pre-line;
 }
 
 .formGroup {
@@ -1290,6 +1376,12 @@
   }
   .userName {
     font-size: 19px;
+  }
+  .statsRow {
+    flex-direction: column;
+  }
+  .statsNumeric {
+    width: 100%;
   }
   .profileCard {
     padding: 16px 16px;

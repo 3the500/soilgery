@@ -2,6 +2,7 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 try:
     from backend.database import create_tables, engine
@@ -69,6 +70,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ── 정적 파일(채팅 이미지/동영상 첨부) 서빙 ─────────────────
+# ⚠️ Railway 등 클라우드 배포 환경은 파일시스템이 재배포 시 초기화될 수 있으므로,
+# 운영 환경에서는 S3/Cloudinary 등 영구 오브젝트 스토리지로 교체하는 것을 권장합니다.
+_UPLOAD_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+os.makedirs(os.path.join(_UPLOAD_ROOT, "chat"), exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=_UPLOAD_ROOT), name="uploads")
 
 
 # ── 라우터 등록 ─────────────────────────────────────

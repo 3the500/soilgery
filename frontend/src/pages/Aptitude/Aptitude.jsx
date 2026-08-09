@@ -1,20 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { aptitudeAPI } from '../../api/index'
+import { aptitudeAPI, matchingAPI } from '../../api/index'
 import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import styles from './Aptitude.module.css'
 
 const OPTIONS = ['예', '아니요']
-
-const STAT_LABELS = {
-  strength: '근력',
-  stamina: '체력',
-  grit: '근성',
-  intelligence: '지성',
-  wage_pref: '급여',
-  personality: '성격',
-}
 
 export default function Aptitude() {
   const navigate = useNavigate()
@@ -27,6 +18,11 @@ export default function Aptitude() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadError, setLoadError] = useState(null)
+
+  // 🔍 [피드백 반영] 검사 완료 화면에서 보여줄 "1순위 추천 업무" 상세 정보
+  // (task/message/ai_reason 은 매칭 화면과 동일하게 백엔드 계산 결과를 그대로 사용)
+  const [recommended, setRecommended] = useState(null)
+  const [showDetailReason, setShowDetailReason] = useState(false)
 
   // 💡 검사 시작 전 소개 화면 제어 상태
   const [isStarted, setIsStarted] = useState(false)
@@ -78,6 +74,16 @@ export default function Aptitude() {
       setResult(res.data)
       await refreshUser?.()
       showToast('적성검사가 완료되었습니다! 스탯 카드가 업데이트되었어요. 🎉', 'success')
+
+      // 🔍 [피드백 반영] 매칭 화면과 동일한 기준(유클리드 거리)으로 계산된 1순위 추천
+      // 업무 + AI 상세 분석 근거를 함께 조회해 결과 화면에서 바로 보여준다.
+      try {
+        const taskRes = await matchingAPI.getRecommendedTasks(1)
+        setRecommended(taskRes.data?.[0] || null)
+      } catch (taskErr) {
+        console.error('추천 업무 상세 조회 실패:', taskErr)
+        setRecommended(null)
+      }
     } catch (err) {
       showToast('검사 제출 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     } finally {
@@ -100,25 +106,17 @@ export default function Aptitude() {
 
   // 💡 검사 결과 및 추천 분야 안내 화면
   if (result) {
-    const recommendedTask = getRecommendedTaskName(result)
+    // recommended(백엔드 계산 결과)를 우선 사용하고, 아직 못 받아왔거나 실패한 경우에만
+    // 기존의 간단한 로컬 추정치로 대체 표시한다.
+    const recommendedTask = recommended?.task || getRecommendedTaskName(result)
+    const recommendedDesc = recommended?.message
+    const aiReason = recommended?.ai_reason
+
     return (
       <div className={styles.container}>
         <div className={`glass-card ${styles.introCard}`}>
           <div className={styles.topBar}>
             <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
-          </div>
-          <div className={styles.introIconBadge}>📊</div>
-          <h2 className={styles.introTitle}>🌱 적성검사 분석 완료</h2>
-          <p className={styles.introDesc}>검사 결과를 바탕으로 나의 스탯과 추천 분야가 산출되었습니다!</p>
-          
-          {/* 스탯 그리드 */}
-          <div className={styles.resultGrid}>
-            {Object.entries(STAT_LABELS).map(([field, label]) => (
-              <div key={field} className={styles.resultRow}>
-                <span>{label}</span>
-                <strong>{result[field]}</strong>
-              </div>
-            ))}
           </div>
 
           {/* 💡 추천 분야 안내 카드 */}
@@ -126,8 +124,29 @@ export default function Aptitude() {
             <span className={styles.recommendBadge}>✨ 1순위 추천 농사 분야</span>
             <h3 className={styles.recommendTaskTitle}>{recommendedTask}</h3>
             <p className={styles.recommendTaskDesc}>
-              나의 스탯 특성을 고려해 보았을 때 <strong>{recommendedTask}</strong> 분야에 가장 높은 적합도를 보였습니다. 이 추천 분야로 매칭을 신청하실 수 있습니다!
+              {recommendedDesc || (
+                <>나의 스탯 특성을 고려해 보았을 때 <strong>{recommendedTask}</strong> 분야에 가장 높은 적합도를 보였습니다. 이 추천 분야로 매칭을 신청하실 수 있습니다!</>
+              )}
             </p>
+
+            {/* 🔍 [피드백 반영] AI가 왜 이렇게 분석했는지 "상세하게 보기" / "접기" 토글
+                (매칭 화면에 있던 기능을 이 화면으로 이동) */}
+            {aiReason && (
+              <>
+                <button
+                  type="button"
+                  className={styles.detailToggleBtn}
+                  onClick={() => setShowDetailReason((prev) => !prev)}
+                >
+                  {showDetailReason ? '접기 ▲' : '🔍 AI 분석 상세하게 보기 ▼'}
+                </button>
+                {showDetailReason && (
+                  <div className={styles.detailReasonBox}>
+                    <p className={styles.detailReasonText}>{aiReason}</p>
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <div className={styles.btnGroupFull}>
@@ -139,7 +158,14 @@ export default function Aptitude() {
             </button>
             <button
               className={`btn btn-outline ${styles.reTestBtn}`}
-              onClick={() => { setResult(null); setAnswers({}); setCurrentIndex(0); setIsStarted(false); }}
+              onClick={() => {
+                setResult(null)
+                setAnswers({})
+                setCurrentIndex(0)
+                setIsStarted(false)
+                setRecommended(null)
+                setShowDetailReason(false)
+              }}
             >
               🔄 다시 검사하기
             </button>

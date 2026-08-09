@@ -1,1 +1,1 @@
-from . import auth_router, aptitude_router, matching_router, posting_router, chat_router, support_router
+from . import auth_router, aptitude_router, matching_router, posting_router, chat_router, support_router, review_router

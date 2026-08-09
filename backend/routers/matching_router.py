@@ -19,7 +19,7 @@ from matching import (
     get_my_matches,
     FARM_TASK_PROFILES,
 )
-from ai_matching import ai_rank_candidates, get_task_message
+from ai_matching import ai_rank_candidates, get_task_message, get_task_analysis
 
 router = APIRouter(tags=["매칭"])
 
@@ -31,11 +31,18 @@ def _to_response(stats: dict) -> dict:
 # ---- 검사 결과 화면에서 "추천 업무" 보여주기 ----
 @router.get("/users/me/recommended-task", response_model=List[RecommendedTask])
 def read_recommended_task(top_n: int = 3, current_user: User = Depends(get_current_user)):
-    """검사 결과 화면에서 본인에게 어떤 농사 업무가 잘 맞는지 보여줄 때 호출."""
+    """
+    검사 결과 화면에서 본인에게 어떤 농사 업무가 잘 맞는지 보여줄 때 호출.
+
+    [피드백 반영] 기본 출력(message)은 그대로 유지하되, 1순위 추천 업무에 한해
+    "상세하게 보기"를 눌렀을 때 노출할 AI 상세 분석 문장(ai_reason)을 함께 내려준다.
+    (top_n이 여러 개여도 AI 호출 비용을 아끼기 위해 1순위 업무에 대해서만 생성)
+    """
     stats = extract_stats(current_user)
     ranking = recommend_farm_task(stats, top_n=top_n)
-    for item in ranking:
+    for idx, item in enumerate(ranking):
         item["message"] = get_task_message(item["task"])
+        item["ai_reason"] = get_task_analysis(stats, item["task"]) if idx == 0 else None
     return ranking
 
 

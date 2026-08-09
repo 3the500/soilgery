@@ -45,6 +45,13 @@ class Message(Base):
     content = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    # [피드백 반영] 채팅에서 이미지/동영상 공유 지원용 첨부 정보
+    # message_type: "text" | "image" | "video"
+    message_type = Column(String, default="text", nullable=False)
+    file_url = Column(String, nullable=True)   # 첨부파일 다운로드 URL (/uploads/chat/...)
+    file_name = Column(String, nullable=True)  # 원본 파일명
+    file_size = Column(Integer, nullable=True)  # 바이트 단위
+
 
 class Report(Base):
     __tablename__ = "reports"
@@ -65,7 +72,11 @@ class Review(Base):
     id = Column(Integer, primary_key=True, index=True)
     reviewer_id = Column(Integer, ForeignKey("users.id"), nullable=False)   # 리뷰 작성자 ID
     reviewee_id = Column(Integer, ForeignKey("users.id"), nullable=False)   # 리뷰 대상 유저 ID
-    match_id = Column(Integer, ForeignKey("match_requests.id"), nullable=True) # 매칭 ID (선택)
+    # [버그 수정] 매칭이 삭제(양쪽 모두 채팅나가기)될 때 FK 제약으로 삭제가 막히지 않도록
+    # ondelete="SET NULL" 지정. (기존에 이미 생성된 DB에는 이 제약이 소급 적용되지 않으므로,
+    # chat.py의 leave_chat()에서 매칭 삭제 전 리뷰의 match_id를 애플리케이션 레벨에서
+    # 먼저 NULL로 비워주는 방식으로 실제 버그를 방지한다.)
+    match_id = Column(Integer, ForeignKey("match_requests.id", ondelete="SET NULL"), nullable=True) # 매칭 ID (선택)
     rating = Column(Float, nullable=False)                                  # 평점 (1.0 ~ 5.0)
     comment = Column(String, nullable=True)                                 # 한줄 후기/평가
     created_at = Column(DateTime, default=datetime.utcnow)

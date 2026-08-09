@@ -1,13 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 #backend. 추가하여 경로지정
 from database import get_db, User
 from auth import get_current_user
 from schemas import SendMessageRequest, MessageResponse, LeaveChatResponse
-from chat import send_message, get_conversation, get_match_info, leave_chat
+from chat import send_message, get_conversation, get_match_info, leave_chat, send_file_message
 
 router = APIRouter(prefix="/matches", tags=["채팅"])
 
@@ -35,6 +35,25 @@ def post_message(
     """매칭이 성사된 농부 또는 청년이 메시지를 보낼 때 호출. 매칭 당사자가 아니면 400 에러."""
     try:
         message = send_message(match_id, current_user.id, body.content, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return message
+
+
+@router.post("/{match_id}/upload", response_model=MessageResponse)
+async def upload_chat_file(
+    match_id: int,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    [피드백 반영] 매칭이 성사된 농부-청년 채팅방에서 이미지/동영상을 공유할 때 호출.
+    이미지 최대 20MB, 동영상 최대 300MB까지 허용한다.
+    """
+    content = await file.read()
+    try:
+        message = send_file_message(match_id, current_user.id, file.filename or "attachment", content, db)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return message

@@ -15,25 +15,40 @@ SQLite / PostgreSQL 둘 다 `ALTER TABLE ... ADD COLUMN ...` 문법을 지원하
 from sqlalchemy import inspect, text
 
 
-def run_migrations(engine) -> None:
-    inspector = inspect(engine)
-    if "match_requests" not in inspector.get_table_names():
-        # 테이블 자체가 아직 없으면(신규 DB) create_tables()가 이미 최신 컬럼 포함해서
-        # 만들어줬을 것이므로 할 일이 없다.
+def _add_missing_columns(engine, inspector, table_name: str, columns_to_add: dict) -> None:
+    if table_name not in inspector.get_table_names():
         return
 
-    existing_columns = {col["name"] for col in inspector.get_columns("match_requests")}
-    columns_to_add = {
-        "employer_left": "BOOLEAN NOT NULL DEFAULT FALSE",
-        "employee_left": "BOOLEAN NOT NULL DEFAULT FALSE",
-    }
+    existing_columns = {col["name"] for col in inspector.get_columns(table_name)}
 
     with engine.begin() as conn:
         for column_name, ddl_type in columns_to_add.items():
             if column_name in existing_columns:
                 continue
             try:
-                conn.execute(text(f"ALTER TABLE match_requests ADD COLUMN {column_name} {ddl_type}"))
-                print(f"[OK] match_requests.{column_name} 컬럼 추가 완료")
+                conn.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {ddl_type}"))
+                print(f"[OK] {table_name}.{column_name} 컬럼 추가 완료")
             except Exception as e:
-                print(f"[WARN] match_requests.{column_name} 컬럼 추가 실패(이미 있을 수 있음): {e}")
+                print(f"[WARN] {table_name}.{column_name} 컬럼 추가 실패(이미 있을 수 있음): {e}")
+
+
+def run_migrations(engine) -> None:
+    inspector = inspect(engine)
+
+    _add_missing_columns(engine, inspector, "match_requests", {
+        "employer_left": "BOOLEAN NOT NULL DEFAULT FALSE",
+        "employee_left": "BOOLEAN NOT NULL DEFAULT FALSE",
+    })
+
+    # [피드백 반영] 내 정보 - 프로필 사진 등록 기능용 컬럼
+    _add_missing_columns(engine, inspector, "users", {
+        "profile_image": "TEXT",
+    })
+
+    # [피드백 반영] 채팅 - 이미지/동영상 첨부 공유 기능용 컬럼
+    _add_missing_columns(engine, inspector, "messages", {
+        "message_type": "VARCHAR DEFAULT 'text' NOT NULL",
+        "file_url": "VARCHAR",
+        "file_name": "VARCHAR",
+        "file_size": "INTEGER",
+    })

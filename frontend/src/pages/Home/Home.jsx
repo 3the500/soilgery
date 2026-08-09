@@ -1,9 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../../store/AuthContext'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { authAPI, matchingAPI, reviewAPI } from '../../api'
 import { useToast } from '../../context/ToastContext'
+import StatHexagon from '../../components/StatHexagon'
 import styles from './Home.module.css'
+
+// [피드백 반영] 농업 특화 스텟 라벨 (컬럼명은 기존 그대로 유지, 표시 이름만 구체화)
+const STAT_DISPLAY = [
+  { field: 'stamina', label: '체력', icon: '⚡' },
+  { field: 'strength', label: '근력', icon: '💪' },
+  { field: 'intelligence', label: '숙련도', icon: '🧠' },
+  { field: 'grit', label: '성실성', icon: '🔥' },
+  { field: 'personality', label: '협동심', icon: '🤝' },
+  { field: 'wage_pref', label: '급여민감도', icon: '💰' },
+]
+
+const PROFILE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+const ALLOWED_PROFILE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export default function Home() {
   const { user, logout, refreshUser } = useAuth()
@@ -44,6 +58,15 @@ export default function Home() {
 
   // 상단 우측 탭 상태: 'notice' (알림), 'menu' (메뉴: 관리자 기능), 'settings' (설정), null
   const [activeHeaderTab, setActiveHeaderTab] = useState(null)
+
+  // 🌾 [피드백 반영] 내 정보 탭 - AI 추천 업무 (직업 배지 바로 옆에 표시)
+  // task/message/ai_reason 을 함께 보관해, 배지 클릭 시 AI 분석 상세보기 팝업에 사용한다.
+  const [recommendedTask, setRecommendedTask] = useState(null)
+  const [showTaskAnalysisModal, setShowTaskAnalysisModal] = useState(false)
+
+  // 🖼️ [피드백 반영] 내 정보 탭 - 프로필 사진 업로드
+  const photoInputRef = useRef(null)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
 
   const isFarmer = user?.role === '농부'
   const isStatsEmpty = (u) =>
@@ -98,6 +121,53 @@ export default function Home() {
       showToast(err.response?.data?.detail || '내 정보 수정 중 오류가 발생했습니다.', 'error')
     } finally {
       setSubmittingEdit(false)
+    }
+  }
+
+  // 🌾 [피드백 반영] 청년 회원의 "적성검사 결과 기반 추천 업무"를 조회해
+  // 내 정보 탭의 직업(청년) 배지 바로 옆에 표시한다.
+  useEffect(() => {
+    if (!user || isFarmer || isStatsEmpty(user)) {
+      setRecommendedTask(null)
+      return
+    }
+    matchingAPI.getRecommendedTasks(1)
+      .then((res) => setRecommendedTask(res.data?.[0] || null))
+      .catch((err) => {
+        console.error('추천 업무 조회 실패:', err)
+        setRecommendedTask(null)
+      })
+  }, [user?.id, user?.strength, user?.stamina, user?.grit, user?.intelligence, user?.wage_pref, user?.personality, isFarmer])
+
+  // 🖼️ [피드백 반영] 프로필 사진 업로드 (2~5MB 이하)
+  const handleClickAvatar = () => {
+    if (uploadingPhoto) return
+    photoInputRef.current?.click()
+  }
+
+  const handlePhotoSelected = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+
+    if (!ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type)) {
+      showToast('JPEG, PNG, WEBP 형식의 이미지만 등록할 수 있어요.', 'error')
+      return
+    }
+    if (file.size > PROFILE_IMAGE_MAX_BYTES) {
+      showToast('프로필 사진은 5MB를 넘을 수 없어요.', 'error')
+      return
+    }
+
+    setUploadingPhoto(true)
+    try {
+      await authAPI.uploadProfileImage(file)
+      await refreshUser()
+      showToast('프로필 사진이 등록되었습니다! 🖼️', 'success')
+    } catch (err) {
+      showToast('프로필 사진 업로드 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
+    } finally {
+      setUploadingPhoto(false)
     }
   }
 
@@ -452,7 +522,7 @@ export default function Home() {
                       className={`${styles.adminRoleChip} ${adminUserRoleFilter === 'youth' ? styles.adminRoleChipActive : ''}`}
                       onClick={() => setAdminUserRoleFilter('youth')}
                     >
-                      🧑‍🌾 청년 ({youthUsers.length})
+                      🌱 청년 ({youthUsers.length})
                     </button>
                   </div>
                 </div>
@@ -470,7 +540,7 @@ export default function Home() {
                       >
                         <div className={styles.userInfo}>
                           <span className={styles.userAvatar}>
-                            {u.role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
+                            {u.role === '농부' ? '👨‍🌾' : '🌱'}
                           </span>
                           <div>
                             <div className={styles.userNameGroup}>
@@ -484,10 +554,10 @@ export default function Home() {
                             
                             {u.role !== '농부' && (
                               <div className={styles.statBadges}>
-                                <span>💪근력:{u.strength ?? 0}</span>
                                 <span>⚡체력:{u.stamina ?? 0}</span>
-                                <span>🔥근성:{u.grit ?? 0}</span>
-                                <span>🧠지성:{u.intelligence ?? 0}</span>
+                                <span>💪근력:{u.strength ?? 0}</span>
+                                <span>🧠숙련도:{u.intelligence ?? 0}</span>
+                                <span>🔥성실성:{u.grit ?? 0}</span>
                               </div>
                             )}
                           </div>
@@ -631,53 +701,74 @@ export default function Home() {
           <div className={styles.tabContentFade}>
             {/* 메인 유저 아바타 카드 */}
             <section className={`glass-card ${styles.userMainCard}`}>
-              <div className={styles.avatarArea}>
-                <span className={styles.avatarEmoji}>
-                  {isFarmer ? '👨‍🌾' : '🧑‍🌾'}
-                </span>
+              {/* 🖼️ [피드백 반영] 프로필 사진 등록 (2~5MB 이하, jpeg/png/webp) */}
+              <div
+                className={styles.avatarArea}
+                onClick={handleClickAvatar}
+                role="button"
+                title="프로필 사진 등록/변경"
+              >
+                {user?.profile_image ? (
+                  <img src={user.profile_image} alt="프로필 사진" className={styles.avatarImg} />
+                ) : (
+                  <span className={styles.avatarEmoji}>
+                    {isFarmer ? '👨‍🌾' : '🌱'}
+                  </span>
+                )}
+                <span className={styles.avatarEditBadge}>{uploadingPhoto ? '⏳' : '📷'}</span>
               </div>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                style={{ display: 'none' }}
+                onChange={handlePhotoSelected}
+              />
+
               <h2 className={styles.userName}>{user?.name}</h2>
-              <span className={styles.userRoleTag}>{user?.role}</span>
+              <div className={styles.roleTaskRow}>
+                <span className={styles.userRoleTag}>{user?.role}</span>
+                {/* 🌾 [피드백 반영] 직업(청년) 배지 바로 오른쪽에 AI 추천 업무 표시.
+                    클릭하면 AI 분석 상세보기(적성검사 결과 화면과 동일 내용)를 팝업으로 확인할 수 있다. */}
+                {!isFarmer && (
+                  recommendedTask ? (
+                    <button
+                      type="button"
+                      className={styles.recommendedTaskTag}
+                      onClick={() => setShowTaskAnalysisModal(true)}
+                      title="AI 분석 상세하게 보기"
+                    >
+                      ✨ 추천업무: {recommendedTask.task} 🔍
+                    </button>
+                  ) : (
+                    <span className={styles.recommendedTaskTag}>적성검사 필요</span>
+                  )
+                )}
+              </div>
               <div className={styles.ratingBox}>
                 <span>⭐ 평균 평점</span>
                 <strong>{user?.rating ? Number(user?.rating).toFixed(1) : '0.0'} / 5.0</strong>
               </div>
             </section>
 
-            {/* 📊 내 매칭 스탯 그리드 (농부 회원 제외) */}
+            {/* 📊 내 매칭 스탯 (농부 회원 제외) - 육각형 지표 + 숫자 지표를 함께 표시 */}
             {!isFarmer && (
               <section className={styles.section}>
                 <h3 className={styles.sectionTitle}>📊 내 매칭 스탯</h3>
-                <div className={`glass-card ${styles.statsGrid}`}>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>💪</span>
-                    <span className={styles.statName}>근력</span>
-                    <strong className={styles.statVal}>{user?.strength ?? 0}</strong>
-                  </div>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>⚡</span>
-                    <span className={styles.statName}>체력</span>
-                    <strong className={styles.statVal}>{user?.stamina ?? 0}</strong>
-                  </div>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>🔥</span>
-                    <span className={styles.statName}>근성</span>
-                    <strong className={styles.statVal}>{user?.grit ?? 0}</strong>
-                  </div>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>🧠</span>
-                    <span className={styles.statName}>지성</span>
-                    <strong className={styles.statVal}>{user?.intelligence ?? 0}</strong>
-                  </div>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>💰</span>
-                    <span className={styles.statName}>급여</span>
-                    <strong className={styles.statVal}>{user?.wage_pref ?? 0}</strong>
-                  </div>
-                  <div className={styles.statBox}>
-                    <span className={styles.statIcon}>😊</span>
-                    <span className={styles.statName}>성격</span>
-                    <strong className={styles.statVal}>{user?.personality ?? 0}</strong>
+                <div className={`glass-card ${styles.statsRow}`}>
+                  {/* 🔷 [피드백 반영] 왼쪽: 육각형 지표 (스텟이 0이어도 작은 육각형이 보임) */}
+                  <StatHexagon
+                    items={STAT_DISPLAY.map((s) => ({ label: s.label, value: user?.[s.field] ?? 0 }))}
+                  />
+                  {/* 🔢 오른쪽: 기존 숫자 지표 */}
+                  <div className={styles.statsNumeric}>
+                    {STAT_DISPLAY.map((s) => (
+                      <div key={s.field} className={styles.statBox}>
+                        <span className={styles.statIcon}>{s.icon}</span>
+                        <span className={styles.statName}>{s.label}</span>
+                        <strong className={styles.statVal}>{user?.[s.field] ?? 0}</strong>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </section>
@@ -799,7 +890,7 @@ export default function Home() {
                       }}
                     >
                       <span className={styles.chatPartnerAvatar}>
-                        {m.partner_role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
+                        {m.partner_role === '농부' ? '👨‍🌾' : '🌱'}
                       </span>
                       <div className={styles.chatListItemBody}>
                         <div className={styles.chatListItemTitleRow}>
@@ -948,6 +1039,36 @@ export default function Home() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 🔍 [피드백 반영] 내 정보 화면에서 "추천업무" 배지를 클릭하면, 적성검사 결과
+          화면에 있던 "AI 분석 상세하게 보기" 내용을 그대로 팝업으로 확인할 수 있다. */}
+      {showTaskAnalysisModal && recommendedTask && (
+        <div className={styles.modalOverlay} onClick={() => setShowTaskAnalysisModal(false)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>🔍 AI 분석 상세하게 보기</h3>
+              <button
+                type="button"
+                className={styles.modalCloseBtn}
+                onClick={() => setShowTaskAnalysisModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className={styles.modalForm}>
+              <div className={styles.recommendedTaskModalTitle}>
+                ✨ 추천 농사 분야: <strong>{recommendedTask.task}</strong>
+              </div>
+              {recommendedTask.message && (
+                <p className={styles.recommendedTaskModalText}>{recommendedTask.message}</p>
+              )}
+              {recommendedTask.ai_reason && (
+                <p className={styles.recommendedTaskModalText}>{recommendedTask.ai_reason}</p>
+              )}
+            </div>
           </div>
         </div>
       )}

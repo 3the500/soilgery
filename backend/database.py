@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -33,13 +33,17 @@ class User(Base):
     rating = Column(Float, default=0.0, nullable=False)        # 평점 (★ 0.0 ~ 5.0)
     strength = Column(Integer, default=0, nullable=False)      # 근력
     stamina = Column(Integer, default=0, nullable=False)       # 체력
-    grit = Column(Integer, default=0, nullable=False)          # 근성
-    intelligence = Column(Integer, default=0, nullable=False)  # 지성
-    wage_pref = Column(Integer, default=0, nullable=False)     # 급여
-    personality = Column(Integer, default=0, nullable=False)   # 성격
+    grit = Column(Integer, default=0, nullable=False)          # 성실성 (구: 근성)
+    intelligence = Column(Integer, default=0, nullable=False)  # 숙련도 (구: 지성)
+    wage_pref = Column(Integer, default=0, nullable=False)     # 급여민감도 (구: 급여)
+    personality = Column(Integer, default=0, nullable=False)   # 협동심 (구: 성격)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     is_seeking = Column(Boolean, default=True, nullable=False)  # 구직 중 여부
+
+    # 프로필 사진 (base64 data URL 문자열로 저장, 2~5MB 이하로 업로드 시점에 검증)
+    # 별도 오브젝트 스토리지(S3 등) 없이도 동작하도록 DB에 직접 저장하는 방식을 사용합니다.
+    profile_image = Column(Text, nullable=True)
 
 
 def get_db():

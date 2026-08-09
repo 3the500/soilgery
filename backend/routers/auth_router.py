@@ -1,5 +1,6 @@
+import base64
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 
 from database import get_db, User
@@ -7,6 +8,15 @@ from schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse, 
 from auth import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["인증"])
+
+# [피드백 반영] 내 정보 - 프로필 사진 등록 기능
+# 요구사항 원문 "사진 용량은 2MB~5MB 이하"는 하한선까지 강제하는 것인지 표현이 다소
+# 모호합니다. 일반 스마트폰 사진은 압축/리사이즈를 거치면 2MB 미만인 경우도 흔해서,
+# 하한선(2MB)까지 강제하면 정상적인 사진도 계속 거부되는 문제가 생길 수 있습니다.
+# 그래서 우선 "최대 5MB"만 강제하도록 구현했습니다. 하한선(2MB 미만 업로드 차단)이
+# 실제로 필요하시면 MIN_PROFILE_IMAGE_SIZE 검증을 추가해 드릴 수 있습니다.
+MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024   # 5MB
+ALLOWED_IMAGE_CONTENT_TYPES = {"image/jpeg", "image/png", "image/webp"}
 
 
 
@@ -72,6 +82,44 @@ def update_me(
     for field, value in update_data.items():
         setattr(current_user, field, value)
 
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@router.post("/me/profile-image", response_model=UserResponse, summary="프로필 사진 등록/변경")
+async def upload_profile_image(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    [피드백 반영] 내 정보 메뉴에서 프로필 사진을 등록할 수 있게 한다.
+    업로드된 이미지는 base64 data URL 형태로 인코딩해 User.profile_image 컬럼에 저장한다.
+    (별도의 오브젝트 스토리지 없이 DB에 바로 저장하는 방식)
+    """
+    if file.content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
+        raise HTTPException(status_code=400, detail="JPEG, PNG, WEBP 형식의 이미지만 업로드할 수 있습니다.")
+
+    content = await file.read()
+    if len(content) > MAX_PROFILE_IMAGE_SIZE:
+        raise HTTPException(status_code=400, detail="프로필 사진은 5MB를 초과할 수 없습니다.")
+
+    encoded = base64.b64encode(content).decode("utf-8")
+    current_user.profile_image = f"data:{file.content_type};base64,{encoded}"
+
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@router.delete("/me/profile-image", response_model=UserResponse, summary="프로필 사진 삭제")
+def delete_profile_image(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """등록된 프로필 사진을 삭제하고 기본 아바타로 되돌린다."""
+    current_user.profile_image = None
     db.commit()
     db.refresh(current_user)
     return current_user

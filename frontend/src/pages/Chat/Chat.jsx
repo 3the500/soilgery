@@ -1,8 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
-import api, { chatAPI, reviewAPI } from '../../api/index'
+import api, { chatAPI, reviewAPI, API_BASE_URL } from '../../api/index'
 import styles from './Chat.module.css'
+
+// 🖼️🎬 [피드백 반영] 채팅 이미지/동영상 공유 - 서버(chat.py) 정책과 동일한 클라이언트 측 사전 검증
+const MAX_IMAGE_BYTES = 20 * 1024 * 1024   // 이미지 20MB
+const MAX_VIDEO_BYTES = 300 * 1024 * 1024  // 동영상 300MB
+const toAttachmentUrl = (fileUrl) => (fileUrl ? `${API_BASE_URL}${fileUrl}` : '')
 
 const toLocalDate = (isoString) => {
   if (!isoString) return null
@@ -58,6 +63,13 @@ export default function Chat() {
   const [selectedRating, setSelectedRating] = useState(5.0)
   const [reviewComment, setReviewComment] = useState('')
 
+  // 🖼️🎬 [피드백 반영] 이미지/동영상 첨부 업로드 상태
+  const fileInputRef = useRef(null)
+  const [uploadingFile, setUploadingFile] = useState(false)
+
+  // 🚨 [피드백 반영] 채팅방 최초 입장 시 "캡처 후 신고" 안내 배너 노출 여부
+  const [showReportNotice, setShowReportNotice] = useState(false)
+
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
@@ -104,8 +116,13 @@ export default function Chat() {
     fetchMessages(currentMatchId).finally(() => setLoading(false))
     fetchPartnerInfo(currentMatchId)
 
+    // 🔴 [버그 수정] 메시지뿐 아니라 상대방 정보(퇴장 여부 partner_left 포함)도
+    // 함께 폴링해야, 대화 중 상대방이 나갔을 때 "상대방이 나갔습니다" 알림이
+    // 새로고침 없이 즉시 뜬다. (이전에는 메시지만 갱신되고 partner는 입장 시
+    // 최초 1회만 조회되어 반영이 늦었음)
     const interval = setInterval(() => {
       fetchMessages(currentMatchId)
+      fetchPartnerInfo(currentMatchId)
     }, 2000)
 
     return () => clearInterval(interval)
@@ -114,6 +131,22 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // 🚨 [피드백 반영] 이 채팅방에 처음 입장했을 때만 "캡처 후 신고" 안내 배너를 노출
+  useEffect(() => {
+    if (!matchId) return
+    const seenKey = `seen_report_notice_${matchId}`
+    if (!localStorage.getItem(seenKey)) {
+      setShowReportNotice(true)
+    }
+  }, [matchId])
+
+  const handleDismissReportNotice = () => {
+    if (matchId) {
+      localStorage.setItem(`seen_report_notice_${matchId}`, '1')
+    }
+    setShowReportNotice(false)
+  }
 
   const handleSendMessage = async (textToSend) => {
     const content = textToSend || inputText.trim()
@@ -138,6 +171,45 @@ export default function Chat() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
+    }
+  }
+
+  // 🖼️🎬 [피드백 반영] 이미지/동영상 첨부 전송 (이미지 20MB, 동영상 300MB 이하)
+  const handleClickAttach = () => {
+    if (uploadingFile || !matchId || partner?.partner_left) return
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelected = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file || !matchId) return
+
+    const isImage = file.type.startsWith('image/')
+    const isVideo = file.type.startsWith('video/')
+
+    if (!isImage && !isVideo) {
+      alert('이미지 또는 동영상 파일만 전송할 수 있습니다.')
+      return
+    }
+    if (isImage && file.size > MAX_IMAGE_BYTES) {
+      alert('이미지 파일은 20MB를 초과할 수 없습니다.')
+      return
+    }
+    if (isVideo && file.size > MAX_VIDEO_BYTES) {
+      alert('동영상 파일은 300MB를 초과할 수 없습니다.')
+      return
+    }
+
+    setUploadingFile(true)
+    try {
+      const res = await chatAPI.uploadFile(matchId, file)
+      setMessages((prev) => [...prev, res.data])
+      localStorage.setItem('last_seen_chat_time', new Date().toISOString())
+    } catch (err) {
+      alert('파일 전송 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'))
+    } finally {
+      setUploadingFile(false)
     }
   }
 
@@ -206,9 +278,18 @@ export default function Chat() {
           ← 메인화면
         </button>
         <div className={styles.partnerProfileHeader}>
-          <span className={styles.partnerAvatarEmoji}>
-            {partner?.partner_role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
-          </span>
+          {/* 🖼️ [피드백 반영] 상대방이 프로필 사진을 등록했다면 이모지 대신 실제 사진을 표시 */}
+          {partner?.partner_profile_image ? (
+            <img
+              src={partner.partner_profile_image}
+              alt={partner?.partner_name || '상대방 프로필'}
+              className={styles.partnerAvatarImg}
+            />
+          ) : (
+            <span className={styles.partnerAvatarEmoji}>
+              {partner?.partner_role === '농부' ? '👨‍🌾' : '🌱'}
+            </span>
+          )}
           <div className={styles.partnerNameCol}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <strong className={styles.partnerNameText}>
@@ -240,6 +321,24 @@ export default function Chat() {
           <span className={styles.contextPinText}>
             희망 업무: <strong>{partner.task || '농업 업무 매칭'}</strong>
           </span>
+        </div>
+      )}
+
+      {/* 🚨 [피드백 반영] 채팅방 최초 입장 시 노출되는 "캡처 후 신고" 안내 배너 */}
+      {showReportNotice && (
+        <div className={styles.reportNoticeBanner}>
+          <span className={styles.reportNoticeText}>
+            ⚠️ 상대방의 폭언 등 부적절한 언행이나 문제가 발생하면, 대화 내용을 캡처하신 뒤
+            AI 상담사 메뉴의 신고 기능으로 알려주세요. 접수된 내용은 담당자가 확인합니다.
+          </span>
+          <button
+            type="button"
+            className={styles.reportNoticeCloseBtn}
+            onClick={handleDismissReportNotice}
+            title="닫기"
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -281,7 +380,15 @@ export default function Chat() {
                 <div className={`${styles.messageRow} ${isMyMessage ? styles.myRow : styles.otherRow}`}>
                   {!isMyMessage && (
                     <div className={styles.avatar}>
-                      {partner?.partner_role === '농부' ? '👨‍🌾' : '🧑‍🌾'}
+                      {partner?.partner_profile_image ? (
+                        <img
+                          src={partner.partner_profile_image}
+                          alt={partner?.partner_name || '상대방'}
+                          className={styles.avatarImg}
+                        />
+                      ) : (
+                        partner?.partner_role === '농부' ? '👨‍🌾' : '🌱'
+                      )}
                     </div>
                   )}
                   <div className={styles.messageWrapper}>
@@ -291,7 +398,24 @@ export default function Chat() {
                       </span>
                     )}
                     <div className={`${styles.bubble} ${isMyMessage ? styles.myBubble : styles.otherBubble}`}>
-                      {msg.content}
+                      {/* 🖼️🎬 [피드백 반영] 이미지/동영상 첨부 메시지 렌더링 */}
+                      {msg.message_type === 'image' && msg.file_url ? (
+                        <a href={toAttachmentUrl(msg.file_url)} target="_blank" rel="noreferrer">
+                          <img
+                            src={toAttachmentUrl(msg.file_url)}
+                            alt={msg.file_name || '이미지'}
+                            className={styles.attachmentImage}
+                          />
+                        </a>
+                      ) : msg.message_type === 'video' && msg.file_url ? (
+                        <video
+                          src={toAttachmentUrl(msg.file_url)}
+                          controls
+                          className={styles.attachmentVideo}
+                        />
+                      ) : (
+                        msg.content
+                      )}
                     </div>
                     <span className={styles.timestamp}>
                       {msg.created_at ? formatKoreanTime(msg.created_at) : ''}
@@ -330,6 +454,23 @@ export default function Chat() {
 
       {/* ⌨️ 둥근 캡슐 DM 입력 하단 바 */}
       <form className={styles.inputArea} onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}>
+        {/* 🖼️🎬 [피드백 반영] 이미지/동영상 첨부 버튼 (이미지 20MB, 동영상 300MB 이하) */}
+        <button
+          type="button"
+          className={styles.attachButton}
+          onClick={handleClickAttach}
+          disabled={!matchId || partner?.partner_left || uploadingFile}
+          title="사진/동영상 보내기"
+        >
+          {uploadingFile ? '⏳' : '📎'}
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*,video/*"
+          style={{ display: 'none' }}
+          onChange={handleFileSelected}
+        />
         <input
           type="text"
           className={styles.capsuleInput}

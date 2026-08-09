@@ -1,0 +1,34 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gridPolygon {
+  fill: none;
+  stroke: #E2D9C3;
+  stroke-width: 1;
+}
+
+.axisLine {
+  stroke: #E2D9C3;
+  stroke-width: 1;
+}
+
+.dataPolygon {
+  fill: rgba(255, 193, 7, 0.35);
+  stroke: #F5B000;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.dataDot {
+  fill: #8B5129;
+}
+
+.axisLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: var(--color-text-sub, #8A7F6B);
+}

@@ -41,6 +41,24 @@ npm run dev
 
 ---
 
+## ☁️ Railway 배포 가이드 (중요)
+
+이 저장소는 **백엔드/프론트엔드를 Railway에 별도의 두 서비스로 배포**하는 구조입니다. 각 서비스의 **Root Directory**를 반드시 아래와 같이 지정해야 합니다. (그렇지 않으면 백엔드가 import 오류로 즉시 죽습니다.)
+
+| Railway 서비스 | Root Directory | 사용되는 설정 파일 |
+|---|---|---|
+| 백엔드 (FastAPI) | `backend` | `backend/Procfile`, `backend/railway.toml` (`uvicorn main:app ...`) |
+| 프론트엔드 (React/Vite) | `frontend` | `frontend/railway.toml` (`npm run build` → `npm run preview`) |
+
+> ⚠️ `backend/` 내부의 모든 모듈(`database.py`, `auth.py`, 라우터들 등)은 **`backend`를 작업 디렉터리로 실행된다는 전제**로 `from database import ...` 형태의 상대 경로 import를 사용합니다. Root Directory를 저장소 루트로 설정하면 이 import들이 전부 깨지므로, 반드시 백엔드 서비스의 Root Directory는 `backend`로 지정하세요.
+
+백엔드 서비스에는 아래 환경변수가 **반드시** 설정되어 있어야 합니다 (없으면 서버 시작 자체가 실패합니다):
+- `DATABASE_URL` — Railway PostgreSQL 플러그인 연결 주소
+- `SECRET_KEY` — JWT 서명 키
+- `ANTHROPIC_API_KEY` — AI 매칭/AI 상담사 기능에서 사용 (미설정 시 서버 부팅 시점에 바로 에러 발생)
+
+---
+
 ## 🤝 친구1 (AI / 핵심 기능 담당) 작업 가이드
 
 ### 1. User DB 모델에 반영된 스탯 컬럼 목록

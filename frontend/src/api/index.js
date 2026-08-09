@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 💡 백엔드 클라우드 URL (Railway 24시간 백엔드 연결)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://outstanding-celebration-production.up.railway.app'
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://outstanding-celebration-production.up.railway.app'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -39,6 +39,15 @@ export const authAPI = {
   me: () => api.get('/auth/me'),
   updateMe: (data) => api.put('/auth/me', data),
   getUsers: () => api.get('/auth/users'),
+  // 🖼️ [피드백 반영] 프로필 사진 등록/삭제 (2~5MB 이하, jpeg/png/webp)
+  uploadProfileImage: (file) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post('/auth/me/profile-image', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+  deleteProfileImage: () => api.delete('/auth/me/profile-image'),
 }
 
 // ── 2. 적성검사(Aptitude Test) API ────────────────
@@ -80,6 +89,14 @@ export const chatAPI = {
   getMessages: (matchId) => api.get(`/matches/${matchId}/messages`),
   getMatchInfo: (matchId) => api.get(`/matches/${matchId}/info`),
   leaveChat: (matchId) => api.post(`/matches/${matchId}/leave`),
+  // 🖼️🎬 [피드백 반영] 채팅방 이미지/동영상 공유 (이미지 20MB, 동영상 300MB 이하)
+  uploadFile: (matchId, file) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post(`/matches/${matchId}/upload`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
 }
 
 // ── 6. AI 상담사(Support) API ─────────────────────

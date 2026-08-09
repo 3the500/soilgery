@@ -78,6 +78,39 @@
   line-height: 1.5;
 }
 
+/* 🔍 [피드백 반영] AI 분석 근거 "상세하게 보기" / "접기" 토글 */
+.detailToggleBtn {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-brown);
+  background: #ffffff;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+}
+.detailToggleBtn:hover {
+  background: var(--color-primary-light);
+  color: #1A1209;
+}
+
+.detailReasonBox {
+  margin-top: 4px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px dashed rgba(255, 193, 7, 0.6);
+  border-radius: var(--radius-md);
+}
+
+.detailReasonText {
+  font-size: 13px;
+  color: #5D4037;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
 /* 💡 AI 매칭 진행 중 상태 카드 */
 .seekingNoticeCard {
   background: var(--color-surface);
