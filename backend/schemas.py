@@ -40,6 +40,10 @@ class UserResponse(BaseModel):
     wage_pref: int = 0
     personality: int = 0
 
+    # ── 🏆 경험치 & 레벨 (Lv.1 ~ Lv.10) ─────
+    exp: int = 0
+    level: int = 1
+
     is_seeking: bool = True          # 구직 중 여부
     profile_image: Optional[str] = None  # 프로필 사진 (base64 data URL)
     created_at: Optional[datetime] = None

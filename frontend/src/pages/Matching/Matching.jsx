@@ -45,7 +45,7 @@ export default function Matching() {
       await matchingAPI.requestMatch()
       setSeeking(true)
       await refreshUser?.()
-      showToast('AI 매칭 신청이 성공적으로 완료되었습니다! ⚡', 'success')
+      showToast('소일거리 매칭 신청이 성공적으로 완료되었습니다! ⚡', 'success')
     } catch (err) {
       showToast('매칭 신청 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
     }
@@ -116,7 +116,7 @@ export default function Matching() {
         <div className={styles.topBar}>
           <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
         </div>
-        <h1 className={styles.title}>🌾 AI 추천 농사 업무 & 매칭</h1>
+        <h1 className={styles.title}>🌾 소일거리 추천 농사 업무 & 매칭</h1>
 
         {statsEmpty ? (
           <div className={styles.candidateList}>
@@ -138,9 +138,9 @@ export default function Matching() {
             {seeking ? (
               <div className={styles.seekingNoticeCard}>
                 <div className={styles.seekingHeader}>
-                  <span className={styles.seekingIcon}>🤖</span>
+                  <span className={styles.seekingIcon}>🌱</span>
                   <div className={styles.seekingTitleGroup}>
-                    <h3>⚡ AI 매칭 진행 중...</h3>
+                    <h3>⚡ 소일거리 매칭 진행 중...</h3>
                     <span className={styles.seekingBadge}>농부 회원의 구직 선택을 기다리고 있어요</span>
                   </div>
                 </div>

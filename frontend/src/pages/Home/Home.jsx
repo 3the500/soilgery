@@ -19,6 +19,87 @@ const STAT_DISPLAY = [
 const PROFILE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
 const ALLOWED_PROFILE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
+// 🏆 레벨(Lv.1 ~ Lv.10) 및 경험치(EXP) 유틸리티
+export const LEVEL_TABLE = [
+  { level: 1, minExp: 0, maxExp: 100, youthTitle: '새싹 소일꾼', farmerTitle: '초보 농부' },
+  { level: 2, minExp: 100, maxExp: 250, youthTitle: '초보 소일꾼', farmerTitle: '새싹 농부' },
+  { level: 3, minExp: 250, maxExp: 450, youthTitle: '숙련 소일꾼', farmerTitle: '경험자 농부' },
+  { level: 4, minExp: 450, maxExp: 700, youthTitle: '베테랑 소일꾼', farmerTitle: '베테랑 농부' },
+  { level: 5, minExp: 700, maxExp: 1000, youthTitle: '농가의 희망', farmerTitle: '농사의 달인' },
+  { level: 6, minExp: 1000, maxExp: 1350, youthTitle: '전문 소일꾼', farmerTitle: '명품 대농' },
+  { level: 7, minExp: 1350, maxExp: 1750, youthTitle: '마스터 소일꾼', farmerTitle: '리더 농부' },
+  { level: 8, minExp: 1750, maxExp: 2200, youthTitle: '전설의 일손', farmerTitle: '으뜸 대농' },
+  { level: 9, minExp: 2200, maxExp: 2700, youthTitle: '소일거리 장인', farmerTitle: '농가의 수호자' },
+  { level: 10, minExp: 2700, maxExp: 2700, youthTitle: '농사의 신 👑', farmerTitle: '대한민국 으뜸농부 👑' },
+]
+
+export function getLevelDetail(exp = 0, role = '청년') {
+  const currentExp = Math.max(0, exp)
+  let info = LEVEL_TABLE.find((t) => currentExp >= t.minExp && (t.level === 10 || currentExp < t.maxExp))
+  if (!info) {
+    info = LEVEL_TABLE[LEVEL_TABLE.length - 1]
+  }
+
+  const isMax = info.level === 10
+  const title = role === '농부' ? info.farmerTitle : info.youthTitle
+  const min = info.minExp
+  const max = isMax ? min : info.maxExp
+  const needed = isMax ? 0 : max - min
+  const currentInLevel = isMax ? 0 : currentExp - min
+  const progressPercent = isMax ? 100 : Math.min(100, Math.round((currentInLevel / needed) * 100))
+
+  return {
+    level: info.level,
+    title,
+    currentExp,
+    minExp: min,
+    maxExp: max,
+    currentInLevel,
+    neededInLevel: needed,
+    progressPercent,
+    isMax,
+  }
+}
+
+export function getHarvestIndexInfo(user, receivedReviews = [], myMatches = []) {
+  const rating = user?.rating ? Number(user.rating) : 0.0
+  const totalMatches = myMatches.length
+  const canceledMatches = myMatches.filter((m) => m.partner_left).length
+  const successMatches = Math.max(0, totalMatches - canceledMatches)
+
+  const successRate = totalMatches > 0 ? Math.round((successMatches / totalMatches) * 100) : 100
+
+  const receivedCount = receivedReviews.length
+  const positiveCount = receivedReviews.filter((r) => Number(r.rating) >= 4.0).length
+  const satisfactionRate = receivedCount > 0 ? Math.round((positiveCount / receivedCount) * 100) : 100
+
+  let index = 50
+  if (receivedCount > 0 || totalMatches > 0) {
+    index = Math.min(100, Math.max(0, Math.round((rating / 5.0) * 80 + (successRate / 100) * 20)))
+  }
+
+  let grade = '🌱 새싹 경작자'
+  if (index >= 90) {
+    grade = '👑 풍년 농사의 신'
+  } else if (index >= 70) {
+    grade = '🌾 풍요로운 결실'
+  } else if (index >= 50) {
+    grade = '🌿 잘 자라는 일손'
+  }
+
+  return {
+    harvestIndex: index,
+    grade,
+    totalMatches,
+    successMatches,
+    canceledMatches,
+    successRate,
+    receivedCount,
+    positiveCount,
+    satisfactionRate,
+  }
+}
+
 export default function Home() {
   const { user, logout, refreshUser } = useAuth()
   const navigate = useNavigate()
@@ -255,6 +336,28 @@ export default function Home() {
             setActiveHeaderTab(null)
             setBottomTab('review')
             setSearchParams({ tab: 'review' })
+          }
+        })
+      }
+    }
+
+    // 4. 🏆 [신규 기능] 레벨업 달성 축하 알림 (Lv.2 이상 도달 시)
+    const levelInfo = getLevelDetail(user.exp || 0, user.role || '청년')
+    if (levelInfo.level > 1) {
+      const levelNoticeId = `level_up_${levelInfo.level}`
+      if (!savedDismissed.includes(levelNoticeId)) {
+        list.push({
+          id: levelNoticeId,
+          type: 'level',
+          canDismiss: true,
+          title: `🎉 레벨업 축하합니다! Lv.${levelInfo.level} 달성!`,
+          desc: `축하합니다! 소일거리 활동으로 경험치를 쌓아 [${levelInfo.title}] 칭호를 획득하셨습니다! 🏆🌾`,
+          btnText: '👤 내 정보 프로필 보기',
+          action: () => {
+            setActiveHeaderTab(null)
+            setBottomTab('profile')
+            setSearchParams({ tab: 'profile' })
+            showToast(`🎉 Lv.${levelInfo.level} [${levelInfo.title}] 달성을 축하드립니다!`, 'success')
           }
         })
       }
@@ -498,7 +601,7 @@ export default function Home() {
                         )}
                         <div className={styles.welcomeNoticeHeader}>
                           <span className={styles.welcomeNoticeIcon}>
-                            {n.type === 'review' ? '⭐' : n.type === 'match' ? '💬' : '🌱'}
+                            {n.type === 'level' ? '🏆' : n.type === 'review' ? '⭐' : n.type === 'match' ? '💬' : '🌱'}
                           </span>
                           <div style={{ flex: 1, paddingRight: n.canDismiss ? '20px' : '0' }}>
                             <strong>{n.title}</strong>
@@ -710,7 +813,7 @@ export default function Home() {
                       <div className={styles.reviewItemHeader}>
                         <div className={styles.reviewUserMeta}>
                           <span className={styles.reviewUserAvatar}>
-                            {reviewTabSub === 'received' ? '🧑‍🌾' : '👨‍🌾'}
+                            {reviewTabSub === 'received' ? (isFarmer ? '🌱' : '👨‍🌾') : (isFarmer ? '👨‍🌾' : '🌱')}
                           </span>
                           <div>
                             <strong>
@@ -743,9 +846,9 @@ export default function Home() {
         {/* 2️⃣ [👤 내 정보 탭] 컨텐츠 */}
         {bottomTab === 'profile' && (
           <div className={styles.tabContentFade}>
-            {/* 메인 유저 아바타 카드 */}
+            {/* 메인 유저 아바타 카드 (통합 카드) */}
             <section className={`glass-card ${styles.userMainCard}`}>
-              {/* 🖼️ [피드백 반영] 프로필 사진 등록 (2~5MB 이하, jpeg/png/webp) */}
+              {/* 🖼️ 프로필 사진 */}
               <div
                 className={styles.avatarArea}
                 onClick={handleClickAvatar}
@@ -772,8 +875,6 @@ export default function Home() {
               <h2 className={styles.userName}>{user?.name}</h2>
               <div className={styles.roleTaskRow}>
                 <span className={styles.userRoleTag}>{user?.role}</span>
-                {/* 🌾 [피드백 반영] 직업(청년) 배지 바로 오른쪽에 AI 추천 업무 표시.
-                    클릭하면 AI 분석 상세보기(적성검사 결과 화면과 동일 내용)를 팝업으로 확인할 수 있다. */}
                 {!isFarmer && (
                   recommendedTask ? (
                     <button
@@ -789,10 +890,118 @@ export default function Home() {
                   )
                 )}
               </div>
-              <div className={styles.ratingBox}>
-                <span>⭐ 평균 평점</span>
-                <strong>{user?.rating ? Number(user?.rating).toFixed(1) : '0.0'} / 5.0</strong>
+
+              {/* 🏆 레벨 & 경험치(EXP) 게이지 바 */}
+              {(() => {
+                const levelInfo = getLevelDetail(user?.exp || 0, user?.role || '청년')
+                return (
+                  <div className={styles.levelCardSection}>
+                    <div className={styles.levelBadgeRow}>
+                      <span className={styles.levelBadge}>
+                        🏆 Lv.{levelInfo.level}
+                      </span>
+                      <strong className={styles.levelTitleText}>
+                        {levelInfo.title}
+                      </strong>
+                    </div>
+
+                    <div className={styles.expProgressBarWrapper}>
+                      <div className={styles.expProgressBarTrack}>
+                        <div
+                          className={styles.expProgressBarFill}
+                          style={{ width: `${levelInfo.progressPercent}%` }}
+                        />
+                      </div>
+                      <div className={styles.expProgressTextRow}>
+                        <span className={styles.expSubLabel}>
+                          {levelInfo.isMax ? '👑 최고 레벨 달성!' : `다음 레벨까지 +${levelInfo.maxExp - levelInfo.currentExp} EXP`}
+                        </span>
+                        <strong className={styles.expNumText}>
+                          {levelInfo.currentExp} / {levelInfo.isMax ? 'MAX' : levelInfo.maxExp} EXP ({levelInfo.progressPercent}%)
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* ⭐ 대형 하이라이트 평균 평점 카드 */}
+              <div className={styles.ratingBigCard}>
+                <span className={styles.ratingBigLabel}>⭐ 평균 평점</span>
+                {user?.rating && Number(user.rating) > 0 ? (
+                  <div className={styles.ratingBigScoreGroup}>
+                    <strong className={styles.ratingBigScoreNum}>
+                      {Number(user.rating).toFixed(1)}
+                    </strong>
+                    <span className={styles.ratingBigMaxText}>/ 5.0</span>
+                  </div>
+                ) : (
+                  <span className={styles.ratingEmptyText}>아직 없음</span>
+                )}
               </div>
+
+              {/* 🌾 평균 평점 바로 아래 일체형으로 통합된 소일거리 결실 리포트 */}
+              {(() => {
+                const harvestInfo = getHarvestIndexInfo(user, reviewsData.received, myMatches)
+                return (
+                  <div className={styles.harvestInnerCard}>
+                    <div className={styles.harvestHeaderRow}>
+                      <div className={styles.harvestTitleBox}>
+                        <span className={styles.harvestSubLabel}>내 소일거리 결실 척도</span>
+                        <strong className={styles.harvestMainScore}>
+                          🌾 풍년 지수 {harvestInfo.harvestIndex}%
+                        </strong>
+                      </div>
+                      <span className={styles.harvestGradeBadge}>
+                        {harvestInfo.grade}
+                      </span>
+                    </div>
+
+                    <div className={styles.harvestProgressBarTrack}>
+                      <div
+                        className={styles.harvestProgressBarFill}
+                        style={{ width: `${harvestInfo.harvestIndex}%` }}
+                      />
+                    </div>
+
+                    <div className={styles.harvestDivider} />
+
+                    <div className={styles.harvestDetailBox}>
+                      <div className={styles.harvestDetailRow}>
+                        <span className={styles.harvestDetailLabel}>⭐ 일손 만족 추천율</span>
+                        <strong className={styles.harvestDetailHighlight}>
+                          {harvestInfo.receivedCount > 0 ? `${harvestInfo.satisfactionRate}%` : '아직 없음'}
+                        </strong>
+                      </div>
+                      <p className={styles.harvestDetailSubText}>
+                        {harvestInfo.receivedCount > 0
+                          ? `받은 평가 ${harvestInfo.receivedCount}명 중 ${harvestInfo.positiveCount}명이 칭찬함`
+                          : '아직 등록된 매칭 평가 후기가 없습니다'}
+                      </p>
+                    </div>
+
+                    <div className={styles.harvestDetailBox}>
+                      <div className={styles.harvestDetailRow}>
+                        <span className={styles.harvestDetailLabel}>🤝 매칭 진행 성과</span>
+                        <strong className={styles.harvestDetailHighlight}>
+                          {harvestInfo.totalMatches > 0 ? `성공률 ${harvestInfo.successRate}%` : '아직 없음'}
+                        </strong>
+                      </div>
+                      <p className={styles.harvestDetailSubText}>
+                        {harvestInfo.totalMatches > 0 ? (
+                          <>
+                            총 <strong>{harvestInfo.totalMatches}회</strong> 개설 대화 중{' '}
+                            <span className={styles.successTagText}>성공 {harvestInfo.successMatches}회</span> ·{' '}
+                            <span className={styles.cancelTagText}>파기 {harvestInfo.canceledMatches}회</span>
+                          </>
+                        ) : (
+                          '아직 진행된 소일거리 매칭 내역이 없습니다'
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })()}
             </section>
 
             {/* 📊 내 매칭 스탯 (농부 회원 제외) - 육각형 지표 + 숫자 지표를 함께 표시 */}

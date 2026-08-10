@@ -52,7 +52,12 @@ def create_review(
     avg_rating = db.query(func.avg(Review.rating)).filter(Review.reviewee_id == req.reviewee_id).scalar()
     if avg_rating is not None:
         target_user.rating = round(float(avg_rating), 1)
-        db.commit()
+
+    # 3. 🏆 리뷰를 받을 때마다 경험치(rating * 20) 부여 및 레벨(1~10) 갱신
+    gained_exp = round(float(req.rating) * 20)
+    target_user.exp = (target_user.exp or 0) + gained_exp
+    target_user.level = calculate_level(target_user.exp)
+    db.commit()
 
     return ReviewResponse(
         id=review.id,
@@ -65,6 +70,41 @@ def create_review(
         comment=review.comment,
         created_at=review.created_at
     )
+
+
+# 🏆 경험치(EXP) 기준 레벨 계산 함수 (Lv.1 ~ Lv.10)
+def calculate_level(exp: int) -> int:
+    if exp < 100:
+        return 1
+    elif exp < 250:
+        return 2
+    elif exp < 450:
+        return 3
+    elif exp < 700:
+        return 4
+    elif exp < 1000:
+        return 5
+    elif exp < 1350:
+        return 6
+    elif exp < 1750:
+        return 7
+    elif exp < 2200:
+        return 8
+    elif exp < 2700:
+        return 9
+    else:
+        return 10
+
+
+def sync_all_users_exp_and_level(db: Session):
+    """기존 DB의 리뷰 데이터를 기반으로 전체 유저의 exp와 level을 소급 동기화합니다."""
+    users = db.query(User).all()
+    for user in users:
+        reviews = db.query(Review).filter(Review.reviewee_id == user.id).all()
+        total_exp = sum(round(float(r.rating) * 20) for r in reviews)
+        user.exp = total_exp
+        user.level = calculate_level(total_exp)
+    db.commit()
 
 
 @router.get("/my", summary="내 관련 리뷰 목록 조회 (내가 쓴 리뷰 & 내가 받은 리뷰)")

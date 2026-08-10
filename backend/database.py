@@ -38,11 +38,14 @@ class User(Base):
     wage_pref = Column(Integer, default=0, nullable=False)     # 급여민감도 (구: 급여)
     personality = Column(Integer, default=0, nullable=False)   # 협동심 (구: 성격)
 
+    # ── 🏆 레벨 및 경험치 (Lv.1 ~ Lv.10) ───────────
+    exp = Column(Integer, default=0, nullable=False)           # 누적 경험치
+    level = Column(Integer, default=1, nullable=False)         # 현재 레벨 (1 ~ 10)
+
     created_at = Column(DateTime, default=datetime.utcnow)
     is_seeking = Column(Boolean, default=True, nullable=False)  # 구직 중 여부
 
-    # 프로필 사진 (base64 data URL 문자열로 저장, 2~5MB 이하로 업로드 시점에 검증)
-    # 별도 오브젝트 스토리지(S3 등) 없이도 동작하도록 DB에 직접 저장하는 방식을 사용합니다.
+    # 프로필 사진 (base64 data URL 문자열로 저장)
     profile_image = Column(Text, nullable=True)
 
 
@@ -56,3 +59,14 @@ def get_db():
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
+
+    # DB 마이그레이션: exp, level 컬럼이 없는 기존 DB 테이블 자동 보완
+    with engine.connect() as conn:
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN exp INTEGER DEFAULT 0;")
+        except Exception:
+            pass
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN level INTEGER DEFAULT 1;")
+        except Exception:
+            pass

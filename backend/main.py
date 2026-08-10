@@ -30,7 +30,7 @@ except ImportError:
     )
 
 
-# ── 앱 수명주기(Lifespan) 설정 (DB 테이블 자동 생성) ─────────────────────
+# ── 앱 수명주기(Lifespan) 설정 (DB 테이블 자동 생성 및 레벨 동기화) ─────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
@@ -43,6 +43,24 @@ async def lifespan(app: FastAPI):
         run_migrations(engine)
     except Exception as e:
         print(f"[ERROR] DB 마이그레이션 실패: {e}")
+
+    try:
+        try:
+            from backend.database import SessionLocal
+            from backend.routers.review_router import sync_all_users_exp_and_level
+        except ImportError:
+            from database import SessionLocal
+            from routers.review_router import sync_all_users_exp_and_level
+
+        db = SessionLocal()
+        try:
+            sync_all_users_exp_and_level(db)
+            print("[OK] 전체 유저 경험치 및 레벨 동기화 완료")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[ERROR] 경험치 동기화 실패: {e}")
+
     yield
 
 

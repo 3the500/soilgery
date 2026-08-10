@@ -560,13 +560,251 @@ button.recommendedTaskTag:hover {
   color: #1A1209;
 }
 
-.ratingBox {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 14px; font-weight: 700; color: var(--color-brown);
-  background: var(--color-primary-pale);
-  border: 1px solid rgba(255, 193, 7, 0.4);
-  padding: 6px 18px; border-radius: var(--radius-full);
-  margin-top: 4px;
+/* 🏆 럭셔리 레벨 카드 & 경험치(EXP) 게이지바 디자인 */
+.levelCardSection {
+  width: 100%;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #FFFDF7 0%, #FFF8E7 100%);
+  border: 1.5px solid rgba(255, 193, 7, 0.5);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px rgba(139, 81, 41, 0.05);
+}
+
+.levelBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.levelBadge {
+  font-size: 13px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(245, 176, 0, 0.35);
+  letter-spacing: -0.2px;
+}
+
+.levelTitleText {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-brown);
+  letter-spacing: -0.3px;
+}
+
+.expProgressBarWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.expProgressBarTrack {
+  width: 100%;
+  height: 12px;
+  background: #EAE3D2;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.expProgressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFCA28 0%, #4CAF50 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 6px rgba(76, 175, 80, 0.4);
+}
+
+.expProgressTextRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.expSubLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+}
+
+.expNumText {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--color-brown);
+}
+
+/* ⭐ 대형 하이라이트 평균 평점 카드 디자인 */
+.ratingBigCard {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+  border: 1.8px solid #FFD54F;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px rgba(255, 193, 7, 0.22);
+}
+
+.ratingBigLabel {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--color-brown);
+}
+
+.ratingBigScoreGroup {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.ratingBigScoreNum {
+  font-size: 24px;
+  font-weight: 900;
+  color: #D84315;
+  letter-spacing: -0.5px;
+}
+
+.ratingBigMaxText {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+}
+
+.ratingEmptyText {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--color-text-sub);
+}
+
+/* 🌾 메인 프로필 카드 내부 통합 소일거리 결실 리포트 */
+.harvestInnerCard {
+  width: 100%;
+  margin-top: 14px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(180deg, #FFFDF8 0%, #FFF9EE 100%);
+  border: 1.5px solid rgba(255, 193, 7, 0.45);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(139, 81, 41, 0.05);
+}
+
+.harvestHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.harvestTitleBox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.harvestSubLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+}
+
+.harvestMainScore {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-brown);
+  letter-spacing: -0.4px;
+}
+
+.harvestGradeBadge {
+  font-size: 12.5px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFF3C4 0%, #FFE082 100%);
+  color: #8B5129;
+  border: 1px solid rgba(255, 193, 7, 0.6);
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+}
+
+.harvestProgressBarTrack {
+  width: 100%;
+  height: 14px;
+  background: #EAE3D2;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.harvestProgressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #81C784 0%, #FFCA28 50%, #F5B000 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(245, 176, 0, 0.4);
+}
+
+.harvestDivider {
+  width: 100%;
+  height: 1px;
+  background: #EDE8D5;
+  margin: 2px 0;
+}
+
+.harvestDetailBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--color-surface-2);
+  border: 1px solid #EDE8D5;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+}
+
+.harvestDetailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.harvestDetailLabel {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.harvestDetailHighlight {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--color-brown);
+}
+
+.harvestDetailSubText {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  line-height: 1.45;
+}
+
+.successTagText {
+  color: #2E7D32;
+  font-weight: 800;
+}
+
+.cancelTagText {
+  color: #E53935;
+  font-weight: 700;
 }
 
 /* ── 📊 통합 매칭 스탯 그리드 ────────────────────── */
