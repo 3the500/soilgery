@@ -109,7 +109,7 @@ export default function Support() {
                 <div className={styles.bubbleRow}>
                   {isUser && <span className={styles.msgTime}>{m.time}</span>}
                   <div className={`${styles.msgBubble} ${isUser ? styles.userBubble : styles.aiBubble}`}>
-                    <p>{m.text}</p>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>{m.text}</p>
                   </div>
                   {!isUser && <span className={styles.msgTime}>{m.time}</span>}
                 </div>

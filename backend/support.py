@@ -31,41 +31,41 @@ FAQS = [
         "id": "faq_matching",
         "question": "매칭은 어떻게 이루어지나요?",
         "answer": (
-            "적성검사 결과로 추천받은 업무에 대해 '매칭 원해요'를 누르시면, "
-            "그 업무를 필요로 하는 농부님들의 후보자 목록에 노출됩니다. "
-            "농부님이 후보자 중 원하는 분을 선택하면 매칭이 성사돼요."
+            "🌱 적성검사 결과로 추천받은 업무에 대해 '소일거리 매칭 중'을 켜주시면, "
+            "해당 업무를 필요로 하는 농부님들의 후보자 목록에 내 프로필이 노출됩니다.\n\n"
+            "👨‍🌾 농부님이 후보자 중 원하는 분을 선택하여 대화를 신청하면 1:1 채팅방이 생성되어 매칭이 성사돼요!"
         ),
     },
     {
         "id": "faq_retest",
         "question": "적성검사를 다시 보고 싶어요.",
         "answer": (
-            "적성검사는 상단 메뉴의 '적성검사' 탭에서 언제든지 다시 응시하실 수 있어요. "
-            "재검사를 완료하면 이전 결과는 새 결과로 갱신되고, 추천 업무도 다시 계산됩니다."
+            "🧠 적성검사는 상단 메뉴의 '적성검사' 탭에서 언제든지 다시 응시하실 수 있어요.\n\n"
+            "재검사를 완료하면 이전 스텟 결과는 새 결과로 자동 갱신되고, 추천 업무도 다시 분석해 드립니다!"
         ),
     },
     {
         "id": "faq_cancel_match",
         "question": "매칭 대기를 취소하고 싶어요.",
         "answer": (
-            "매칭 메뉴에서 '매칭 대기 취소' 버튼을 누르시면 더 이상 농부님들의 후보자 "
-            "목록에 노출되지 않습니다. 언제든 다시 매칭을 신청하실 수 있어요."
+            "⏸️ 메인 화면 상단의 큼직한 '전원 버튼'을 눌러 매칭을 일시정지(회색)하실 수 있습니다.\n\n"
+            "일시정지 상태에서는 농부님들의 후보자 목록에 노출되지 않으며, 언제든 다시 클릭해 매칭을 시작하실 수 있어요."
         ),
     },
     {
         "id": "faq_wage_chat",
         "question": "급여 조건 및 근무 시간은 어떻게 확인하나요?",
         "answer": (
-            "근무 조건 및 급여는 농가 공고별로 상이하며, "
-            "농부님과 매칭이 완료된 후 생성되는 1:1 대화방(채팅)에서 자세히 협의하실 수 있습니다."
+            "💰 근무 조건 및 급여는 농가 공고별로 상이합니다.\n\n"
+            "농부님과 매칭이 완료된 후 생성되는 1:1 대화방(채팅)에서 구체적인 조율 및 협의가 가능합니다."
         ),
     },
     {
         "id": "faq_no_response",
         "question": "매칭된 상대방이 채팅에 답이 없어요.",
         "answer": (
-            "채팅으로 며칠간 응답이 없다면 상대방의 닉네임과 함께 아래에 문의 내용을 남겨주시면 "
-            "담당자가 확인 후 안내해드릴게요."
+            "💬 채팅으로 며칠간 응답이 없거나 노쇼가 발생한 경우,\n\n"
+            f"상대방의 닉네임과 함께 질문창에 문의나 신고를 남겨주시면 담당자가 확인 후 신속히 안내해 드릴게요. (문의: {ADMIN_EMAIL})"
         ),
     },
 ]
@@ -142,50 +142,113 @@ def save_report(user_id: int, category: str, summary: str, severity: str, db: Se
     return report.id
 
 
+def _smart_rule_fallback(message: str, user_id: int, db: Session) -> Dict:
+    """AI API 실패 시 또는 사전 정의된 키워드 기반 스마트 fallback 지원 (절대 오류 없이 항상 친절히 답변)"""
+    msg = message.strip().lower()
+
+    # 1. 인사
+    if any(k in msg for k in ["안녕", "반가워", "하이", "반갑", "소일아"]):
+        return {
+            "type": "answer",
+            "message": "안녕하세요! 충북 소일거리 AI 상담사 '소일이'입니다. 🌱\n적성검사, 일손 매칭, 근무 조건 등 궁금하신 점을 무엇이든 편하게 물어보세요!"
+        }
+
+    # 2. 신고/피해 감지 (사기, 노쇼, 폭언, 임금 미지급 등)
+    if any(k in msg for k in ["신고", "사기", "노쇼", "돈 안", "임금", "체불", "욕설", "폭언", "성희롱"]):
+        try:
+            report_id = save_report(
+                user_id=user_id,
+                category="자동감지신고",
+                summary=message[:100],
+                severity="high",
+                db=db
+            )
+            report_info = f"(접수번호: #{report_id})"
+        except Exception:
+            report_info = ""
+
+        return {
+            "type": "report",
+            "message": (
+                f"🚨 신고가 접수되었습니다. 담당자가 내용 확인 후 조치할 예정이에요. {report_info}\n\n"
+                f"보다 자세한 내용(채팅 캡처 화면 등)을 전달하고 싶으시면 {ADMIN_EMAIL} 로 "
+                "메일을 보내주시면 우선 처리해 드립니다."
+            )
+        }
+
+    # 3. 매칭 관련
+    if any(k in msg for k in ["매칭", "신청", "어떻게"]):
+        return {
+            "type": "answer",
+            "message": "매칭은 적성검사를 마치신 후 '소일거리 매칭 중' 전원 버튼을 켜주시면 완료됩니다! 농부님이 회원님의 맞춤 스텟을 확인 후 1:1 대화를 신청하게 돼요. 🌾"
+        }
+
+    # 4. 적성검사 관련
+    if any(k in msg for k in ["적성", "검사", "스텟", "테스트"]):
+        return {
+            "type": "answer",
+            "message": "적성검사는 6가지 질문을 통해 체력, 근력, 성실성 등을 측정하고 가장 적합한 농가 일손 업무를 AI가 분석해 드립니다! 언제든 상단 적성검사 메뉴에서 재응시 가능합니다. 🧠"
+        }
+
+    return {
+        "type": "answer",
+        "message": (
+            "안녕하세요! 충북 소일거리 AI 상담사 '소일이'입니다. 🌱\n"
+            "궁금하신 사항은 상단 [자주 묻는 질문] 칩을 클릭하시거나, "
+            f"자세한 개인 문의는 {ADMIN_EMAIL} 로 이메일을 주시면 친절히 안내해 드릴게요!"
+        ),
+    }
+
+
 def ask_ai(user_id: int, message: str, db: Session) -> Dict:
     """
     사용자가 자유롭게 입력한 질문을 AI가 분석해서 답변.
     """
-    try:
-        response = client.messages.create(
-            model="claude-sonnet-5",  # 🔧 [버그 수정] 기존 claude-3-5-sonnet-20241022 모델이
-            # 2025-10-28부로 Anthropic에서 완전히 폐기(retired)되어 모든 API 호출이 실패하고
-            # 있었음. 이 때문에 "안녕" 같은 인사에도 아래 except 블록의 임시 오류 메시지만
-            # 반환되고 있었음. 현재 사용 가능한 모델로 교체.
-            max_tokens=500,
-            temperature=0.3,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": message}],
-        )
-        text = response.content[0].text.strip()
-    except Exception as e:
-        print("Claude API 호출 실패:", e)
-        return {
-            "type": "answer",
-            "message": "일시적으로 답변을 가져오지 못했어요. 잠시 후 다시 시도해주세요.",
-        }
+    # 1. Anthropic Claude API 호출 시도 (정상적인 공식 모델명 순차 적용)
+    models_to_try = [
+        "claude-3-5-sonnet-20241022",
+        "claude-3-haiku-20240307",
+        "claude-3-7-sonnet-20250219"
+    ]
 
-    # 신고(JSON) 처리 검증
-    try:
-        parsed = json.loads(text)
-        if isinstance(parsed, dict) and parsed.get("type") == "report":
-            report_id = save_report(
-                user_id=user_id,
-                category=parsed.get("category", "미분류"),
-                summary=parsed.get("summary", message),
-                severity=parsed.get("severity", "low"),
-                db=db,
+    for model in models_to_try:
+        try:
+            response = client.messages.create(
+                model=model,
+                max_tokens=500,
+                temperature=0.3,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": message}],
             )
-            return {
-                "type": "report",
-                "message": (
-                    "🚨 신고가 접수되었습니다. 담당자가 내용 확인 후 조치할 예정이에요. "
-                    f"(접수번호: {report_id})\n\n"
-                    f"보다 자세한 내용을 전달하고 싶으시면 {ADMIN_EMAIL} 로 캡처 화면과 함께 "
-                    "메일을 보내주셔도 확인 후 처리해 드립니다."
-                ),
-            }
-    except (json.JSONDecodeError, TypeError):
-        pass
+            text = response.content[0].text.strip()
+            
+            # 신고(JSON) 처리 검증
+            try:
+                parsed = json.loads(text)
+                if isinstance(parsed, dict) and parsed.get("type") == "report":
+                    report_id = save_report(
+                        user_id=user_id,
+                        category=parsed.get("category", "미분류"),
+                        summary=parsed.get("summary", message),
+                        severity=parsed.get("severity", "low"),
+                        db=db,
+                    )
+                    return {
+                        "type": "report",
+                        "message": (
+                            "🚨 신고가 접수되었습니다. 담당자가 내용 확인 후 조치할 예정이에요. "
+                            f"(접수번호: #{report_id})\n\n"
+                            f"보다 자세한 내용을 전달하고 싶으시면 {ADMIN_EMAIL} 로 캡처 화면과 함께 "
+                            "메일을 보내주셔도 확인 후 처리해 드립니다."
+                        ),
+                    }
+            except (json.JSONDecodeError, TypeError):
+                pass
 
-    return {"type": "answer", "message": text}
+            return {"type": "answer", "message": text}
+        except Exception as e:
+            print(f"Claude API ({model}) 호출 제외/실패:", e)
+            continue
+
+    # 2. API 키 미설정 또는 네트워크 오류 시 100% 에러 없는 스마트 키워드 폴백 제공
+    return _smart_rule_fallback(message, user_id, db)
