@@ -44,3 +44,17 @@ def submit_test(
 def read_my_stats(current_user: User = Depends(get_current_user)):
     """마이페이지 등에서 본인의 현재 스텟을 보여줄 때 호출."""
     return _to_response(extract_stats(current_user))
+
+
+@router.post("/reset", response_model=StatsResponse)
+def reset_my_stats(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """[요구사항 반영] 적성검사 재시작 시 모든 스텟을 0으로 초기화합니다."""
+    for col in STAT_COLUMN_MAP.values():
+        setattr(current_user, col, 0)
+    db.commit()
+    db.refresh(current_user)
+    return _to_response(extract_stats(current_user))
+

@@ -31,6 +31,10 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
     if body.role not in ["청년", "농부"]:
         raise HTTPException(status_code=400, detail="역할은 '청년' 또는 '농부'여야 합니다")
 
+    # 거주지역 필수 유효성 검사
+    if not body.location or not body.location.strip():
+        raise HTTPException(status_code=400, detail="거주 지역을 필수 항목으로 입력해 주세요")
+
     user = User(
         email=body.email,
         hashed_password=hash_password(body.password),

@@ -55,6 +55,7 @@ export const aptitudeAPI = {
   getQuestions: () => api.get('/aptitude-test/questions'),
   submitTest: (data) => api.post('/aptitude-test/submit', data),
   getMyStats: () => api.get('/aptitude-test/my-stats'),
+  resetStats: () => api.post('/aptitude-test/reset'),
 }
 
 // ── 3. 매칭(Matching) API ─────────────────────────

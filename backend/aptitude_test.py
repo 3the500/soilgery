@@ -133,17 +133,25 @@ def extract_stats(user: User) -> Dict[str, int]:
 def submit_aptitude_test(user: User, answers: Dict[str, str], db: Session) -> Dict[str, int]:
     """
     로그인된 사용자가 적성검사에 응답했을 때 호출.
-    (라우터에서: user = Depends(get_current_user), db = Depends(get_db) 로 얻은 값을 그대로 전달)
-
-    계산된 스텟을 User 레코드에 반영하고 커밋합니다.
-    재검사 시에도 이전 값을 새 결과로 덮어씁니다.
+    [요구사항 반영] 적성검사 진행 시 기존 스텟을 0으로 완벽히 초기화한 다음
+    새로운 검사 결과를 반영합니다. (음수 방지 max(0, v) 처리)
     """
+    # 1. 사용자 기존 모든 스텟 0으로 완전 초기화
+    for col in STAT_COLUMN_MAP.values():
+        setattr(user, col, 0)
+    db.commit()
+
+    # 2. 새로운 응답에 따른 스텟 계산
     stats = compute_stats(answers)
 
+    # 3. 0부터 계산된 결과 반영 (최소 0 보장)
+    final_stats = {}
     for korean_stat, value in stats.items():
         column_name = STAT_COLUMN_MAP[korean_stat]
-        setattr(user, column_name, value)
+        positive_val = max(0, value)
+        setattr(user, column_name, positive_val)
+        final_stats[korean_stat] = positive_val
 
     db.commit()
     db.refresh(user)
-    return stats
+    return final_stats

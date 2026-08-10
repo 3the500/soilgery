@@ -13,7 +13,7 @@ export default function Register() {
   const navigate = useNavigate()
 
   const [form, setForm] = useState({
-    email: '', password: '', name: '', role: '', location: '',
+    email: '', password: '', name: '', role: '', province: '충청북도', city: '',
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,11 +27,19 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.role) { setError('나는 어떤 사람인지(청년/농부) 선택해 주세요'); return }
+    if (!form.province || !form.city.trim()) { setError('거주 지역(도/시)을 필수 항목으로 입력해 주세요'); return }
     if (form.password.length < 8) { setError('비밀번호는 8자 이상이어야 합니다'); return }
     setError('')
     setLoading(true)
     try {
-      await register(form)
+      const fullLocation = `${form.province} ${form.city.trim()}`
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+        location: fullLocation,
+      })
       navigate('/home')
     } catch (err) {
       console.error('회원가입 에러:', err)
@@ -116,13 +124,75 @@ export default function Register() {
             />
           </div>
 
+          {/* 거주 지역 (도, 시 나눠서 필수 입력) */}
           <div className="input-group">
-            <label htmlFor="location">거주 지역 <span className={styles.optional}>(선택)</span></label>
-            <input
-              id="location" name="location" type="text"
-              className="input-field" placeholder="예: 충북 청주시"
-              value={form.location} onChange={handleChange}
-            />
+            <label htmlFor="province">
+              거주 지역 <span className={styles.required}>(필수)</span>
+            </label>
+            <div className={styles.locationGrid}>
+              <select
+                id="province"
+                name="province"
+                className="input-field"
+                value={form.province}
+                onChange={handleChange}
+                required
+              >
+                <option value="">도/시 선택</option>
+                <option value="충청북도">충청북도 (충북)</option>
+                <option value="서울특별시">서울특별시</option>
+                <option value="경기도">경기도</option>
+                <option value="충청남도">충청남도</option>
+                <option value="강원특별자치도">강원특별자치도</option>
+                <option value="전라북도">전라북도</option>
+                <option value="전라남도">전라남도</option>
+                <option value="경상북도">경상북도</option>
+                <option value="경상남도">경상남도</option>
+                <option value="제주특별자치도">제주특별자치도</option>
+                <option value="세종특별자치시">세종특별자치시</option>
+                <option value="대전광역시">대전광역시</option>
+                <option value="광주광역시">광주광역시</option>
+                <option value="대구광역시">대구광역시</option>
+                <option value="울산광역시">울산광역시</option>
+                <option value="부산광역시">부산광역시</option>
+                <option value="인천광역시">인천광역시</option>
+              </select>
+
+              {form.province === '충청북도' ? (
+                <select
+                  id="city"
+                  name="city"
+                  className="input-field"
+                  value={form.city}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">시/군 선택</option>
+                  <option value="청주시">청주시</option>
+                  <option value="충주시">충주시</option>
+                  <option value="제천시">제천시</option>
+                  <option value="보은군">보은군</option>
+                  <option value="옥천군">옥천군</option>
+                  <option value="영동군">영동군</option>
+                  <option value="증평군">증평군</option>
+                  <option value="진천군">진천군</option>
+                  <option value="괴산군">괴산군</option>
+                  <option value="음성군">음성군</option>
+                  <option value="단양군">단양군</option>
+                </select>
+              ) : (
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  className="input-field"
+                  placeholder="시/군/구 입력 (예: 수원시)"
+                  value={form.city}
+                  onChange={handleChange}
+                  required
+                />
+              )}
+            </div>
           </div>
 
           {error && <p className="error-msg">{error}</p>}

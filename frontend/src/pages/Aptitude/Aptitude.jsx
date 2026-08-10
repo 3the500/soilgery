@@ -158,7 +158,13 @@ export default function Aptitude() {
             </button>
             <button
               className={`btn btn-outline ${styles.reTestBtn}`}
-              onClick={() => {
+              onClick={async () => {
+                try {
+                  await aptitudeAPI.resetStats()
+                  await refreshUser?.()
+                } catch (e) {
+                  console.log('스텟 초기화 진행:', e)
+                }
                 setResult(null)
                 setAnswers({})
                 setCurrentIndex(0)
@@ -215,7 +221,15 @@ export default function Aptitude() {
 
           <button
             className={`btn btn-primary ${styles.startBtn}`}
-            onClick={() => setIsStarted(true)}
+            onClick={async () => {
+              try {
+                await aptitudeAPI.resetStats()
+                await refreshUser?.()
+              } catch (e) {
+                console.log('스텟 초기화 진행:', e)
+              }
+              setIsStarted(true)
+            }}
           >
             🌱 적성검사 시작하기 (1분 소요)
           </button>

@@ -41,7 +41,8 @@ export default function Home() {
   const [submittingEdit, setSubmittingEdit] = useState(false)
   const [editFormData, setEditFormData] = useState({
     name: '',
-    location: '',
+    province: '충청북도',
+    city: '',
     is_seeking: true,
   })
 
@@ -87,9 +88,22 @@ export default function Home() {
   // ✏️ 내 정보 수정 모달 열기 시 폼 데이터 초기화
   const handleOpenEditProfile = () => {
     if (!user) return
+    const rawLoc = (user.location || '').trim()
+    let prov = '충청북도'
+    let cty = ''
+    if (rawLoc) {
+      const parts = rawLoc.split(' ')
+      if (parts.length >= 2) {
+        prov = parts[0]
+        cty = parts.slice(1).join(' ')
+      } else {
+        cty = rawLoc
+      }
+    }
     setEditFormData({
       name: user.name || '',
-      location: user.location || '전라도',
+      province: prov,
+      city: cty,
       is_seeking: user.is_seeking !== false,
     })
     setIsEditProfileOpen(true)
@@ -104,12 +118,17 @@ export default function Home() {
       showToast('이름을 입력해주세요.', 'error')
       return
     }
+    if (!editFormData.province || !editFormData.city.trim()) {
+      showToast('거주 지역(도/시)을 필수 항목으로 입력해 주세요.', 'error')
+      return
+    }
 
     setSubmittingEdit(true)
     try {
+      const fullLocation = `${editFormData.province} ${editFormData.city.trim()}`
       await authAPI.updateMe({
         name: editFormData.name.trim(),
-        location: editFormData.location,
+        location: fullLocation,
         is_seeking: editFormData.is_seeking,
       })
 
@@ -354,6 +373,31 @@ export default function Home() {
 
   // 💡 적성검사 안내 모달 제어 상태
   const [showAptitudeNoticeModal, setShowAptitudeNoticeModal] = useState(false)
+
+  // ⚡ 메인 매칭 탭에서 바로 매칭 상태 (ON/OFF) 토글
+  const [togglingSeeking, setTogglingSeeking] = useState(false)
+
+  const handleToggleSeeking = async () => {
+    if (!user || togglingSeeking) return
+    const nextStatus = user.is_seeking === false
+    setTogglingSeeking(true)
+    try {
+      await authAPI.updateMe({ is_seeking: nextStatus })
+      await refreshUser()
+      showToast(
+        nextStatus
+          ? '🟢 소일거리 매칭이 활성화되었습니다!'
+          : '⚪ 소일거리 매칭이 일시정지되었습니다.',
+        nextStatus ? 'success' : 'info'
+      )
+    } catch (err) {
+      console.error('매칭 상태 변경 실패:', err)
+      showToast('매칭 상태 변경 중 오류가 발생했습니다.', 'error')
+    } finally {
+      setSubmittingEdit(false)
+      setTogglingSeeking(false)
+    }
+  }
 
   const handleAutoMatching = () => {
     if (!isFarmer && isStatsEmpty(user)) {
@@ -795,9 +839,9 @@ export default function Home() {
                   <span>{user?.location || '미설정'}</span>
                 </div>
                 <div className={styles.profileRow}>
-                  <span className={styles.profileLabel}>AI 매칭 상태</span>
+                  <span className={styles.profileLabel}>매칭 상태</span>
                   <span className={user?.is_seeking !== false ? styles.seekingTagActive : styles.seekingTagPaused}>
-                    {user?.is_seeking !== false ? '🟢 AI 매칭 활성화' : '⚪ AI 매칭 일시정지'}
+                    {user?.is_seeking !== false ? '🟢 소일거리 매칭 중' : '⚪ 소일거리 매칭 일시정지'}
                   </span>
                 </div>
 
@@ -817,31 +861,54 @@ export default function Home() {
         {/* 3️⃣ [⚡ 찾기 탭] 컨텐츠 */}
         {bottomTab === 'matching' && (
           <div className={styles.tabContentFade}>
-            {/* ⚡ 중앙 커다란 AI 자동매칭 히어로 카드 & 대형 버튼 */}
+            {/* ⚡ 중앙 커다란 자동매칭 히어로 카드 & 화면 1/3 초대형 활성화 버튼 */}
             <section className={styles.aiMatchingHeroSection}>
               <div className={`glass-card ${styles.aiMatchingHeroCard}`}>
                 <div className={styles.aiMatchingHeroHeader}>
-                  <span className={styles.aiMatchingHeroBadge}>✨ AI Smart Match</span>
+                  <span className={styles.aiMatchingHeroBadge}>✨ Smart Match</span>
                   <div className={styles.aiMatchingHeroIconArea}>
-                    <span className={styles.aiMatchingHeroIcon} title="AI 마스코트 소일이">🤖</span>
+                    <span className={styles.aiMatchingHeroIcon} title="마스코트 소일이">🌱</span>
                   </div>
                   <h3 className={styles.aiMatchingHeroTitle}>
                     {isFarmer ? '⚡ 최적의 청년 일손 찾기' : '⚡ 나에게 딱 맞는 농부(일자리) 찾기'}
                   </h3>
                   <p className={styles.aiMatchingHeroSub}>
                     {isFarmer ? (
-                      <>AI 도우미 '소일이'가 충주 등 청정 농가의 조건에 맞는<br />최적의 청년 일손을 매칭해 드립니다</>
+                      <>도우미 '소일이'가 충주 등 청정 농가의 조건에 맞는<br />최적의 청년 일손을 매칭해 드립니다</>
                     ) : (
-                      <>AI 도우미 '소일이'가 내 유형검사 결과와 거주 지역을 분석하여<br />최적의 농가 일자리를 매칭해 드립니다</>
+                      <>도우미 '소일이'가 내 유형검사 결과와 거주 지역을 분석하여<br />최적의 농가 일자리를 매칭해 드립니다</>
                     )}
                   </p>
+
+                  {/* 📝 모든 매칭 상태 문구를 버튼 위 상단에 배치 */}
+                  <div className={styles.heroStatusTextWrapper}>
+                    <div className={styles.heroStatusMainBadge}>
+                      <span className={styles.heroStatusLabel}>현재 매칭 상태:</span>
+                      <strong className={user?.is_seeking !== false ? styles.heroStatusActiveText : styles.heroStatusPausedText}>
+                        {user?.is_seeking !== false ? '🟢 소일거리 매칭 진행 중' : '⚪ 소일거리 매칭 일시정지'}
+                      </strong>
+                    </div>
+                    <p className={styles.heroStatusHintText}>
+                      {user?.is_seeking !== false
+                        ? '👇 아래 버튼을 터치하면 매칭이 일시정지됩니다'
+                        : '👇 아래 버튼을 터치하면 매칭이 시작됩니다'}
+                    </p>
+                  </div>
                 </div>
 
+                {/* 🔴 화면 1/3을 차지하고 중앙에 아이콘 이미지 하나만 배치된 대형 버튼 */}
                 <button
-                  className={`btn shine-effect ${styles.aiMatchingHeroBtn}`}
-                  onClick={handleAutoMatching}
+                  type="button"
+                  className={`${styles.giantSeekingToggleBtn} ${
+                    user?.is_seeking !== false ? styles.giantSeekingActive : styles.giantSeekingPaused
+                  }`}
+                  onClick={handleToggleSeeking}
+                  disabled={togglingSeeking}
+                  title={user?.is_seeking !== false ? '터치하여 매칭 일시정지' : '터치하여 매칭 활성화'}
                 >
-                  {isFarmer ? '⚡ AI 청년 자동매칭 시작하기 ⚡' : '⚡ AI 농부 자동매칭 시작하기 ⚡'}
+                  <div className={styles.giantSeekingSingleIcon}>
+                    {togglingSeeking ? '⏳' : '⏻'}
+                  </div>
                 </button>
               </div>
             </section>
@@ -979,7 +1046,7 @@ export default function Home() {
             <form onSubmit={handleSubmitEditProfile} className={styles.modalForm}>
               {/* 1. 이름 (닉네임) */}
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>이름 (닉네임)</label>
+                <label className={styles.formLabel}>이름 (닉네임) <span className={styles.required}>(필수)</span></label>
                 <input
                   type="text"
                   className={styles.formInput}
@@ -990,28 +1057,77 @@ export default function Home() {
                 />
               </div>
 
-              {/* 2. 거주 지역 (텍스트 입력) */}
+              {/* 2. 거주 지역 (도, 시 나눠서 필수 입력) */}
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>거주 지역</label>
-                <input
-                  type="text"
-                  className={styles.formInput}
-                  value={editFormData.location}
-                  onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })}
-                  placeholder="예: 충북 청주시, 경기도 수원시 등"
-                />
+                <label className={styles.formLabel}>거주 지역 <span className={styles.required}>(필수)</span></label>
+                <div className={styles.locationGrid}>
+                  <select
+                    className={styles.formInput}
+                    value={editFormData.province}
+                    onChange={(e) => setEditFormData({ ...editFormData, province: e.target.value })}
+                    required
+                  >
+                    <option value="">도/시 선택</option>
+                    <option value="충청북도">충청북도 (충북)</option>
+                    <option value="서울특별시">서울특별시</option>
+                    <option value="경기도">경기도</option>
+                    <option value="충청남도">충청남도</option>
+                    <option value="강원특별자치도">강원특별자치도</option>
+                    <option value="전라북도">전라북도</option>
+                    <option value="전라남도">전라남도</option>
+                    <option value="경상북도">경상북도</option>
+                    <option value="경상남도">경상남도</option>
+                    <option value="제주특별자치도">제주특별자치도</option>
+                    <option value="세종특별자치시">세종특별자치시</option>
+                    <option value="대전광역시">대전광역시</option>
+                    <option value="광주광역시">광주광역시</option>
+                    <option value="대구광역시">대구광역시</option>
+                    <option value="울산광역시">울산광역시</option>
+                    <option value="부산광역시">부산광역시</option>
+                    <option value="인천광역시">인천광역시</option>
+                  </select>
+
+                  {editFormData.province === '충청북도' ? (
+                    <select
+                      className={styles.formInput}
+                      value={editFormData.city}
+                      onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })}
+                      required
+                    >
+                      <option value="">시/군 선택</option>
+                      <option value="청주시">청주시</option>
+                      <option value="충주시">충주시</option>
+                      <option value="제천시">제천시</option>
+                      <option value="보은군">보은군</option>
+                      <option value="옥천군">옥천군</option>
+                      <option value="영동군">영동군</option>
+                      <option value="증평군">증평군</option>
+                      <option value="진천군">진천군</option>
+                      <option value="괴산군">괴산군</option>
+                      <option value="음성군">음성군</option>
+                      <option value="단양군">단양군</option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      className={styles.formInput}
+                      placeholder="시/군/구 입력 (예: 부천시)"
+                      value={editFormData.city}
+                      onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })}
+                      required
+                    />
+                  )}
+                </div>
               </div>
 
-              {/* 3. AI 매칭 상태 토글 */}
+              {/* 3. 소일거리 매칭 상태 토글 */}
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  AI 매칭 상태
-                </label>
+                <label className={styles.formLabel}>매칭 상태</label>
                 <div className={styles.toggleRow}>
                   <span className={styles.toggleDesc}>
                     {editFormData.is_seeking
-                      ? '🟢 현재 AI 매칭 추천 받아보기 (활성화)'
-                      : '⚪ AI 매칭 일시정지 (추천 대상 제외)'}
+                      ? '🟢 소일거리 매칭 중 (추천 활성화)'
+                      : '⚪ 소일거리 매칭 일시정지 (추천 제외)'}
                   </span>
                   <input
                     type="checkbox"
