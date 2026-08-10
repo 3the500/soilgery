@@ -643,49 +643,70 @@ button.recommendedTaskTag:hover {
   color: var(--color-brown);
 }
 
-/* ⭐ 대형 하이라이트 평균 평점 카드 디자인 */
-.ratingBigCard {
+/* 👤 내 정보 탭 전용 콤팩트 서브스텟 평점 요약 카드 */
+.profileSubStatCard {
   width: 100%;
-  margin-top: 12px;
-  padding: 14px 18px;
+  padding: 10px 14px;
+  background: #FFFDF8;
+  border: 1px solid #EDE8D5;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 6px rgba(139, 81, 41, 0.03);
+}
+
+.profileSubStatLeft {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
-  border: 1.8px solid #FFD54F;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 14px rgba(255, 193, 7, 0.22);
+  gap: 10px;
 }
 
-.ratingBigLabel {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: var(--color-brown);
+.profileSubStatStarIcon {
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border: 1.5px solid #FFD54F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.25);
+  flex-shrink: 0;
 }
 
-.ratingBigScoreGroup {
+.profileSubStatScoreBox {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.profileSubStatScoreRow {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 3px;
 }
 
-.ratingBigScoreNum {
-  font-size: 24px;
+.profileSubStatBigNum {
+  font-size: 19px;
   font-weight: 900;
-  color: #D84315;
-  letter-spacing: -0.5px;
+  color: var(--color-brown);
+  letter-spacing: -0.4px;
 }
 
-.ratingBigMaxText {
-  font-size: 13.5px;
+.profileSubStatMaxNum {
+  font-size: 12px;
   font-weight: 700;
   color: var(--color-text-sub);
 }
 
-.ratingEmptyText {
-  font-size: 14.5px;
-  font-weight: 800;
+.profileSubStatSubText {
+  font-size: 11.5px;
+  font-weight: 700;
   color: var(--color-text-sub);
+}
+
+.profileSubStatSubText strong {
+  color: var(--color-brown);
+  font-weight: 800;
 }
 
 /* 🌾 메인 프로필 카드 내부 통합 소일거리 결실 리포트 */

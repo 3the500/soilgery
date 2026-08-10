@@ -768,7 +768,7 @@ export default function Home() {
                     <span className={styles.reviewSummaryMaxNum}>/ 5.0</span>
                   </div>
                   <span className={styles.reviewSummarySubText}>
-                    받은 리뷰 총 <strong>{reviewsData.received.length}</strong>개
+                    받은 리뷰 총 <strong>{reviewsData.received.length}</strong>개 · 작성한 리뷰 <strong>{reviewsData.given.length}</strong>개
                   </span>
                 </div>
               </div>
@@ -925,26 +925,15 @@ export default function Home() {
                 )
               })()}
 
-              {/* ⭐ 대형 하이라이트 평균 평점 카드 */}
-              <div className={styles.ratingBigCard}>
-                <span className={styles.ratingBigLabel}>⭐ 평균 평점</span>
-                {user?.rating && Number(user.rating) > 0 ? (
-                  <div className={styles.ratingBigScoreGroup}>
-                    <strong className={styles.ratingBigScoreNum}>
-                      {Number(user.rating).toFixed(1)}
-                    </strong>
-                    <span className={styles.ratingBigMaxText}>/ 5.0</span>
-                  </div>
-                ) : (
-                  <span className={styles.ratingEmptyText}>아직 없음</span>
-                )}
-              </div>
-
-              {/* 🌾 평균 평점 바로 아래 일체형으로 통합된 소일거리 결실 리포트 */}
+              {/* 🌾 통합 소일거리 결실 리포트 (평균 평점, 받은 리뷰, 작성한 리뷰, 만족도, 매칭 성과 통일) */}
               {(() => {
                 const harvestInfo = getHarvestIndexInfo(user, reviewsData.received, myMatches)
+                const givenCount = reviewsData.given ? reviewsData.given.length : 0
+                const receivedCount = reviewsData.received ? reviewsData.received.length : 0
+
                 return (
                   <div className={styles.harvestInnerCard}>
+                    {/* 1. 풍년 지수 헤더 */}
                     <div className={styles.harvestHeaderRow}>
                       <div className={styles.harvestTitleBox}>
                         <span className={styles.harvestSubLabel}>내 소일거리 결실 척도</span>
@@ -957,6 +946,7 @@ export default function Home() {
                       </span>
                     </div>
 
+                    {/* 2. 게이지 바 */}
                     <div className={styles.harvestProgressBarTrack}>
                       <div
                         className={styles.harvestProgressBarFill}
@@ -966,6 +956,25 @@ export default function Home() {
 
                     <div className={styles.harvestDivider} />
 
+                    {/* 3. ⭐ 내 정보 탭 맞춤 콤팩트 서브스텟 평점 요약 블록 */}
+                    <div className={styles.profileSubStatCard}>
+                      <div className={styles.profileSubStatLeft}>
+                        <span className={styles.profileSubStatStarIcon}>⭐</span>
+                        <div className={styles.profileSubStatScoreBox}>
+                          <div className={styles.profileSubStatScoreRow}>
+                            <span className={styles.profileSubStatBigNum}>
+                              {user?.rating ? Number(user.rating).toFixed(1) : '0.0'}
+                            </span>
+                            <span className={styles.profileSubStatMaxNum}>/ 5.0</span>
+                          </div>
+                          <span className={styles.profileSubStatSubText}>
+                            받은 리뷰 총 <strong>{receivedCount}</strong>개 · 작성한 리뷰 <strong>{givenCount}</strong>개
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 5. ⭐ 일손 만족 추천율 */}
                     <div className={styles.harvestDetailBox}>
                       <div className={styles.harvestDetailRow}>
                         <span className={styles.harvestDetailLabel}>⭐ 일손 만족 추천율</span>
@@ -980,6 +989,7 @@ export default function Home() {
                       </p>
                     </div>
 
+                    {/* 6. 🤝 매칭 진행 성과 */}
                     <div className={styles.harvestDetailBox}>
                       <div className={styles.harvestDetailRow}>
                         <span className={styles.harvestDetailLabel}>🤝 매칭 진행 성과</span>

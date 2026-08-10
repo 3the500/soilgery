@@ -1,21 +1,60 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../store/AuthContext'
 import { supportAPI } from '../../api/index'
 import styles from './Support.module.css'
 
+const DEFAULT_WELCOME_MSG = {
+  sender: 'ai',
+  text: '안녕하세요! 충북 소일거리 AI 마스코트 \'소일이\'입니다. 🌱🍎\n\n충주 사과 과수원 일손 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요!',
+  time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+}
+
 export default function Support() {
   const navigate = useNavigate()
-  const [messages, setMessages] = useState([
-    {
-      sender: 'ai',
-      text: '안녕하세요! 충주 청정 농원 소일거리 AI 마스코트 \'소일이\'입니다. 🌱🍎\n\n충주 명품 사과 과수원 일손 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요!',
-      time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+  const { user } = useAuth()
+  const storageKey = user ? `soilgery_support_messages_${user.id}` : 'soilgery_support_messages_guest'
+
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed
+        }
+      }
+    } catch (e) {
+      console.error('상담 대화기록 불러오기 오류:', e)
     }
-  ])
+    return [DEFAULT_WELCOME_MSG]
+  })
+
   const [faqs, setFaqs] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const chatBottomRef = useRef(null)
+
+  // 💾 유저별 상담 대화기록 자동 저장
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(messages))
+    } catch (e) {
+      console.error('상담 대화기록 저장 오류:', e)
+    }
+  }, [messages, storageKey])
+
+  // 🧹 대화내역 초기화
+  const handleClearHistory = () => {
+    if (window.confirm('이전 상담 대화 기록을 초기화하시겠습니까?')) {
+      const resetMsgs = [{
+        ...DEFAULT_WELCOME_MSG,
+        time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+      }]
+      setMessages(resetMsgs)
+      localStorage.removeItem(storageKey)
+    }
+  }
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -82,6 +121,9 @@ export default function Support() {
         <div className={styles.headerCenter}>
           <h1 className={styles.headerTitle}>🤖 AI 소일이 1:1 상담실</h1>
         </div>
+        <button className={styles.clearBtn} onClick={handleClearHistory} title="상담 대화기록 초기화">
+          🧹 초기화
+        </button>
       </header>
 
       {/* 💬 토스 챗봇 메인 메세지 스크롤 영역 */}

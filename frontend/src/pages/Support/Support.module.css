@@ -40,6 +40,23 @@
   color: #1A1209;
 }
 
+.clearBtn {
+  font-size: 12px;
+  font-weight: 800;
+  color: #795548;
+  background: #FFF8E1;
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  background: #FFE082;
+  color: #1A1209;
+}
+
 .headerCenter {
   display: flex;
   flex-direction: column;
