@@ -6,7 +6,7 @@ import styles from './Support.module.css'
 
 const DEFAULT_WELCOME_MSG = {
   sender: 'ai',
-  text: '안녕하세요! 충북 소일거리 AI 마스코트 \'소일이\'입니다. 🌱🍎\n\n충주 사과 과수원 일손 매칭, 적성검사, 급여 조건 등 궁금하신 점을 편하게 질문해 주세요!',
+  text: '안녕하세요! 충북 소일거리 안내원 \'소일이\'입니다. 🌱🍎\n\n농가 일손 구하기, 맞춤 업무 추천, 급여나 조건 등 궁금하신 점이 있으시면 편하게 물어보세요!',
   time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
 }
 
@@ -113,13 +113,13 @@ export default function Support() {
 
   return (
     <div className={styles.wrapper}>
-      {/* 🔝 토스 스타일 상단 헤더 */}
+      {/* 🔝 상단 헤더 */}
       <header className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>
-          ← 메인화면
+          ← 홈으로
         </button>
         <div className={styles.headerCenter}>
-          <h1 className={styles.headerTitle}>🤖 AI 소일이 1:1 상담실</h1>
+          <h1 className={styles.headerTitle}>💬 소일이 1:1 상담실</h1>
         </div>
         <button className={styles.clearBtn} onClick={handleClearHistory} title="상담 대화기록 초기화">
           🧹 초기화

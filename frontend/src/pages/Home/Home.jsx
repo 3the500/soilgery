@@ -639,7 +639,7 @@ export default function Home() {
                   className={`btn btn-outline ${styles.settingItemBtn}`}
                   onClick={handleGoAptitude}
                 >
-                  🌱 적성검사 하러가기 (관리자/테스트)
+                  🌱 적성검사 다시받기
                 </button>
               </div>
 
@@ -768,7 +768,7 @@ export default function Home() {
                     <span className={styles.reviewSummaryMaxNum}>/ 5.0</span>
                   </div>
                   <span className={styles.reviewSummarySubText}>
-                    받은 리뷰 총 <strong>{reviewsData.received.length}</strong>개 · 작성한 리뷰 <strong>{reviewsData.given.length}</strong>개
+                    받은 리뷰 총 <strong>{reviewsData.received.length}</strong>개 · 내가 쓴 리뷰 <strong>{reviewsData.given.length}</strong>개
                   </span>
                 </div>
               </div>
@@ -789,7 +789,7 @@ export default function Home() {
                     className={`${styles.reviewSubChip} ${reviewTabSub === 'given' ? styles.reviewSubChipActive : ''}`}
                     onClick={() => setReviewTabSub('given')}
                   >
-                    내가 작성한 리뷰 ({reviewsData.given.length})
+                    내가 쓴 리뷰 ({reviewsData.given.length})
                   </button>
                 </div>
               </div>
@@ -800,10 +800,10 @@ export default function Home() {
                 <div className={`glass-card ${styles.emptyCtaBox}`}>
                   <span className={styles.emptyCtaIcon}>⭐</span>
                   <strong className={styles.emptyCtaTitle}>
-                    {reviewTabSub === 'received' ? '아직 받은 리뷰가 없습니다' : '아직 작성한 리뷰가 없습니다'}
+                    {reviewTabSub === 'received' ? '아직 받은 후기가 없습니다' : '아직 작성한 후기가 없습니다'}
                   </strong>
                   <p className={styles.emptyCtaSub}>
-                    일손 매칭 대화 종료 시 따뜻한 별점과 후기를 주고받아 보세요!
+                    일손 매칭 후 서로 따뜻한 평가와 소중한 후기를 나눠보세요!
                   </p>
                 </div>
               ) : (
@@ -936,7 +936,7 @@ export default function Home() {
                     {/* 1. 풍년 지수 헤더 */}
                     <div className={styles.harvestHeaderRow}>
                       <div className={styles.harvestTitleBox}>
-                        <span className={styles.harvestSubLabel}>내 소일거리 결실 척도</span>
+                        <span className={styles.harvestSubLabel}>내 소일거리 활동 리포트</span>
                         <strong className={styles.harvestMainScore}>
                           🌾 풍년 지수 {harvestInfo.harvestIndex}%
                         </strong>
@@ -968,7 +968,7 @@ export default function Home() {
                             <span className={styles.profileSubStatMaxNum}>/ 5.0</span>
                           </div>
                           <span className={styles.profileSubStatSubText}>
-                            받은 리뷰 총 <strong>{receivedCount}</strong>개 · 작성한 리뷰 <strong>{givenCount}</strong>개
+                            받은 리뷰 총 <strong>{receivedCount}</strong>개 · 내가 쓴 리뷰 <strong>{givenCount}</strong>개
                           </span>
                         </div>
                       </div>
@@ -1002,7 +1002,7 @@ export default function Home() {
                           <>
                             총 <strong>{harvestInfo.totalMatches}회</strong> 개설 대화 중{' '}
                             <span className={styles.successTagText}>성공 {harvestInfo.successMatches}회</span> ·{' '}
-                            <span className={styles.cancelTagText}>파기 {harvestInfo.canceledMatches}회</span>
+                            <span className={styles.cancelTagText}>중단 {harvestInfo.canceledMatches}회</span>
                           </>
                         ) : (
                           '아직 진행된 소일거리 매칭 내역이 없습니다'
@@ -1017,7 +1017,7 @@ export default function Home() {
             {/* 📊 내 매칭 스탯 (농부 회원 제외) - 육각형 지표 + 숫자 지표를 함께 표시 */}
             {!isFarmer && (
               <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>📊 내 매칭 스탯</h3>
+                <h3 className={styles.sectionTitle}>📊 내 일손 역량 지표</h3>
                 <div className={`glass-card ${styles.statsRow}`}>
                   {/* 🔷 [피드백 반영] 왼쪽: 육각형 지표 (스텟이 0이어도 작은 육각형이 보임) */}
                   <StatHexagon

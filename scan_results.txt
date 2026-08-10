@@ -1,0 +1,36 @@
+[StatHexagon.jsx:1] (스탯) // 🔷 [피드백 반영] 육각형(레이더 차트) 스탯 지표
+[Aptitude.jsx:76] (스탯) showToast('적성검사가 완료되었습니다! 스탯 카드가 업데이트되었어요. 🎉', 'success')
+[Aptitude.jsx:94] (스탯) // 💡 스탯 결과로 추천 농업 분야 산출
+[Aptitude.jsx:119] (메인) <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+[Aptitude.jsx:128] (스탯) <>나의 스탯 특성을 고려해 보았을 때 <strong>{recommendedTask}</strong> 분야에 가장 높은 적합도를 보였습니다. 이 추천 분야로 매칭을 신청하실 수 있습니다!</>
+[Aptitude.jsx:190] (메인) <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+[Aptitude.jsx:202] (스탯) <strong>AI 정밀 스탯 분석</strong>
+[Aptitude.jsx:203] (스탯) <p>내 체력·근력·성향을 종합 분석하여 스탯 카드로 정밀 수치화해 드립니다.</p>
+[Aptitude.jsx:248] (메인) <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+[Chat.jsx:277] (메인) <button className={styles.backButton} onClick={handleBack} title="메인화면으로 이동">
+[Chat.jsx:278] (메인) ← 메인화면
+[Home.jsx:85] (결실) grade = '🌾 풍요로운 결실'
+[Home.jsx:141] (관리자) // 상단 우측 탭 상태: 'notice' (알림), 'menu' (메뉴: 관리자 기능), 'settings' (설정), null
+[Home.jsx:274] (파기) // 🔔 환영 알림 및 리뷰/파기 알림 자동 계산
+[Home.jsx:299] (파기) // 2. 파기(상대방 나감)된 채팅방 조언 알림
+[Home.jsx:480] (메인) // ⚡ 메인 매칭 탭에서 바로 매칭 상태 (ON/OFF) 토글
+[Home.jsx:525] (관리자) // 관리자 회원 분류
+[Home.jsx:631] (관리자) <h4>🛠️ 관리자 기능</h4>
+[Home.jsx:642] (관리자) 🌱 적성검사 하러가기 (관리자/테스트)
+[Home.jsx:642] (테스트) 🌱 적성검사 하러가기 (관리자/테스트)
+[Home.jsx:753] (메인) {/* 메인 콘텐츠 영역 */}
+[Home.jsx:849] (메인) {/* 메인 유저 아바타 카드 (통합 카드) */}
+[Home.jsx:928] (결실) {/* 🌾 통합 소일거리 결실 리포트 (평균 평점, 받은 리뷰, 작성한 리뷰, 만족도, 매칭 성과 통일) */}
+[Home.jsx:1005] (파기) <span className={styles.cancelTagText}>파기 {harvestInfo.canceledMatches}회</span>
+[Home.jsx:1017] (스탯) {/* 📊 내 매칭 스탯 (농부 회원 제외) - 육각형 지표 + 숫자 지표를 함께 표시 */}
+[Home.jsx:1020] (스탯) <h3 className={styles.sectionTitle}>📊 내 매칭 스탯</h3>
+[Matching.jsx:117] (메인) <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+[Matching.jsx:153] (메인) 💬 <strong>안내:</strong> 매칭을 기다리는 동안 메인 화면에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
+[Matching.jsx:159] (메인) 🌱 메인화면으로 이동하기
+[Matching.jsx:176] (메인) 메인화면으로 돌아가기
+[Matching.jsx:191] (메인) <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+[Profile.jsx:167] (스탯) {/* 스탯 정보 - 육각형 지표 + 숫자 지표를 함께 표시 */}
+[Profile.jsx:170] (스탯) <h3 className={styles.sectionTitle}>📊 내 매칭 스탯</h3>
+[Support.jsx:129] (메인) {/* 💬 토스 챗봇 메인 메세지 스크롤 영역 */}
+[Support.jsx:129] (챗봇) {/* 💬 토스 챗봇 메인 메세지 스크롤 영역 */}
+[Support.jsx:169] (챗봇) <span className={styles.aiNameLabel}>소일거리 AI 챗봇</span>

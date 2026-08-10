@@ -114,7 +114,7 @@ export default function Matching() {
     return (
       <div className={styles.container}>
         <div className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+          <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
         </div>
         <h1 className={styles.title}>🌾 소일거리 추천 농사 업무 & 매칭</h1>
 
@@ -150,13 +150,13 @@ export default function Matching() {
                     현재 농부 회원이 일손을 찾을 수 있도록 <strong>구직(매칭 대기)</strong> 상태로 활성화되어 있습니다!
                   </p>
                   <p className={styles.seekingSubText}>
-                    💬 <strong>안내:</strong> 매칭을 기다리는 동안 메인 화면에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
+                    💬 <strong>안내:</strong> 매칭을 기다리는 동안 홈에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
                   </p>
                 </div>
 
                 <div className={styles.actionRowVertical}>
                   <button className={`btn btn-primary ${styles.primaryHomeBtn}`} onClick={() => navigate('/home?tab=matching')}>
-                    🌱 메인화면으로 이동하기
+                    🌱 홈으로 돌아가기
                   </button>
                   <button className={styles.cancelMatchBtn} onClick={handleCancelMatch}>
                     매칭 대기 취소하기
@@ -173,7 +173,7 @@ export default function Matching() {
                     ⚡ 이 조건으로 매칭 신청하기 ⚡
                   </button>
                   <button className={styles.secondaryBtn} onClick={() => navigate('/home?tab=matching')}>
-                    메인화면으로 돌아가기
+                    홈으로 돌아가기
                   </button>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default function Matching() {
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+        <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
       </div>
       <h1 className={styles.title}>👨‍🌾 업무별 추천 청년 후보자 조회</h1>
       <div className={styles.selectGroup}>

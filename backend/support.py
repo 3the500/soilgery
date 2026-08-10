@@ -143,15 +143,8 @@ def save_report(user_id: int, category: str, summary: str, severity: str, db: Se
 
 
 def _smart_rule_fallback(message: str, user_id: int, db: Session) -> Dict:
-    """AI API 실패 시 또는 사전 정의된 키워드 기반 스마트 fallback 지원 (절대 오류 없이 항상 친절히 답변)"""
+    """AI API 실패 시 또는 사전 정의된 키워드 기반 스마트 fallback 지원"""
     msg = message.strip().lower()
-
-    # 1. 인사
-    if any(k in msg for k in ["안녕", "반가워", "하이", "반갑", "소일아"]):
-        return {
-            "type": "answer",
-            "message": "안녕하세요! 충북 소일거리 AI 상담사 '소일이'입니다. 🌱\n적성검사, 일손 매칭, 근무 조건 등 궁금하신 점을 무엇이든 편하게 물어보세요!"
-        }
 
     # 2. 신고/피해 감지 (사기, 노쇼, 폭언, 임금 미지급 등)
     if any(k in msg for k in ["신고", "사기", "노쇼", "돈 안", "임금", "체불", "욕설", "폭언", "성희롱"]):
@@ -192,11 +185,7 @@ def _smart_rule_fallback(message: str, user_id: int, db: Session) -> Dict:
 
     return {
         "type": "answer",
-        "message": (
-            "안녕하세요! 충북 소일거리 AI 상담사 '소일이'입니다. 🌱\n"
-            "궁금하신 사항은 상단 [자주 묻는 질문] 칩을 클릭하시거나, "
-            f"자세한 개인 문의는 {ADMIN_EMAIL} 로 이메일을 주시면 친절히 안내해 드릴게요!"
-        ),
+        "message": "📡 일시적인 AI 서버 통신 오류가 발생했습니다. 네트워크 상태 또는 API 설정을 확인 후 잠시 후 다시 시도해 주세요!",
     }
 
 

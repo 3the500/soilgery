@@ -274,8 +274,8 @@ export default function Chat() {
     <div className={styles.chatContainer}>
       {/* 🔝 DM 헤더 Bar */}
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={handleBack} title="메인화면으로 이동">
-          ← 메인화면
+        <button className={styles.backButton} onClick={handleBack} title="홈으로 이동">
+          ← 홈으로
         </button>
         <div className={styles.partnerProfileHeader}>
           {/* 🖼️ [피드백 반영] 상대방이 프로필 사진을 등록했다면 이모지 대신 실제 사진을 표시 */}

@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float, Boolean, Text
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Float, Boolean, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -60,13 +60,15 @@ def get_db():
 def create_tables():
     Base.metadata.create_all(bind=engine)
 
-    # DB 마이그레이션: exp, level 컬럼이 없는 기존 DB 테이블 자동 보완
+    # DB 마이그레이션: exp, level 컬럼이 없는 기존 DB 테이블 자동 보완 (text() 및 commit() 구문 적용)
     with engine.connect() as conn:
         try:
-            conn.execute("ALTER TABLE users ADD COLUMN exp INTEGER DEFAULT 0;")
+            conn.execute(text("ALTER TABLE users ADD COLUMN exp INTEGER DEFAULT 0;"))
+            conn.commit()
         except Exception:
             pass
         try:
-            conn.execute("ALTER TABLE users ADD COLUMN level INTEGER DEFAULT 1;")
+            conn.execute(text("ALTER TABLE users ADD COLUMN level INTEGER DEFAULT 1;"))
+            conn.commit()
         except Exception:
             pass

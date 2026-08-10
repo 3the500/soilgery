@@ -73,7 +73,7 @@ export default function Aptitude() {
       const res = await aptitudeAPI.submitTest({ answers })
       setResult(res.data)
       await refreshUser?.()
-      showToast('적성검사가 완료되었습니다! 스탯 카드가 업데이트되었어요. 🎉', 'success')
+      showToast('적성검사가 완료되었습니다! 일손 역량 지표가 업데이트되었어요. 🎉', 'success')
 
       // 🔍 [피드백 반영] 매칭 화면과 동일한 기준(유클리드 거리)으로 계산된 1순위 추천
       // 업무 + AI 상세 분석 근거를 함께 조회해 결과 화면에서 바로 보여준다.
@@ -116,7 +116,7 @@ export default function Aptitude() {
       <div className={styles.container}>
         <div className={`glass-card ${styles.introCard}`}>
           <div className={styles.topBar}>
-            <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+            <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
           </div>
 
           {/* 💡 추천 분야 안내 카드 */}
@@ -125,7 +125,7 @@ export default function Aptitude() {
             <h3 className={styles.recommendTaskTitle}>{recommendedTask}</h3>
             <p className={styles.recommendTaskDesc}>
               {recommendedDesc || (
-                <>나의 스탯 특성을 고려해 보았을 때 <strong>{recommendedTask}</strong> 분야에 가장 높은 적합도를 보였습니다. 이 추천 분야로 매칭을 신청하실 수 있습니다!</>
+                <>나의 일손 성향과 체력을 고려해 보았을 때 <strong>{recommendedTask}</strong> 분야에 가장 높은 적합도를 보였습니다. 추천해 드린 이 분야로 맞춤 일손 매칭을 시작하실 수 있습니다!</>
               )}
             </p>
 
@@ -187,7 +187,7 @@ export default function Aptitude() {
       <div className={styles.container}>
         <div className={`glass-card ${styles.introCard}`}>
           <div className={styles.topBar}>
-            <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+            <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
           </div>
           <div className={styles.introIconBadge}>🌱</div>
           <h1 className={styles.introTitle}>맞춤 적성검사 안내</h1>
@@ -199,8 +199,8 @@ export default function Aptitude() {
             <div className={styles.introFeatureItem}>
               <span className={styles.featureEmoji}>🤖</span>
               <div>
-                <strong>AI 정밀 스탯 분석</strong>
-                <p>내 체력·근력·성향을 종합 분석하여 스탯 카드로 정밀 수치화해 드립니다.</p>
+                <strong>내 일손 역량 맞춤 분석</strong>
+                <p>내 체력·근력·성향을 종합 분석하여 일손 역량 지표로 측정해 드립니다.</p>
               </div>
             </div>
             <div className={styles.introFeatureItem}>
@@ -245,7 +245,7 @@ export default function Aptitude() {
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 메인화면</button>
+        <button type="button" className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
       </div>
       <h1 className={styles.title}>농촌 소일거리 적성검사</h1>
       {loadError && <p style={{ color: '#ff6b6b', textAlign: 'center' }}>{loadError}</p>}
