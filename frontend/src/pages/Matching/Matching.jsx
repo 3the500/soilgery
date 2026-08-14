@@ -5,6 +5,35 @@ import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import styles from './Matching.module.css'
 
+const TASK_CARDS = [
+  {
+    value: '밭일',
+    emoji: '🍎',
+    title: '밭일 · 과수 수확',
+    desc: '수확, 파종 등 기본 농작업',
+  },
+  {
+    value: '트렉터 운용',
+    emoji: '🚜',
+    title: '트랙터 · 농기계',
+    desc: '밭갈이, 로터리 기계 조작',
+  },
+  {
+    value: '물건 나르기',
+    emoji: '📦',
+    title: '운반 · 농가 정리',
+    desc: '수확물 적재, 창고 정리',
+  },
+]
+
+function calculateLevel(exp = 0) {
+  if (exp >= 1000) return { level: 5, title: '🌾 일손 달인' }
+  if (exp >= 600) return { level: 4, title: '🌟 베테랑' }
+  if (exp >= 300) return { level: 3, title: '⚡ 유망주' }
+  if (exp >= 100) return { level: 2, title: '🌱 루키' }
+  return { level: 1, title: '🐣 첫걸음' }
+}
+
 export default function Matching() {
   const { user, refreshUser } = useAuth()
   const navigate = useNavigate()
@@ -35,6 +64,10 @@ export default function Matching() {
         })
         .catch((err) => console.error('추천 업무 조회 실패:', err))
         .finally(() => setLoading(false))
+    } else if (user.role === '농부') {
+      // 👨‍🌾 농부 회원 진입 시 기본 선택('밭일') 후보자 목록을 바로 자동 로드!
+      handleSelectTask('밭일')
+      setLoading(false)
     } else {
       setLoading(false)
     }
@@ -71,9 +104,11 @@ export default function Matching() {
 
     try {
       const res = await matchingAPI.getCandidatesByTask(taskName)
-      setCandidates(res.data)
+      const candidateData = Array.isArray(res.data) ? res.data : []
+      setCandidates(candidateData)
     } catch (err) {
       console.error('후보자 조회 실패:', err)
+      showToast('후보자 목록을 불러오지 못했습니다.', 'error')
       setCandidates([])
     }
   }
@@ -88,8 +123,8 @@ export default function Matching() {
       const res = await matchingAPI.createMatchByTask(selectedTask, employeeId)
       const matchId = res.data?.match_id || res.data?.id
       
-      showToast(`지원자 #${employeeId}님과 매칭 대화방이 개설되었습니다! 🎉`, 'success')
-      setCandidates((prev) => prev.filter((c) => c.user_id !== employeeId))
+      showToast(`청년 지원자님과 매칭 대화방이 개설되었습니다! 🎉`, 'success')
+      setCandidates((prev) => (Array.isArray(prev) ? prev.filter((c) => c.user_id !== employeeId) : []))
       
       if (matchId) {
         navigate(`/chat/${matchId}`)
@@ -97,7 +132,8 @@ export default function Matching() {
         navigate('/chat')
       }
     } catch (err) {
-      showToast('매칭 생성 실패: ' + (err.response?.data?.detail || '오류 발생'), 'error')
+      console.error('매칭 생성 에러:', err)
+      showToast('매칭 생성 실패: ' + (err.response?.data?.detail || '오류가 발생했습니다.'), 'error')
     }
   }
 
@@ -190,37 +226,143 @@ export default function Matching() {
       <div className={styles.topBar}>
         <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
       </div>
-      <h1 className={styles.title}>👨‍🌾 업무별 추천 청년 후보자 조회</h1>
-      <div className={styles.selectGroup}>
-        <label>필요한 업무 선택:</label>
-        <select 
-          className={styles.selectBox}
-          value={selectedTask} 
-          onChange={(e) => handleSelectTask(e.target.value)}
-        >
-          <option value="" disabled>업무를 선택하세요</option>
-          {taskOptions.map((task) => (
-            <option key={task} value={task}>
-              {task}
-            </option>
-          ))}
-        </select>
+      <div className={styles.farmerHeaderCard}>
+        <h1 className={styles.title}>👨‍🌾 필요한 농사 업무를 선택해 주세요</h1>
+        <p className={styles.farmerSubText}>선택한 업무에 맞는 우수 청년 지원자를 AI가 자동 추천합니다.</p>
+        <div className={styles.scoreHintRow}>
+          <span className={styles.scoreHintIcon}>⚡</span>
+          <span className={styles.scoreHintText}>AI 추천 점수는 <strong>체력·성실성·숙련도·협동심</strong> 등 6개 적성 항목을 해당 업무 프로필과 비교 분석하여 산출됩니다.</span>
+        </div>
+
+        <div className={styles.taskCleanGrid}>
+          {TASK_CARDS.map((cat) => {
+            const isSelected = selectedTask === cat.value
+            return (
+              <button
+                key={cat.value}
+                type="button"
+                className={`${styles.taskCleanBtn} ${isSelected ? styles.taskCleanBtnActive : ''}`}
+                onClick={() => handleSelectTask(cat.value)}
+              >
+                <span className={styles.cleanEmoji}>{cat.emoji}</span>
+                <span className={styles.cleanTitle}>{cat.title}</span>
+                <span className={styles.cleanDesc}>{cat.desc}</span>
+                {isSelected && <span className={styles.cleanSelected}>✔ 선택됨</span>}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <div className={styles.candidateList}>
-        {candidates.map((c) => (
-          <div key={c.user_id} className={styles.candidateCard}>
-            <div className={styles.candidateName}>
-              👤 {c.name ? `${c.name} (#${c.user_id})` : `지원자 #${c.user_id}`} {c.location && `📍 ${c.location}`}
-            </div>
-            <div className={styles.fitScore}>
-              💡 적합도 거리(낮을수록 우수): {typeof c.fit_score === 'number' ? c.fit_score.toFixed(2) : c.fit_score}
-            </div>
-            <button className={styles.matchBtn} onClick={() => handleCreateMatch(c.user_id)}>이 청년과 매칭하기 (대화방 개설)</button>
-          </div>
-        ))}
-        {selectedTask && candidates.length === 0 && (
-          <p className={styles.emptyText}>현재 '{selectedTask}' 업무를 희망하는 매칭 대기 지원자가 없습니다.</p>
+        {Array.isArray(candidates) &&
+          candidates.map((c, index) => {
+            if (!c) return null
+            const rank = index + 1
+            const matchPercent = Math.min(99, Math.max(78, Math.round(99 - (c.fit_score || 0) * 3.2)))
+            const levelInfo = calculateLevel(c.exp || 0)
+            const ratingNum = c.rating ? Number(c.rating).toFixed(1) : '5.0'
+
+            const rankClass = rank === 1 ? styles.rankCardGold : rank === 2 ? styles.rankCardSilver : rank === 3 ? styles.rankCardBronze : ''
+            const rankBadgeText = rank === 1 ? '🥇 1위 최우수 추천' : rank === 2 ? '🥈 2위 우수 추천' : rank === 3 ? '🥉 3위 추천' : null
+
+            // 💡 눈에 띄는 핵심 추천 이유 태그 생성
+            const stats = c.stats || {}
+            const reasons = [] // { label, emoji, color }
+
+            // 직무 적합도 (matchPercent 기반)
+            if (matchPercent >= 90)
+              reasons.push({ label: '직무 적합 최적!', emoji: '🎯', color: 'green' })
+            else if (matchPercent >= 84)
+              reasons.push({ label: '직무 적합 우수!', emoji: '✅', color: 'green' })
+
+            // 즉시 투입 가능 여부
+            if (c.is_seeking)
+              reasons.push({ label: '즉시 투입 가능!', emoji: '⚡', color: 'amber' })
+
+            // 평점 기반
+            if (Number(c.rating) >= 4.8)
+              reasons.push({ label: '평점 최상위!', emoji: '🌟', color: 'gold' })
+            else if (Number(c.rating) >= 4.5)
+              reasons.push({ label: '후기 평점 우수!', emoji: '⭐', color: 'gold' })
+
+            // 성실성 최상위
+            if ((stats.grit || 0) >= 8)
+              reasons.push({ label: '성실성 탁월!', emoji: '🔥', color: 'orange' })
+
+            // 체력
+            if ((stats.stamina || 0) >= 8)
+              reasons.push({ label: '체력 최상급!', emoji: '💪', color: 'blue' })
+
+            // 숙련도 (농기계 등)
+            if ((stats.intelligence || 0) >= 8)
+              reasons.push({ label: '농기계 숙련자!', emoji: '🚜', color: 'teal' })
+
+            // 경험 풍부
+            if ((c.exp || 0) >= 300)
+              reasons.push({ label: '현장 경험 풍부!', emoji: '🏆', color: 'purple' })
+
+            // 최대 3개만 표시
+            const topReasons = reasons.slice(0, 3)
+
+            return (
+              <div key={c.user_id || index} className={`${styles.candidateCard} ${rankClass}`}>
+
+                {/* 상단: 순위뱃지(좌) / AI추천점수(우) */}
+                <div className={styles.cardTopRow}>
+                  <div className={styles.cardTopLeft}>
+                    {rankBadgeText && (
+                      <span className={`${styles.rankBadge} ${styles[`rankBadge${rank}`]}`}>
+                        {rankBadgeText}
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles.fitScoreBadge}>
+                    ⚡ AI 추천 점수 <strong>{matchPercent}점</strong>
+                  </div>
+                </div>
+
+                {/* 프로필 이미지 + 이름 + 위치 */}
+                <div className={styles.candidateNameRow}>
+                  <div className={styles.candidateAvatar}>
+                    {c.profile_image
+                      ? <img src={c.profile_image} alt="프로필" className={styles.avatarImg} />
+                      : <span className={styles.avatarFallback}>👤</span>
+                    }
+                  </div>
+                  <div className={styles.candidateNameInfo}>
+                    <span className={styles.candidateName}>{c.name || '청년 지원자'}</span>
+                    {c.location && (
+                      <span className={styles.candidateLocation}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                        {c.location}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 구분선 */}
+                <div className={styles.cardDivider} />
+
+                {/* 평점·레벨 + 추천이유 한 줄 통합 */}
+                <div className={styles.cardInfoRow}>
+                  <span className={styles.metricItem}>⭐ <strong>{ratingNum}점</strong></span>
+                  <span className={styles.metricDot}>·</span>
+                  <span className={styles.metricItem}>🏆 <strong>Lv.{levelInfo.level}</strong> {levelInfo.title}</span>
+                  {topReasons.length > 0 && <span className={styles.metricDot}>·</span>}
+                  {topReasons.map((r, i) => (
+                    <span key={i} className={`${styles.reasonTag} ${styles[`reasonTag_${r.color}`]}`}>
+                      {r.emoji} {r.label}
+                    </span>
+                  ))}
+                </div>
+
+                <button className={styles.matchBtn} onClick={() => handleCreateMatch(c.user_id)}>이 청년과 매칭하기 (대화방 개설)</button>
+              </div>
+            )
+          })}
+        {selectedTask && Array.isArray(candidates) && candidates.length === 0 && (
+          <p className={styles.emptyText}>현재 '{selectedTask}' 업무를 희망하는 대기 청년 지원자가 없습니다. 🌾</p>
         )}
       </div>
     </div>

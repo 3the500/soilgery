@@ -539,6 +539,80 @@
   padding: 4px 16px; border-radius: var(--radius-full);
 }
 
+/* 🧑‍🌾 청년 회원 전용 (깨끗한 퓨어 화이트 & 실버 블루 믹스) */
+.youthUserMainCard {
+  position: relative;
+  overflow: hidden;
+  padding-top: 40px !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%) !important;
+  border: 2px solid #94A3B8 !important;
+  box-shadow: 0 14px 36px rgba(148, 163, 184, 0.22) !important;
+}
+
+.youthUserMainCard::before {
+  content: "청년 회원";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: linear-gradient(90deg, #475569 0%, #64748B 100%);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+
+.youthRoleTag {
+  background: #E2E8F0 !important;
+  color: #1E293B !important;
+  border: 1.5px solid #94A3B8 !important;
+  font-weight: 800 !important;
+}
+
+.youthAvatarRing {
+  border: 3px solid #64748B !important;
+  box-shadow: 0 6px 18px rgba(100, 116, 139, 0.3) !important;
+}
+
+/* 👨‍🌾 농부 회원 전용 (풍요로운 황금 옐로우 & 골드 믹스) */
+.farmerUserMainCard {
+  position: relative;
+  overflow: hidden;
+  padding-top: 40px !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF08A 100%) !important;
+  border: 2.2px solid #EAB308 !important;
+  box-shadow: 0 14px 36px rgba(234, 179, 8, 0.28) !important;
+}
+
+.farmerUserMainCard::before {
+  content: "농부 회원";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: linear-gradient(90deg, #CA8A04 0%, #EAB308 100%);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+
+.farmerRoleTag {
+  background: #FACC15 !important;
+  color: #713F12 !important;
+  border: 1.5px solid #CA8A04 !important;
+  font-weight: 800 !important;
+}
+
+.farmerAvatarRing {
+  border: 3px solid #EAB308 !important;
+  box-shadow: 0 6px 18px rgba(234, 179, 8, 0.38) !important;
+}
+
 .recommendedTaskTag {
   font-size: 12px; font-weight: 700;
   background: #FFF3C4;

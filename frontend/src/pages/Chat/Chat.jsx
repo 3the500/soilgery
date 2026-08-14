@@ -278,18 +278,11 @@ export default function Chat() {
           ← 홈으로
         </button>
         <div className={styles.partnerProfileHeader}>
-          {/* 🖼️ [피드백 반영] 상대방이 프로필 사진을 등록했다면 이모지 대신 실제 사진을 표시 */}
-          {partner?.partner_profile_image ? (
-            <img
-              src={partner.partner_profile_image}
-              alt={partner?.partner_name || '상대방 프로필'}
-              className={styles.partnerAvatarImg}
-            />
-          ) : (
-            <span className={styles.partnerAvatarEmoji}>
-              {partner?.partner_role === '농부' ? '👨‍🌾' : '🌱'}
-            </span>
-          )}
+          <img
+            src={partner?.partner_profile_image || (partner?.partner_role === '농부' ? '/images/farmer.png' : '/images/chung.png')}
+            alt={partner?.partner_name || '상대방 프로필'}
+            className={styles.partnerAvatarImg}
+          />
           <div className={styles.partnerNameCol}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <strong className={styles.partnerNameText}>

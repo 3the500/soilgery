@@ -21,8 +21,13 @@ export default function Register() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const selectRole = (role) =>
-    setForm((prev) => ({ ...prev, role }))
+  const selectRole = (role) => {
+    if (role === '농부') {
+      setForm((prev) => ({ ...prev, role, province: '충청북도', city: '충주시' }))
+    } else {
+      setForm((prev) => ({ ...prev, role }))
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -124,10 +129,15 @@ export default function Register() {
             />
           </div>
 
-          {/* 거주 지역 (도, 시 나눠서 필수 입력) */}
+          {/* 거주 지역 (농부 회원일 경우 충청북도 충주시 자동 고정) */}
           <div className="input-group">
             <label htmlFor="province">
               거주 지역 <span className={styles.required}>(필수)</span>
+              {form.role === '농부' && (
+                <span style={{ fontSize: '11.5px', color: '#D97706', marginLeft: '6px', fontWeight: 'bold' }}>
+                  📍 농부 회원은 충청북도 충주시 전용입니다
+                </span>
+              )}
             </label>
             <div className={styles.locationGrid}>
               <select
@@ -136,29 +146,43 @@ export default function Register() {
                 className="input-field"
                 value={form.province}
                 onChange={handleChange}
+                disabled={form.role === '농부'}
                 required
               >
-                <option value="">도/시 선택</option>
                 <option value="충청북도">충청북도 (충북)</option>
-                <option value="서울특별시">서울특별시</option>
-                <option value="경기도">경기도</option>
-                <option value="충청남도">충청남도</option>
-                <option value="강원특별자치도">강원특별자치도</option>
-                <option value="전라북도">전라북도</option>
-                <option value="전라남도">전라남도</option>
-                <option value="경상북도">경상북도</option>
-                <option value="경상남도">경상남도</option>
-                <option value="제주특별자치도">제주특별자치도</option>
-                <option value="세종특별자치시">세종특별자치시</option>
-                <option value="대전광역시">대전광역시</option>
-                <option value="광주광역시">광주광역시</option>
-                <option value="대구광역시">대구광역시</option>
-                <option value="울산광역시">울산광역시</option>
-                <option value="부산광역시">부산광역시</option>
-                <option value="인천광역시">인천광역시</option>
+                {form.role !== '농부' && (
+                  <>
+                    <option value="서울특별시">서울특별시</option>
+                    <option value="경기도">경기도</option>
+                    <option value="충청남도">충청남도</option>
+                    <option value="강원특별자치도">강원특별자치도</option>
+                    <option value="전라북도">전라북도</option>
+                    <option value="전라남도">전라남도</option>
+                    <option value="경상북도">경상북도</option>
+                    <option value="경상남도">경상남도</option>
+                    <option value="제주특별자치도">제주특별자치도</option>
+                    <option value="세종특별자치시">세종특별자치시</option>
+                    <option value="대전광역시">대전광역시</option>
+                    <option value="광주광역시">광주광역시</option>
+                    <option value="대구광역시">대구광역시</option>
+                    <option value="울산광역시">울산광역시</option>
+                    <option value="부산광역시">부산광역시</option>
+                    <option value="인천광역시">인천광역시</option>
+                  </>
+                )}
               </select>
 
-              {form.province === '충청북도' ? (
+              {form.role === '농부' ? (
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  className="input-field"
+                  value="충주시"
+                  disabled
+                  readOnly
+                />
+              ) : form.province === '충청북도' ? (
                 <select
                   id="city"
                   name="city"

@@ -188,10 +188,14 @@ class AiAnswerResponse(BaseModel):
 # ── 매칭(후보자) ──────────────────────────────────
 class CandidateResponse(BaseModel):
     user_id: int
-    name: Optional[str] = None      # 지원자 이름 추가
-    location: Optional[str] = None  # 거주 지역 추가
+    name: Optional[str] = None
+    location: Optional[str] = None
+    profile_image: Optional[str] = None
+    rating: Optional[float] = 5.0
+    exp: Optional[int] = 0
     stats: StatsResponse
     fit_score: float
+    is_seeking: Optional[bool] = True
 
 
 # ⭐️ 리뷰 & 평점 ─────────────────────────────────

@@ -559,12 +559,6 @@ export default function Home() {
             )}
           </button>
           <button
-            className={`${styles.topBtn} ${activeHeaderTab === 'menu' ? styles.topBtnActive : ''}`}
-            onClick={() => toggleHeaderTab('menu')}
-          >
-            🔗 메뉴
-          </button>
-          <button
             className={`${styles.topBtn} ${activeHeaderTab === 'settings' ? styles.topBtnActive : ''}`}
             onClick={() => toggleHeaderTab('settings')}
           >
@@ -624,110 +618,23 @@ export default function Home() {
             </div>
           )}
 
-          {/* 2. 🔗 메뉴 탭 클릭 시 */}
-          {activeHeaderTab === 'menu' && (
+          {/* ⚙️ 설정 탭 클릭 시 */}
+          {activeHeaderTab === 'settings' && (
             <div className={`glass-card ${styles.menuCard}`}>
               <div className={styles.menuCardHeader}>
-                <h4>🛠️ 관리자 기능</h4>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className={styles.userCountBadge}>총 {allUsers.length}명</span>
-                  <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
-                </div>
+                <h4>⚙️ 설정 및 메뉴</h4>
+                <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
               </div>
               <div className={styles.accountActionBody}>
                 <button
                   className={`btn btn-outline ${styles.settingItemBtn}`}
-                  onClick={handleGoAptitude}
+                  onClick={() => {
+                    setActiveHeaderTab(null);
+                    handleGoAptitude();
+                  }}
                 >
                   🌱 적성검사 다시받기
                 </button>
-              </div>
-
-              {/* 👥 전체 회원 현황 (농부 진하게 / 청년 짙게 시각적 대비) */}
-              <div className={styles.menuCardBody} style={{ borderTop: '1px dashed #EDE8D5' }}>
-                <div className={styles.adminFilterHeader}>
-                  <h5 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--color-brown)', margin: 0 }}>
-                    👥 회원 현황 목록
-                  </h5>
-                  <div className={styles.adminRoleChipGroup}>
-                    <button
-                      type="button"
-                      className={`${styles.adminRoleChip} ${adminUserRoleFilter === 'all' ? styles.adminRoleChipActive : ''}`}
-                      onClick={() => setAdminUserRoleFilter('all')}
-                    >
-                      전체 ({allUsers.length})
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.adminRoleChip} ${adminUserRoleFilter === 'farmer' ? styles.adminRoleChipActive : ''}`}
-                      onClick={() => setAdminUserRoleFilter('farmer')}
-                    >
-                      👨‍🌾 농부 ({farmerUsers.length})
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.adminRoleChip} ${adminUserRoleFilter === 'youth' ? styles.adminRoleChipActive : ''}`}
-                      onClick={() => setAdminUserRoleFilter('youth')}
-                    >
-                      🌱 청년 ({youthUsers.length})
-                    </button>
-                  </div>
-                </div>
-
-                {loadingUsers ? (
-                  <p className={styles.emptyText}>회원 목록을 불러오는 중...</p>
-                ) : filteredAdminUsers.length === 0 ? (
-                  <p className={styles.emptyText}>해당하는 회원이 없습니다.</p>
-                ) : (
-                  <div className={styles.userTable}>
-                    {filteredAdminUsers.map((u) => (
-                      <div
-                        key={u.id}
-                        className={`${styles.userRow} ${u.role === '농부' ? styles.farmerUserRow : styles.youthUserRow}`}
-                      >
-                        <div className={styles.userInfo}>
-                          <span className={styles.userAvatar}>
-                            {u.role === '농부' ? '👨‍🌾' : '🌱'}
-                          </span>
-                          <div>
-                            <div className={styles.userNameGroup}>
-                              <strong>{u.name}</strong>
-                              <span className={`${styles.roleBadge} ${u.role === '농부' ? styles.farmerBadge : styles.youthBadge}`}>
-                                {u.role}
-                              </span>
-                              <span className={styles.ratingBadge}>⭐ {u.rating ? Number(u.rating).toFixed(1) : '0.0'}</span>
-                            </div>
-                            <p className={styles.userSubInfo}>{u.email} {u.location ? `· 📍${u.location}` : ''}</p>
-                            
-                            {u.role !== '농부' && (
-                              <div className={styles.statBadges}>
-                                <span>⚡체력:{u.stamina ?? 0}</span>
-                                <span>💪근력:{u.strength ?? 0}</span>
-                                <span>🧠숙련도:{u.intelligence ?? 0}</span>
-                                <span>🔥성실성:{u.grit ?? 0}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <span className={styles.joinDate}>
-                          {u.created_at ? new Date(u.created_at).toLocaleDateString('ko-KR') : '최근'}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* 3. ⚙️ 설정 탭 클릭 시 */}
-          {activeHeaderTab === 'settings' && (
-            <div className={`glass-card ${styles.menuCard}`}>
-              <div className={styles.menuCardHeader}>
-                <h4>⚙️ 설정 및 계정 관리</h4>
-                <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
-              </div>
-              <div className={styles.accountActionBody}>
                 <button
                   className={`btn btn-outline ${styles.settingItemBtn}`}
                   onClick={() => {
@@ -846,23 +753,20 @@ export default function Home() {
         {/* 2️⃣ [👤 내 정보 탭] 컨텐츠 */}
         {bottomTab === 'profile' && (
           <div className={styles.tabContentFade}>
-            {/* 메인 유저 아바타 카드 (통합 카드) */}
-            <section className={`glass-card ${styles.userMainCard}`}>
+            {/* 메인 유저 아바타 카드 (통합 카드 - 청년: 화이트 / 농부: 옐로우 구분) */}
+            <section className={`glass-card ${styles.userMainCard} ${isFarmer ? styles.farmerUserMainCard : styles.youthUserMainCard}`}>
               {/* 🖼️ 프로필 사진 */}
               <div
-                className={styles.avatarArea}
+                className={`${styles.avatarArea} ${isFarmer ? styles.farmerAvatarRing : styles.youthAvatarRing}`}
                 onClick={handleClickAvatar}
                 role="button"
                 title="프로필 사진 등록/변경"
               >
-                {user?.profile_image ? (
-                  <img src={user.profile_image} alt="프로필 사진" className={styles.avatarImg} />
-                ) : (
-                  <span className={styles.avatarEmoji}>
-                    {isFarmer ? '👨‍🌾' : '🌱'}
-                  </span>
-                )}
-                <span className={styles.avatarEditBadge}>{uploadingPhoto ? '⏳' : '📷'}</span>
+                <img
+                  src={user?.profile_image || (isFarmer ? '/images/farmer.png' : '/images/chung.png')}
+                  alt="프로필 사진"
+                  className={styles.avatarImg}
+                />
               </div>
               <input
                 ref={photoInputRef}
@@ -874,7 +778,7 @@ export default function Home() {
 
               <h2 className={styles.userName}>{user?.name}</h2>
               <div className={styles.roleTaskRow}>
-                <span className={styles.userRoleTag}>{user?.role}</span>
+                <span className={`${styles.userRoleTag} ${isFarmer ? styles.farmerRoleTag : styles.youthRoleTag}`}>{user?.role}</span>
                 {!isFarmer && (
                   recommendedTask ? (
                     <button

@@ -153,31 +153,29 @@ def read_candidates_by_task(
     if task_name not in FARM_TASK_PROFILES:
         raise HTTPException(status_code=400, detail="유효하지 않은 농사 업무입니다.")
 
-    # 매칭 대기 중(is_seeking=True)인 청년 사용자 조회
-    seeking_users = db.query(User).filter(
-        User.role == "청년", 
-        User.is_seeking == True
-    ).all()
+    # 청년 회원 전체 조회 (매칭 신청(is_seeking=True) 청년 우선 정렬)
+    youth_users = db.query(User).filter(User.role == "청년").all()
 
     ideal_profile = FARM_TASK_PROFILES[task_name]
     candidates = []
 
-    for user in seeking_users:
+    for user in youth_users:
         stats = extract_stats(user)
-        top_task = recommend_farm_task(stats, top_n=1)[0]["task"]
-        
-        # 선택한 업무와 청년의 1순위 추천 업무가 일치하는 경우만 추출
-        if top_task == task_name:
-            fit_score = math.sqrt(sum((stats[k] - ideal_profile[k]) ** 2 for k in stats))
-            candidates.append({
-                "user_id": user.id,
-                "name": user.name,
-                "location": user.location,
-                "stats": _to_response(stats),
-                "fit_score": fit_score
-            })
+        fit_score = math.sqrt(sum((stats[k] - ideal_profile[k]) ** 2 for k in stats))
+        candidates.append({
+            "user_id": user.id,
+            "name": user.name,
+            "location": user.location,
+            "profile_image": getattr(user, "profile_image", None),
+            "rating": float(getattr(user, "rating", 5.0) or 5.0),
+            "exp": int(getattr(user, "exp", 0) or 0),
+            "stats": _to_response(stats),
+            "fit_score": fit_score,
+            "is_seeking": bool(user.is_seeking)
+        })
 
-    candidates.sort(key=lambda c: c["fit_score"])
+    # 구직 활성화(is_seeking=True) 유저 우선, 이후 적합도(fit_score) 순 정렬
+    candidates.sort(key=lambda c: (not c["is_seeking"], c["fit_score"]))
     return candidates
 
 # ---- 농부: 업무 기반 매칭 생성 ----

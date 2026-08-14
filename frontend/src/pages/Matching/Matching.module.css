@@ -296,6 +296,122 @@
   box-shadow: 0 0 0 3.5px rgba(255, 193, 7, 0.2);
 }
 
+
+
+/* 🌾 [디자인 업그레이드] 농부 헤더 카드 & 3열 세그먼트 탭 칩 */
+.farmerHeaderCard {
+  background: var(--color-surface);
+  border: 1.5px solid rgba(237, 232, 213, 0.9);
+  border-radius: var(--radius-xl);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+  margin-bottom: 8px;
+}
+
+.farmerIconBadge {
+  font-size: 12px;
+  font-weight: 800;
+  color: #713F12;
+  background: #FEF9C3;
+  border: 1px solid #FACC15;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+/* AI 점수 안내 힌트 줄 */
+.scoreHintRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-lg);
+  padding: 9px 12px;
+}
+
+.scoreHintIcon {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.scoreHintText {
+  font-size: 12px;
+  color: #78350F;
+  line-height: 1.4;
+}
+
+/* 🌟 직관적인 업무 선택 카드 그리드 */
+.taskCleanGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.taskCleanBtn {
+  background: #FAFAF7;
+  border: 1.8px solid #E2D9C3;
+  border-radius: var(--radius-lg);
+  padding: 16px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  position: relative;
+}
+
+.taskCleanBtn:hover {
+  transform: translateY(-2px);
+  border-color: #F5C400;
+  box-shadow: 0 6px 16px rgba(245, 196, 0, 0.18);
+}
+
+.taskCleanBtnActive {
+  background: linear-gradient(160deg, #FFF9DC 0%, #FFF0A0 100%) !important;
+  border-color: #EAB308 !important;
+  box-shadow: 0 6px 20px rgba(234, 179, 8, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+.cleanEmoji {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.cleanTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1A1209;
+  line-height: 1.2;
+}
+
+.cleanDesc {
+  font-size: 11px;
+  color: #78716C;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.cleanSelected {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #92400E;
+  background: rgba(234, 179, 8, 0.2);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+
 .candidateList {
   display: flex;
   flex-direction: column;
@@ -319,21 +435,211 @@
   border-color: var(--color-primary-light);
 }
 
+/* 프로필 이미지 + 이름 + 위치 행 */
+.candidateNameRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.candidateAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #F5F0E8;
+  border: 2px solid #E2D9C3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.candidateNameInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
 .candidateName {
   font-size: 18px;
   font-weight: 800;
   color: var(--color-text);
+  line-height: 1.1;
 }
 
-.fitScore {
-  font-size: 13.5px;
+.candidateLocation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #78716C;
+  font-weight: 500;
+}
+
+/* 🟢 구직 활성 상태 뱃지 */
+.seekingBadge {
+  font-size: 11.5px;
   font-weight: 700;
-  color: var(--color-brown);
-  background: var(--color-primary-pale);
-  border: 1px solid rgba(255, 193, 7, 0.45);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  width: fit-content;
+  color: #166534;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.notSeekingBadge {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #6B7280;
+  background: #F3F4F6;
+  border: 1px solid #D1D5DB;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+/* 카드 내부 구분선 */
+.cardDivider {
+  height: 1px;
+  background: rgba(226, 217, 195, 0.7);
+  margin: 0 -2px;
+}
+
+/* 평점·레벨·추천이유 한 줄 통합 */
+.cardInfoRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.metricDot {
+  color: #C4B8A0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.reasonLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #92400E;
+  white-space: nowrap;
+}
+
+/* 추천 이유 태그 기본 — 눈에 띄게 강조 */
+.reasonTag {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1.8px solid;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  /* 기본 */
+  color: #14532D;
+  background: linear-gradient(135deg, #BBF7D0, #86EFAC);
+  border-color: #22C55E;
+}
+
+.reasonTag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* green — 직무 적합 */
+.reasonTag_green {
+  color: #14532D;
+  background: linear-gradient(135deg, #DCFCE7, #86EFAC);
+  border-color: #16A34A;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+/* amber — 즉시 투입 */
+.reasonTag_amber {
+  color: #92400E;
+  background: linear-gradient(135deg, #FEF3C7, #FCD34D);
+  border-color: #D97706;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
+}
+
+/* gold — 평점 */
+.reasonTag_gold {
+  color: #78350F;
+  background: linear-gradient(135deg, #FFFBEB, #FDE68A);
+  border-color: #CA8A04;
+  box-shadow: 0 2px 8px rgba(202, 138, 4, 0.25);
+}
+
+/* orange — 성실성 */
+.reasonTag_orange {
+  color: #9A3412;
+  background: linear-gradient(135deg, #FFF7ED, #FDBA74);
+  border-color: #EA580C;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.22);
+}
+
+/* blue — 체력 */
+.reasonTag_blue {
+  color: #1E3A8A;
+  background: linear-gradient(135deg, #DBEAFE, #93C5FD);
+  border-color: #2563EB;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.22);
+}
+
+/* teal — 숙련도 */
+.reasonTag_teal {
+  color: #134E4A;
+  background: linear-gradient(135deg, #CCFBF1, #5EEAD4);
+  border-color: #0D9488;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.22);
+}
+
+/* purple — 경험 */
+.reasonTag_purple {
+  color: #4C1D95;
+  background: linear-gradient(135deg, #F3E8FF, #C084FC);
+  border-color: #7C3AED;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.22);
+}
+
+/* 카드 상단 행: 좌(순위+구직상태) / 우(AI 추천 점수) */
+.cardTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cardTopLeft {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fitScoreBadge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #92400E;
+  background: linear-gradient(135deg, #FFF9C4 0%, #FEF08A 100%);
+  border: 1.5px solid #EAB308;
+  padding: 5px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .matchBtn {
@@ -346,6 +652,68 @@
   font-weight: 700;
   transition: all var(--transition);
   box-shadow: 0 4px 18px rgba(245, 176, 0, 0.35);
+}
+
+.candidateMetricsInline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.metricItem {
+  font-size: 12.5px;
+  color: var(--color-text);
+  background: #FFFDF0;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid #FACC15;
+}
+
+/* 🏆 1, 2, 3위 순위 뱃지 및 카드 하이라이트 */
+.rankBadgeRow {
+  margin-bottom: 4px;
+}
+
+.rankBadge {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.rankBadge1 {
+  background: linear-gradient(135deg, #FEF08A 0%, #FACC15 100%);
+  color: #713F12;
+  border: 1px solid #CA8A04;
+}
+
+.rankBadge2 {
+  background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+  color: #1E293B;
+  border: 1px solid #94A3B8;
+}
+
+.rankBadge3 {
+  background: linear-gradient(135deg, #FFEDD5 0%, #FDBA74 100%);
+  color: #7C2D12;
+  border: 1px solid #EA580C;
+}
+
+.rankCardGold {
+  border: 2px solid #EAB308 !important;
+  background: linear-gradient(135deg, #FFFDF0 0%, #FEF9C3 100%) !important;
+}
+
+.rankCardSilver {
+  border: 1.5px solid #94A3B8 !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+}
+
+.rankCardBronze {
+  border: 1.5px solid #F97316 !important;
+  background: linear-gradient(135deg, #FFFDF5 0%, #FFEDD5 100%) !important;
 }
 
 .matchBtn:hover {
@@ -361,13 +729,32 @@
 }
 
 /* 📱 모바일 스마트폰 화면 핏 최적화 */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .container {
     padding: 16px 14px 40px;
     gap: 16px;
   }
   .title {
-    font-size: 18px;
+    font-size: 17px;
+  }
+  .farmerHeaderCard {
+    padding: 16px 14px;
+  }
+  /* 모바일: 3열 유지, 각 카드 폰트만 줄이기 */
+  .taskCleanGrid {
+    gap: 8px;
+  }
+  .taskCleanBtn {
+    padding: 14px 6px 12px;
+  }
+  .cleanEmoji {
+    font-size: 24px;
+  }
+  .cleanTitle {
+    font-size: 11.5px;
+  }
+  .cleanDesc {
+    font-size: 10px;
   }
   .primaryHomeBtn, .startMatchBtn, .matchBtn {
     padding: 12px 16px;
@@ -376,4 +763,4 @@
   .recommendTaskCard, .seekingNoticeCard, .readyNoticeCard {
     padding: 18px 16px;
   }
-}
+}
