@@ -27,6 +27,12 @@ export default function Aptitude() {
   // 💡 검사 시작 전 소개 화면 제어 상태
   const [isStarted, setIsStarted] = useState(false)
 
+  // 🛡️ [버그 수정] "다음" 버튼 위치가 마지막 문항에서 "결과 제출하기"로 바뀌는 순간,
+  // 일부 안드로이드 웹뷰(APK)에서 같은 좌표에 남아있는 터치 이벤트가 새로 렌더링된
+  // 제출 버튼까지 눌러버리는 '고스트 클릭' 현상이 있어, 문항 전환 직후 아주 짧은 시간
+  // 동안은 제출 버튼이 눌리지 않도록 잠가둔다.
+  const [justArrived, setJustArrived] = useState(false)
+
   // 🚫 농부 회원 접근 차단 가이드
   useEffect(() => {
     if (user?.role === '농부') {
@@ -56,6 +62,12 @@ export default function Aptitude() {
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
+      const goingToLast = currentIndex + 1 === questions.length - 1
+      if (goingToLast) {
+        // 마지막 문항으로 이동하는 순간 = 같은 자리 버튼이 "제출"로 바뀌는 순간
+        setJustArrived(true)
+        setTimeout(() => setJustArrived(false), 400)
+      }
       setCurrentIndex((prev) => prev + 1)
     }
   }
@@ -64,6 +76,11 @@ export default function Aptitude() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // 🛡️ [버그 수정] 문항 전환 직후 짧은 잠금 시간 동안 들어온 제출 이벤트는
+    // 사용자가 실제로 누른 게 아니라 고스트 클릭일 가능성이 높으므로 무시한다.
+    if (justArrived) {
+      return
+    }
     // 🚨 [피드백 반영] "결과 제출하기" 버튼을 눌렀을 때만(다른 질문 이동 시점이 아니라)
     // 모든 문항이 체크되어 있는지 확인하고, 빠진 문항이 있으면 alert 팝업으로 안내한다.
     if (!allAnswered) {
@@ -294,7 +311,7 @@ export default function Aptitude() {
                   다음 &gt;
                 </button>
               ) : (
-                <button type="submit" className={styles.navBtn} disabled={loading}>
+                <button type="submit" className={styles.navBtn} disabled={loading || justArrived}>
                   {loading ? '분석 중...' : '결과 제출하기'}
                 </button>
               )}
