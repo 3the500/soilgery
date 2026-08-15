@@ -4,6 +4,8 @@ import { useAuth } from '../../store/AuthContext'
 import api, { chatAPI, reviewAPI, API_BASE_URL } from '../../api/index'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Chat.module.css'
+import avatarYouth from '../../assets/icons/avatar_youth.jpg'
+import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
 
 // 👤 [피드백 반영] 상대방 정보 보기 모달에 표시할 매칭 스탯 라벨
 // (Profile.jsx의 STAT_DISPLAY와 동일한 항목/순서로 맞춰 통일감 있게 표시)
@@ -421,7 +423,11 @@ export default function Chat() {
                           className={styles.avatarImg}
                         />
                       ) : (
-                        partner?.partner_role === '농부' ? '👨‍🌾' : '🌱'
+                        <img
+                          src={partner?.partner_role === '농부' ? avatarFarmer : avatarYouth}
+                          alt={partner?.partner_name || '상대방'}
+                          className={styles.avatarImg}
+                        />
                       )}
                     </div>
                   )}

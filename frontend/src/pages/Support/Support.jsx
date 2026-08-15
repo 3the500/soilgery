@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import { supportAPI } from '../../api/index'
 import styles from './Support.module.css'
+import soilyiImg from '../../assets/icons/character_soilyi.jpg'
 
 const DEFAULT_WELCOME_MSG = {
   sender: 'ai',
@@ -142,7 +143,7 @@ export default function Support() {
             >
               {!isUser && (
                 <div className={styles.aiAvatar}>
-                  <span>🤖</span>
+                  <img src={soilyiImg} alt="소일이" className={styles.aiAvatarImg} />
                 </div>
               )}
 

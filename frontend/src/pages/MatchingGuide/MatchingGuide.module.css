@@ -1,0 +1,547 @@
+.wrapper {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(255, 236, 179, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(220, 245, 215, 0.4) 0%, transparent 60%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 90px;
+}
+
+.bgOrb {
+  position: fixed;
+  top: -100px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 202, 40, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 🔝 상단 헤더 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(254, 252, 247, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(237, 232, 213, 0.9);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  background: none;
+  border: 1.5px solid #E2D9C3;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.backBtn:hover {
+  background: var(--color-surface);
+  border-color: #FACC15;
+  color: var(--color-brown);
+}
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.stepCounterBadge {
+  font-size: 12px;
+  font-weight: 800;
+  color: #92400E;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* 📊 진행 바 */
+.progressBarTrack {
+  width: 100%;
+  height: 4px;
+  background: #E5E7EB;
+  position: sticky;
+  top: 56px;
+  z-index: 39;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #F59E0B 0%, #10B981 100%);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🏷️ 단계별 탭 칩 스크롤 */
+.stepTabScroll {
+  overflow-x: auto;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(237, 232, 213, 0.6);
+  scrollbar-width: none;
+}
+
+.stepTabScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.stepTabGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+}
+
+.stepTabChip {
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.stepTabChip:hover {
+  border-color: #FACC15;
+  color: var(--color-text);
+}
+
+.stepTabChipActive {
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%) !important;
+  color: #1A1209 !important;
+  border-color: #F5B000 !important;
+  box-shadow: 0 4px 12px rgba(245, 176, 0, 0.3) !important;
+}
+
+/* 📦 메인 컨테이너 */
+.mainContainer {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 18px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 스텝 헤더 섹션 */
+.stepHeaderSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeIn 0.3s ease;
+}
+
+.stepBadge {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #92400E;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.stepMainTitle {
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--color-text);
+  margin: 2px 0 0;
+  line-height: 1.3;
+}
+
+.stepSubTitle {
+  font-size: 13.5px;
+  color: var(--color-text-sub);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* 🌐 0단계: 개요 그리드 */
+.overviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.overviewCard {
+  background: var(--color-surface);
+  border: 1.5px solid rgba(237, 232, 213, 0.9);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 16px rgba(139, 81, 41, 0.05);
+}
+
+.overviewCard:hover {
+  transform: translateY(-2px);
+  border-color: #F5B000;
+  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.2);
+}
+
+.overviewCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.overviewNum {
+  font-size: 11px;
+  font-weight: 900;
+  color: #92400E;
+  background: #FEF3C7;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.overviewIcon {
+  font-size: 24px;
+}
+
+.overviewCardTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 2px 0 0;
+}
+
+.overviewCardDesc {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  line-height: 1.35;
+  margin: 0;
+  flex: 1;
+}
+
+.overviewCardArrow {
+  font-size: 11px;
+  font-weight: 800;
+  color: #D97706;
+  text-align: right;
+  margin-top: 6px;
+}
+
+.tipsContainer {
+  background: #FFFBEB;
+  border: 1.5px solid #FDE68A;
+  border-radius: var(--radius-xl);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tipsTitle {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #78350F;
+  margin: 0;
+}
+
+.tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tipItem {
+  font-size: 12.5px;
+  color: #92400E;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* 🎯 1~4단계: 상세 뷰 */
+.detailStepSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.mainHighlightCard {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF5 100%);
+  border: 1.5px solid #FDE68A;
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.08);
+}
+
+.highlightHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.highlightIcon {
+  font-size: 36px;
+  line-height: 1;
+  background: #FEF3C7;
+  border: 1.5px solid #FCD34D;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.highlightTitle {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 6px;
+}
+
+.highlightDesc {
+  font-size: 13px;
+  color: #57534E;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featureItemCard {
+  background: var(--color-surface);
+  border: 1.5px solid rgba(237, 232, 213, 0.85);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all var(--transition);
+}
+
+.featureItemCard:hover {
+  border-color: #FACC15;
+  transform: translateX(2px);
+}
+
+.featureItemIcon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.featureItemText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.featureItemTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.featureItemDesc {
+  font-size: 12.5px;
+  color: var(--color-text-sub);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.stepHintBox {
+  background: #F0FDF4;
+  border: 1.5px solid #BBF7D0;
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+}
+
+.stepHintText {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #166534;
+  line-height: 1.4;
+}
+
+/* 📱 하단 고정 플로팅 액션 바 */
+.bottomActionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(254, 252, 247, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(237, 232, 213, 0.9);
+  padding: 12px 20px;
+}
+
+.bottomActionInner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prevBtn {
+  background: var(--color-surface);
+  border: 1.5px solid #E2D9C3;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 11px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.prevBtn:hover {
+  background: #F5F0E8;
+  border-color: #D6C8AE;
+}
+
+.prevBtnPlaceholder {
+  width: 80px;
+}
+
+.dotIndicatorGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dotIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D1D5DB;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.dotIndicatorActive {
+  width: 22px;
+  border-radius: 99px;
+  background: #F59E0B;
+}
+
+.nextBtn {
+  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  color: #1A1209;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 11px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.35);
+  white-space: nowrap;
+}
+
+.nextBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(245, 176, 0, 0.45);
+}
+
+.finishMatchBtn {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 11px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  white-space: nowrap;
+}
+
+.finishMatchBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 모바일 반응형 최적화 */
+@media (max-width: 540px) {
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+  .mainHighlightCard {
+    padding: 16px;
+  }
+  .highlightIcon {
+    font-size: 30px;
+    padding: 8px;
+  }
+  .highlightTitle {
+    font-size: 15px;
+  }
+  .stepMainTitle {
+    font-size: 18px;
+  }
+  .prevBtn {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .nextBtn, .finishMatchBtn {
+    padding: 10px 14px;
+    font-size: 12.5px;
+  }
+}

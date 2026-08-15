@@ -4,44 +4,19 @@ import { matchingAPI, aptitudeAPI } from '../../api/index'
 import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import styles from './Matching.module.css'
+import taskHarvest from '../../assets/icons/task_harvest.jpg'
+import taskEquipment from '../../assets/icons/task_equipment.jpg'
+import taskTransport from '../../assets/icons/task_transport.jpg'
+import avatarYouth from '../../assets/icons/avatar_youth.jpg'
+import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
 
 const TASK_CARDS = [
-  {
-    value: '밭일',
-    emoji: '🍎',
-    title: '밭일 · 과수 수확',
-    desc: '수확, 파종 등 기본 농작업',
-  },
-  {
-    value: '농기구 운용',
-    emoji: '🚜',
-    title: '농기구 운용',
-    desc: '트랙터, 관리기 등 농기계 조작',
-  },
-  {
-    value: '물건 나르기',
-    emoji: '📦',
-    title: '운반 · 농가 정리',
-    desc: '수확물 적재, 창고 정리',
-  },
-  {
-    value: '시설정비',
-    emoji: '🔧',
-    title: '시설정비',
-    desc: '하우스, 농기자재 등 시설 보수',
-  },
-  {
-    value: '선별 및 포장',
-    emoji: '🧺',
-    title: '선별 및 포장',
-    desc: '농산물 선별, 상품 포장 작업',
-  },
-  {
-    value: '가공',
-    emoji: '🏭',
-    title: '가공',
-    desc: '농산물 세척·건조·가공 작업',
-  },
+  { value: '밭일', img: taskHarvest, emoji: '🍎', title: '밭일 · 과수 수확', desc: '수확, 파종 등 기본 농작업' },
+  { value: '농기구 운용', img: taskEquipment, emoji: '🚜', title: '농기구 운용', desc: '트랙터, 관리기 등 농기계 조작' },
+  { value: '물건 나르기', img: taskTransport, emoji: '📦', title: '운반 · 농가 정리', desc: '수확물 적재, 창고 정리' },
+  { value: '시설정비', img: null, emoji: '🔧', title: '시설정비', desc: '하우스, 농기자재 등 시설 보수' },
+  { value: '선별 및 포장', img: null, emoji: '🧺', title: '선별 및 포장', desc: '농산물 선별, 상품 포장 작업' },
+  { value: '가공', img: null, emoji: '🏭', title: '가공', desc: '농산물 세척·건조·가공 작업' },
 ]
 
 function calculateLevel(exp = 0) {
@@ -166,88 +141,117 @@ export default function Matching() {
   // 🧑‍🌾 청년 회원 전용 매칭 화면
   if (user.role === '청년') {
     return (
-      <div className={styles.container}>
-        <div className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
-        </div>
-        <h1 className={styles.title}>🌾 소일거리 추천 농사 업무 & 매칭</h1>
-
-        {statsEmpty ? (
-          <div className={styles.candidateList}>
-            <p className={styles.emptyText}>먼저 적성검사를 완료해 주세요.</p>
-            <button className={styles.matchBtn} onClick={() => navigate('/aptitude')}>🌱 적성검사 하러가기</button>
+      <div className={styles.wrapper}>
+        <div className={styles.bgOrb} />
+        {/* 🔝 상단 프리미엄 헤더 */}
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>
+              ← 홈으로
+            </button>
           </div>
-        ) : (
-          <div className={styles.matchContentBox}>
-            {/* 스텟 기반으로 가장 잘 맞는 업무 1개 표시 */}
-            {tasks.slice(0, 1).map((item) => (
-              <div key={item.task} className={styles.recommendTaskCard}>
-                <span className={styles.taskCardBadge}>✨ 추천 농업 분야</span>
-                <h3 className={styles.taskCardTitle}>{item.task}</h3>
-                <p className={styles.taskCardDesc}>{item.message}</p>
-              </div>
-            ))}
+          <h1 className={styles.headerTitle}>🌾 추천 업무 & 매칭</h1>
+          <div className={styles.headerRight}>
+            <span className={styles.roleHeaderBadge}>🌱 청년 일손</span>
+          </div>
+        </header>
 
-            {/* seeking(매칭 신청/대기) 상태에 따른 안내 및 버튼 */}
-            {seeking ? (
-              <div className={styles.seekingNoticeCard}>
-                <div className={styles.seekingHeader}>
-                  <span className={styles.seekingIcon}>🌱</span>
-                  <div className={styles.seekingTitleGroup}>
-                    <h3>⚡ 소일거리 매칭 진행 중...</h3>
-                    <span className={styles.seekingBadge}>농부 회원의 구직 선택을 기다리고 있어요</span>
+        <div className={styles.container}>
+          {statsEmpty ? (
+            <div className={styles.candidateList}>
+              <div className={styles.emptyNoticeCard}>
+                <span className={styles.emptyNoticeIcon}>🌱</span>
+                <strong className={styles.emptyNoticeTitle}>아직 적성검사를 진행하지 않았어요</strong>
+                <p className={styles.emptyNoticeDesc}>나의 농업 역량 스탯을 분석하고 딱 맞는 일자리를 추천받아보세요.</p>
+                <button className={`btn btn-primary ${styles.matchBtn}`} onClick={() => navigate('/aptitude')}>
+                  🌱 1분 적성검사 하러가기
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.matchContentBox}>
+              {/* 스텟 기반으로 가장 잘 맞는 업무 1개 표시 */}
+              {tasks.slice(0, 1).map((item) => (
+                <div key={item.task} className={styles.recommendTaskCard}>
+                  <span className={styles.taskCardBadge}>✨ AI 1순위 추천 분야</span>
+                  <h3 className={styles.taskCardTitle}>{item.task}</h3>
+                  <p className={styles.taskCardDesc}>{item.message}</p>
+                </div>
+              ))}
+
+              {/* seeking(매칭 신청/대기) 상태에 따른 안내 및 버튼 */}
+              {seeking ? (
+                <div className={styles.seekingNoticeCard}>
+                  <div className={styles.seekingHeader}>
+                    <span className={styles.seekingIcon}>🌱</span>
+                    <div className={styles.seekingTitleGroup}>
+                      <h3>⚡ 소일거리 매칭 진행 중...</h3>
+                      <span className={styles.seekingBadge}>농부 회원의 구직 선택을 기다리고 있어요</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.seekingInfoBox}>
+                    <p className={styles.seekingMainText}>
+                      현재 농부 회원이 일손을 찾을 수 있도록 <strong>구직(매칭 대기)</strong> 상태로 활성화되어 있습니다!
+                    </p>
+                    <p className={styles.seekingSubText}>
+                      💬 <strong>안내:</strong> 매칭을 기다리는 동안 홈에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
+                    </p>
+                  </div>
+
+                  <div className={styles.actionRowVertical}>
+                    <button className={`btn btn-primary ${styles.primaryHomeBtn}`} onClick={() => navigate('/home?tab=matching')}>
+                      🌱 홈으로 돌아가기
+                    </button>
+                    <button className={styles.cancelMatchBtn} onClick={handleCancelMatch}>
+                      매칭 대기 취소하기
+                    </button>
                   </div>
                 </div>
-
-                <div className={styles.seekingInfoBox}>
-                  <p className={styles.seekingMainText}>
-                    현재 농부 회원이 일손을 찾을 수 있도록 <strong>구직(매칭 대기)</strong> 상태로 활성화되어 있습니다!
+              ) : (
+                <div className={styles.readyNoticeCard}>
+                  <p className={styles.readyText}>
+                    위 추천 분야 조건으로 나를 찾아줄 농부 회원에게 <strong>구직(매칭)</strong>을 신청하시겠습니까?
                   </p>
-                  <p className={styles.seekingSubText}>
-                    💬 <strong>안내:</strong> 매칭을 기다리는 동안 홈에서 다른 작업을 하고 계셔도 됩니다. 농부 회원이 선택하는 즉시 <strong>실시간 채팅방이 개설되며 알림이 도착합니다!</strong>
-                  </p>
+                  <div className={styles.actionRowVertical}>
+                    <button className={`btn btn-primary ${styles.startMatchBtn}`} onClick={handleRequestMatch}>
+                      ⚡ 이 조건으로 매칭 신청하기 ⚡
+                    </button>
+                    <button className={styles.secondaryBtn} onClick={() => navigate('/home?tab=matching')}>
+                      홈으로 돌아가기
+                    </button>
+                  </div>
                 </div>
-
-                <div className={styles.actionRowVertical}>
-                  <button className={`btn btn-primary ${styles.primaryHomeBtn}`} onClick={() => navigate('/home?tab=matching')}>
-                    🌱 홈으로 돌아가기
-                  </button>
-                  <button className={styles.cancelMatchBtn} onClick={handleCancelMatch}>
-                    매칭 대기 취소하기
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className={styles.readyNoticeCard}>
-                <p className={styles.readyText}>
-                  위 추천 분야 조건으로 나를 찾아줄 농부 회원에게 <strong>구직(매칭)</strong>을 신청하시겠습니까?
-                </p>
-                <div className={styles.actionRowVertical}>
-                  <button className={`btn btn-primary ${styles.startMatchBtn}`} onClick={handleRequestMatch}>
-                    ⚡ 이 조건으로 매칭 신청하기 ⚡
-                  </button>
-                  <button className={styles.secondaryBtn} onClick={() => navigate('/home?tab=matching')}>
-                    홈으로 돌아가기
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     )
   }
 
   // 👨‍🌾 농부 회원 전용 구인 매칭 화면
   return (
-    <div className={styles.container}>
-      <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>← 홈으로</button>
-      </div>
-      <div className={styles.farmerHeaderCard}>
-        <h1 className={styles.title}>👨‍🌾 필요한 농사 업무를 선택해 주세요</h1>
-        <p className={styles.farmerSubText}>선택한 업무에 맞는 우수 청년 지원자를 AI가 자동 추천합니다.</p>
-        <div className={styles.scoreHintRow}>
+    <div className={styles.wrapper}>
+      <div className={styles.bgOrb} />
+      {/* 🔝 상단 프리미엄 헤더 */}
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <button className={styles.backBtn} onClick={() => navigate('/home?tab=matching')}>
+            ← 홈으로
+          </button>
+        </div>
+        <h1 className={styles.headerTitle}>👨‍🌾 청년 후보자 매칭</h1>
+        <div className={styles.headerRight}>
+          <span className={styles.roleHeaderBadge}>👨‍🌾 농가 대표</span>
+        </div>
+      </header>
+
+      <div className={styles.container}>
+        <div className={styles.farmerHeaderCard}>
+          <h1 className={styles.title}>👨‍🌾 필요한 농사 업무를 선택해 주세요</h1>
+          <p className={styles.farmerSubText}>선택한 업무에 맞는 우수 청년 지원자를 AI가 자동 추천합니다.</p>
+          <div className={styles.scoreHintRow}>
           <span className={styles.scoreHintIcon}>⚡</span>
           <span className={styles.scoreHintText}>AI 추천 점수는 <strong>체력·성실성·숙련도·협동심</strong> 등 6개 적성 항목을, 선택한 업무에서 더 중요한 항목일수록 가중치를 두어 비교 분석한 뒤 산출됩니다.</span>
         </div>
@@ -262,7 +266,10 @@ export default function Matching() {
                 className={`${styles.taskCleanBtn} ${isSelected ? styles.taskCleanBtnActive : ''}`}
                 onClick={() => handleSelectTask(cat.value)}
               >
-                <span className={styles.cleanEmoji}>{cat.emoji}</span>
+                {cat.img
+                  ? <img src={cat.img} alt={cat.title} className={styles.cleanEmojiImg} />
+                  : <span className={styles.cleanEmoji}>{cat.emoji}</span>
+                }
                 <span className={styles.cleanTitle}>{cat.title}</span>
                 <span className={styles.cleanDesc}>{cat.desc}</span>
                 {isSelected && <span className={styles.cleanSelected}>✔ 선택됨</span>}
@@ -349,7 +356,7 @@ export default function Matching() {
                   <div className={styles.candidateAvatar}>
                     {c.profile_image
                       ? <img src={c.profile_image} alt="프로필" className={styles.avatarImg} />
-                      : <span className={styles.avatarFallback}>👤</span>
+                      : <img src={avatarYouth} alt="청년 지원자" className={styles.avatarImg} />
                     }
                   </div>
                   <div className={styles.candidateNameInfo}>
@@ -386,6 +393,7 @@ export default function Matching() {
         {selectedTask && Array.isArray(candidates) && candidates.length === 0 && (
           <p className={styles.emptyText}>현재 '{selectedTask}' 업무를 희망하는 대기 청년 지원자가 없습니다. 🌾</p>
         )}
+        </div>
       </div>
     </div>
   )

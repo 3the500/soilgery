@@ -1,5 +1,5 @@
 .wrapper {
-  max-width: 480px;
+  max-width: 640px;
   margin: 0 auto;
   min-height: 100dvh;
   display: flex;
@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-/* 🔝 토스 스타일 상단 헤더 */
+/* 🔝 프리미엄 상단 헤더 */
 .header {
   position: sticky;
   top: 0;
@@ -17,43 +17,45 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 18px;
-  background: rgba(250, 250, 245, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226, 217, 195, 0.85);
+  padding: 14px 20px;
+  background: rgba(254, 252, 247, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(237, 232, 213, 0.9);
 }
 
 .backBtn {
+  background: none;
+  border: 1.5px solid #E2D9C3;
+  color: var(--color-text);
   font-size: 13px;
-  font-weight: 800;
-  color: var(--color-brown);
-  background: var(--color-primary-pale);
-  border: 1px solid rgba(255, 193, 7, 0.45);
-  padding: 6px 14px;
+  font-weight: 700;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
-  transition: all 0.2s;
   cursor: pointer;
+  transition: all var(--transition);
 }
 
 .backBtn:hover {
-  background: var(--color-primary-light);
-  color: #1A1209;
+  background: var(--color-surface);
+  border-color: #FACC15;
+  color: var(--color-brown);
 }
 
 .clearBtn {
   font-size: 12px;
-  font-weight: 800;
-  color: #795548;
-  background: #FFF8E1;
-  border: 1px solid rgba(255, 193, 7, 0.45);
+  font-weight: 700;
+  color: #78350F;
+  background: #FEF3C7;
+  border: 1.5px solid #FCD34D;
   padding: 6px 12px;
   border-radius: var(--radius-full);
-  transition: all 0.2s;
+  transition: all var(--transition);
   cursor: pointer;
 }
 
 .clearBtn:hover {
-  background: #FFE082;
+  background: #FDE68A;
   color: #1A1209;
 }
 
@@ -130,6 +132,14 @@
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+  overflow: hidden;
+}
+
+.aiAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .msgContentArea {

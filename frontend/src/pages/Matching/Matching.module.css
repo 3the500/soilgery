@@ -1,40 +1,135 @@
-.container {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 24px 20px 60px;
+.wrapper {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(255, 236, 179, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(220, 245, 215, 0.4) 0%, transparent 60%);
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  background: var(--color-bg);
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 60px;
 }
 
-.title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-text);
-  letter-spacing: -0.4px;
+.bgOrb {
+  position: fixed;
+  top: -100px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 202, 40, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.topBar {
+/* 🔝 상단 프리미엄 헤더 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(254, 252, 247, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(237, 232, 213, 0.9);
+}
+
+.headerLeft {
   display: flex;
   align-items: center;
 }
 
 .backBtn {
+  background: none;
+  border: 1.5px solid #E2D9C3;
+  color: var(--color-text);
   font-size: 13px;
-  color: var(--color-brown);
-  font-weight: 800;
-  padding: 6px 14px;
-  background: var(--color-primary-pale);
+  font-weight: 700;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 193, 7, 0.45);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
 
 .backBtn:hover {
-  background: var(--color-primary-light);
-  color: #1A1209;
+  background: var(--color-surface);
+  border-color: #FACC15;
+  color: var(--color-brown);
+}
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.roleHeaderBadge {
+  font-size: 12px;
+  font-weight: 800;
+  color: #78350F;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.container {
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 18px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.4px;
+}
+
+.emptyNoticeCard {
+  background: var(--color-surface);
+  border: 1.5px solid #FDE68A;
+  border-radius: var(--radius-xl);
+  padding: 32px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.08);
+}
+
+.emptyNoticeIcon {
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.emptyNoticeTitle {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.emptyNoticeDesc {
+  font-size: 13.5px;
+  color: var(--color-text-sub);
+  margin: 0 0 12px;
+  line-height: 1.4;
 }
 
 .matchContentBox {
@@ -385,6 +480,14 @@
   font-size: 28px;
   line-height: 1;
   margin-bottom: 2px;
+}
+
+.cleanEmojiImg {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  margin-bottom: 2px;
+  border-radius: 8px;
 }
 
 .cleanTitle {

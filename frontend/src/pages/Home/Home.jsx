@@ -5,6 +5,14 @@ import { authAPI, matchingAPI, reviewAPI } from '../../api'
 import { useToast } from '../../context/ToastContext'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Home.module.css'
+import logoSprout from '../../assets/icons/logo_sprout.jpg'
+import avatarYouth from '../../assets/icons/avatar_youth.jpg'
+import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
+import navReview from '../../assets/icons/nav_review.jpg'
+import navMyinfo from '../../assets/icons/nav_myinfo.jpg'
+import navMatching from '../../assets/icons/nav_matching.jpg'
+import navChat from '../../assets/icons/nav_chat.jpg'
+import navAi from '../../assets/icons/nav_ai.jpg'
 
 // [피드백 반영] 농업 특화 스텟 라벨 (컬럼명은 기존 그대로 유지, 표시 이름만 구체화)
 const STAT_DISPLAY = [
@@ -549,7 +557,7 @@ export default function Home() {
       {/* 상단 헤더 */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <span className={styles.logo}>🌱 소일거리</span>
+          <span className={styles.logo}><img src={logoSprout} alt="소일거리 로고" className={styles.logoImg} /> 소일거리</span>
           {user?.name && (
             <span className={styles.userLoginNotice}>
               {user.name} 님 로그인 중
@@ -603,7 +611,7 @@ export default function Home() {
                         )}
                         <div className={styles.welcomeNoticeHeader}>
                           <span className={styles.welcomeNoticeIcon}>
-                            {n.type === 'level' ? '🏆' : n.type === 'review' ? '⭐' : n.type === 'match' ? '💬' : '🌱'}
+                            {n.type === 'level' ? '🏆' : n.type === 'review' ? '⭐' : n.type === 'match' ? <img src={navChat} alt="매칭" style={{width:'1.1em',height:'1.1em',objectFit:'contain',verticalAlign:'middle'}} /> : <img src={logoSprout} alt="소일거리" style={{width:'1.1em',height:'1.1em',objectFit:'contain',verticalAlign:'middle'}} />}
                           </span>
                           <div style={{ flex: 1, paddingRight: n.canDismiss ? '20px' : '0' }}>
                             <strong>{n.title}</strong>
@@ -634,6 +642,16 @@ export default function Home() {
                 <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
               </div>
               <div className={styles.accountActionBody}>
+                {/* 📖 매칭 가이드 (도움말) 페이지 바로가기 */}
+                <button
+                  className={`btn btn-outline ${styles.settingItemBtn}`}
+                  onClick={() => {
+                    setActiveHeaderTab(null);
+                    navigate('/guide/matching');
+                  }}
+                >
+                  📖 소일거리 매칭 가이드
+                </button>
                 {/* [피드백 반영] 농부는 적성검사 대상이 아니므로 버튼 자체를 노출하지 않음 */}
                 {!isFarmer && (
                   <button
@@ -1111,7 +1129,7 @@ export default function Home() {
                       }}
                     >
                       <span className={styles.chatPartnerAvatar}>
-                        {m.partner_role === '농부' ? '👨‍🌾' : '🌱'}
+                        <img src={m.partner_role === '농부' ? avatarFarmer : avatarYouth} alt={m.partner_role} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'50%'}} />
                       </span>
                       <div className={styles.chatListItemBody}>
                         <div className={styles.chatListItemTitleRow}>
@@ -1145,7 +1163,7 @@ export default function Home() {
           className={`${styles.bottomNavItem} ${bottomTab === 'review' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('review')}
         >
-          <span className={styles.bottomNavIcon}>⭐</span>
+          <span className={styles.bottomNavIcon}><img src={navReview} alt="리뷰" className={styles.navIconImg} /></span>
           <span className={styles.bottomNavLabel}>리뷰 관리</span>
         </button>
 
@@ -1153,7 +1171,7 @@ export default function Home() {
           className={`${styles.bottomNavItem} ${bottomTab === 'profile' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('profile')}
         >
-          <span className={styles.bottomNavIcon}>👤</span>
+          <span className={styles.bottomNavIcon}><img src={navMyinfo} alt="내정보" className={styles.navIconImg} /></span>
           <span className={styles.bottomNavLabel}>내정보</span>
         </button>
 
@@ -1161,7 +1179,7 @@ export default function Home() {
           className={`${styles.bottomNavItem} ${bottomTab === 'matching' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('matching')}
         >
-          <span className={styles.bottomNavIcon}>⚡</span>
+          <span className={styles.bottomNavIcon}><img src={navMatching} alt="매칭" className={styles.navIconImg} /></span>
           <span className={styles.bottomNavLabel}>{isFarmer ? '청년 찾기' : '농부 찾기'}</span>
         </button>
 
@@ -1169,7 +1187,7 @@ export default function Home() {
           className={`${styles.bottomNavItem} ${bottomTab === 'chat' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('chat')}
         >
-          <span className={styles.bottomNavIcon}>💬</span>
+          <span className={styles.bottomNavIcon}><img src={navChat} alt="채팅" className={styles.navIconImg} /></span>
           <span className={styles.bottomNavLabel}>채팅방</span>
           {unreadCount > 0 && <span className={styles.bottomNavBadge}>{unreadCount}</span>}
         </button>
@@ -1178,7 +1196,7 @@ export default function Home() {
           className={styles.bottomNavItem}
           onClick={() => navigate('/support')}
         >
-          <span className={styles.bottomNavIcon}>🤖</span>
+          <span className={styles.bottomNavIcon}><img src={navAi} alt="AI상담사" className={styles.navIconImg} /></span>
           <span className={styles.bottomNavLabel}>AI상담사</span>
         </button>
       </nav>
