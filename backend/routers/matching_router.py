@@ -1,4 +1,3 @@
-import math
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -17,6 +16,7 @@ from matching import (
     create_match,
     get_my_latest_match,
     get_my_matches,
+    compute_fit_score,
     FARM_TASK_PROFILES,
 )
 from ai_matching import ai_rank_candidates, get_task_message, get_task_analysis
@@ -153,15 +153,29 @@ def read_candidates_by_task(
     if task_name not in FARM_TASK_PROFILES:
         raise HTTPException(status_code=400, detail="유효하지 않은 농사 업무입니다.")
 
-    # 청년 회원 전체 조회 (매칭 신청(is_seeking=True) 청년 우선 정렬)
-    youth_users = db.query(User).filter(User.role == "청년").all()
+    # [버그 수정] 이전에는 "청년" 전체를 조건 없이 불러와서, 매칭 대기를
+    # 취소(is_seeking=False)한 청년이나 희망 직종이 다른 청년까지도 후보자
+    # 목록에 함께 노출되는 문제가 있었다.
+    # -> 매칭을 희망(is_seeking=True)하는 청년만, 그리고 스텟 기준 1순위 추천
+    #    업무가 이 task_name과 일치하는 청년만 후보자로 보여준다.
+    #    (matching.get_candidates_for_posting()과 동일한 필터링 기준)
+    seeking_users = (
+        db.query(User)
+        .filter(User.role == "청년", User.is_seeking == True)  # noqa: E712
+        .all()
+    )
 
-    ideal_profile = FARM_TASK_PROFILES[task_name]
     candidates = []
-
-    for user in youth_users:
+    for user in seeking_users:
         stats = extract_stats(user)
-        fit_score = math.sqrt(sum((stats[k] - ideal_profile[k]) ** 2 for k in stats))
+        if all(v == 0 for v in stats.values()):
+            continue  # 적성검사 미완료(스텟 전부 0) 청년은 후보에서 제외
+
+        top_task = recommend_farm_task(stats, top_n=1)[0]["task"]
+        if top_task != task_name:
+            continue  # 이 청년의 1순위 추천 업무가 선택된 업무와 다르면 제외
+
+        fit_score = compute_fit_score(stats, task_name)
         candidates.append({
             "user_id": user.id,
             "name": user.name,
@@ -174,8 +188,8 @@ def read_candidates_by_task(
             "is_seeking": bool(user.is_seeking)
         })
 
-    # 구직 활성화(is_seeking=True) 유저 우선, 이후 적합도(fit_score) 순 정렬
-    candidates.sort(key=lambda c: (not c["is_seeking"], c["fit_score"]))
+    # 모두 매칭 희망 + 희망 업무 일치 청년이므로, 적합도(fit_score) 순으로만 정렬
+    candidates.sort(key=lambda c: c["fit_score"])
     return candidates
 
 # ---- 농부: 업무 기반 매칭 생성 ----

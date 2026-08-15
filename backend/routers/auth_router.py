@@ -83,6 +83,24 @@ def update_me(
 ):
     """현재 로그인된 사용자의 프로필 정보(이름, 거주지역, 구직여부, 스탯 등)를 수정합니다."""
     update_data = body.dict(exclude_unset=True)
+
+    # [피드백 반영] 청년이 적성검사를 한 번도 하지 않은 상태(스텟 전부 0)에서도
+    # 홈 화면의 매칭 ON/OFF 토글이 매칭.py의 request_match()를 거치지 않고
+    # 이 API(내 정보 수정)로 곧장 is_seeking=True를 보낼 수 있어, 적성검사 없이도
+    # 매칭 대기 상태가 되어버리는 문제가 있었다.
+    # -> is_seeking을 True로 켜려는 요청이면서, 반영 후 스텟이 여전히 전부 0인
+    #    청년이라면 차단한다. (matching.request_match()의 가드와 동일한 기준)
+    STAT_FIELDS = ("strength", "stamina", "grit", "intelligence", "wage_pref", "personality")
+    if current_user.role == "청년" and update_data.get("is_seeking") is True:
+        stats_after_update = {
+            field: update_data.get(field, getattr(current_user, field)) for field in STAT_FIELDS
+        }
+        if all(v == 0 for v in stats_after_update.values()):
+            raise HTTPException(
+                status_code=400,
+                detail="적성검사를 먼저 완료해야 매칭을 시작할 수 있습니다.",
+            )
+
     for field, value in update_data.items():
         setattr(current_user, field, value)
 

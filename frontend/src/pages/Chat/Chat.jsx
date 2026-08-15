@@ -2,7 +2,19 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import api, { chatAPI, reviewAPI, API_BASE_URL } from '../../api/index'
+import StatHexagon from '../../components/StatHexagon'
 import styles from './Chat.module.css'
+
+// 👤 [피드백 반영] 상대방 정보 보기 모달에 표시할 매칭 스탯 라벨
+// (Profile.jsx의 STAT_DISPLAY와 동일한 항목/순서로 맞춰 통일감 있게 표시)
+const PARTNER_STAT_DISPLAY = [
+  { field: 'stamina', label: '체력', icon: '⚡' },
+  { field: 'strength', label: '근력', icon: '💪' },
+  { field: 'intelligence', label: '숙련도', icon: '🧠' },
+  { field: 'grit', label: '성실성', icon: '🔥' },
+  { field: 'personality', label: '협동심', icon: '🤝' },
+  { field: 'wage_pref', label: '급여민감도', icon: '💰' },
+]
 
 // 🖼️🎬 [피드백 반영] 채팅 이미지/동영상 공유 - 서버(chat.py) 정책과 동일한 클라이언트 측 사전 검증
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024   // 이미지 20MB
@@ -37,6 +49,17 @@ const formatKoreanDateHeader = (isoString) => {
   })
 }
 
+// 📝 [피드백 반영] 상대방 리뷰 목록에 표시할 짧은 날짜 포맷 (YYYY.MM.DD)
+const formatReviewDate = (isoString) => {
+  const date = toLocalDate(isoString)
+  if (!date) return ''
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+}
+
 // ⚡ 인스타그램 DM 스타일 빠른 인사말 칩
 const QUICK_REPLIES = [
   '👋 안녕하세요!',
@@ -57,6 +80,11 @@ export default function Chat() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [leaving, setLeaving] = useState(false)
+
+  // 👤 [피드백 반영] 채팅방에서 상대방 프로필 클릭 시 정보 보기 모달 제어 상태
+  const [showPartnerInfoModal, setShowPartnerInfoModal] = useState(false)
+  // 📊 [피드백 반영] 청년 상대방의 매칭 스탯은 "스탯보기" 버튼을 눌러야 펼쳐지도록 토글
+  const [showPartnerStats, setShowPartnerStats] = useState(false)
 
   // 🥕 당근마켓 스타일 화면 중앙 커스텀 퇴장 & 평점 작성 모달 제어 상태
   const [showLeaveModal, setShowLeaveModal] = useState(false)
@@ -264,6 +292,13 @@ export default function Chat() {
     navigate('/home?tab=chat')
   }
 
+  // 👤 [피드백 반영] 상대방 프로필(아바타/이름 영역) 클릭 시 정보 보기 모달 오픈
+  const handleOpenPartnerInfo = () => {
+    if (!partner) return
+    setShowPartnerStats(false)
+    setShowPartnerInfoModal(true)
+  }
+
   if (!user) {
     return <div className={styles.emptyNotice}>로그인 후 이용할 수 있습니다.</div>
   }
@@ -277,7 +312,13 @@ export default function Chat() {
         <button className={styles.backButton} onClick={handleBack} title="홈으로 이동">
           ← 홈으로
         </button>
-        <div className={styles.partnerProfileHeader}>
+        <div
+          className={styles.partnerProfileHeader}
+          onClick={handleOpenPartnerInfo}
+          role="button"
+          title="상대방 정보 보기"
+          style={{ cursor: partner ? 'pointer' : 'default' }}
+        >
           <img
             src={partner?.partner_profile_image || (partner?.partner_role === '농부' ? '/images/farmer.png' : '/images/chung.png')}
             alt={partner?.partner_name || '상대방 프로필'}
@@ -487,6 +528,92 @@ export default function Chat() {
           ⬆
         </button>
       </form>
+
+      {/* 👤 [피드백 반영] 상대방 프로필 클릭 시 뜨는 "정보 보기" 모달
+          (기본 계정 정보 - 이메일/이름/거주지 등 - 는 제외하고, 매칭 스탯 정보만 노출) */}
+      {showPartnerInfoModal && partner && (
+        <div className={styles.modalOverlay} onClick={() => setShowPartnerInfoModal(false)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <img
+              src={partner.partner_profile_image || (partner.partner_role === '농부' ? '/images/farmer.png' : '/images/chung.png')}
+              alt={partner.partner_name || '상대방 프로필'}
+              className={styles.partnerInfoAvatarImg}
+            />
+            <h3 className={styles.modalTitle}>{partner.partner_name || '상대방'}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span className={styles.partnerRoleBadge}>{partner.partner_role || '소일거리 회원'}</span>
+              {partner.partner_level != null && (
+                <span className={styles.partnerRoleBadge}>Lv.{partner.partner_level}</span>
+              )}
+            </div>
+            <div className={styles.modalBodyText} style={{ marginTop: '8px' }}>
+              <p className={styles.modalHighlight}>⭐ 평점 {partner.partner_rating != null ? Number(partner.partner_rating).toFixed(1) : '0.0'} / 5.0</p>
+
+              {/* 📝 [피드백 반영] 상대방이 받은 리뷰 목록 - 평점 바로 아래에 위치 */}
+              <div className={styles.partnerReviewsArea}>
+                <h4 className={styles.partnerReviewsTitle}>
+                  📝 받은 리뷰{partner.partner_reviews?.length ? ` (${partner.partner_reviews.length})` : ''}
+                </h4>
+                {partner.partner_reviews && partner.partner_reviews.length > 0 ? (
+                  <div className={styles.partnerReviewsList}>
+                    {partner.partner_reviews.map((r) => (
+                      <div key={r.id} className={styles.partnerReviewItem}>
+                        <div className={styles.partnerReviewHeader}>
+                          <span className={styles.partnerReviewerName}>{r.reviewer_name}</span>
+                          <span className={styles.partnerReviewRating}>⭐ {Number(r.rating).toFixed(1)}</span>
+                        </div>
+                        {r.comment && <p className={styles.partnerReviewComment}>{r.comment}</p>}
+                        <span className={styles.partnerReviewDate}>{formatReviewDate(r.created_at)}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={styles.partnerReviewEmpty}>아직 받은 리뷰가 없어요.</p>
+                )}
+              </div>
+
+              {/* 📊 [피드백 반영] 매칭 스탯은 청년에게만 의미 있는 정보라 농부는 표시하지 않음.
+                  청년의 경우 "스탯보기" 버튼을 눌러야 육각형/숫자 지표가 펼쳐지도록 토글 처리 */}
+              {partner.partner_role !== '농부' && partner.partner_stats && (
+                <div className={styles.partnerStatsSection}>
+                  <button
+                    type="button"
+                    className={styles.partnerStatsToggleBtn}
+                    onClick={() => setShowPartnerStats((prev) => !prev)}
+                  >
+                    {showPartnerStats ? '📊 스탯 접기 ▲' : '📊 스탯보기 ▼'}
+                  </button>
+                  {showPartnerStats && (
+                    <div className={styles.partnerStatsArea}>
+                      <StatHexagon
+                        size={160}
+                        items={PARTNER_STAT_DISPLAY.map((s) => ({ label: s.label, value: partner.partner_stats[s.field] ?? 0 }))}
+                      />
+                      <div className={styles.partnerStatsNumeric}>
+                        {PARTNER_STAT_DISPLAY.map((s) => (
+                          <div key={s.field} className={styles.partnerStatBox}>
+                            <span>{s.icon} {s.label}</span>
+                            <strong>{partner.partner_stats[s.field] ?? 0}</strong>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className={styles.modalBtnGroupVertical}>
+              <button
+                className={`btn ${styles.modalSkipBtn}`}
+                onClick={() => setShowPartnerInfoModal(false)}
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 🥕 당근마켓 스타일 화면 중앙 별점 & 한줄후기 평점 남기기 커스텀 모달 팝업 */}
       {showLeaveModal && (

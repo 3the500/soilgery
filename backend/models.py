@@ -14,7 +14,7 @@ class JobPosting(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     employer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    task = Column(String, nullable=False)               # 밭일 / 트렉터 운용 / 물건 나르기
+    task = Column(String, nullable=False)               # 밭일 / 농기구 운용 / 물건 나르기 / 시설정비 / 선별 및 포장 / 가공
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
     location = Column(String, nullable=True)

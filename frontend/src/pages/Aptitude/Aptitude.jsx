@@ -64,8 +64,10 @@ export default function Aptitude() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // 🚨 [피드백 반영] "결과 제출하기" 버튼을 눌렀을 때만(다른 질문 이동 시점이 아니라)
+    // 모든 문항이 체크되어 있는지 확인하고, 빠진 문항이 있으면 alert 팝업으로 안내한다.
     if (!allAnswered) {
-      showToast('모든 질문에 답해주세요.', 'error')
+      alert('아직 체크하지 않은 문항이 있어요! 모든 문항에 답변해주세요.')
       return
     }
     setLoading(true)
@@ -96,7 +98,7 @@ export default function Aptitude() {
     if (!resObj) return '과수원 수확 및 농사 작업'
     const { intelligence = 0, strength = 0, stamina = 0 } = resObj
     if (intelligence >= strength && intelligence >= stamina) {
-      return '트랙터 운용 & 스마트 농업'
+      return '농기구 운용'
     } else if (strength >= stamina) {
       return '물건 나르기 & 농작물 운반'
     } else {
@@ -292,7 +294,7 @@ export default function Aptitude() {
                   다음 &gt;
                 </button>
               ) : (
-                <button type="submit" className={styles.navBtn} disabled={loading || !allAnswered}>
+                <button type="submit" className={styles.navBtn} disabled={loading}>
                   {loading ? '분석 중...' : '결과 제출하기'}
                 </button>
               )}

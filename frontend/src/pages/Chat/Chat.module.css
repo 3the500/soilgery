@@ -581,6 +581,144 @@
   cursor: not-allowed;
 }
 
+/* 👤 [피드백 반영] 채팅방 상대방 "정보 보기" 모달 전용 스타일 */
+.partnerInfoAvatarImg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-primary-light);
+  margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.25);
+}
+
+.partnerStatsArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.partnerStatsNumeric {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.partnerStatBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: var(--color-primary-pale);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  color: #5D4037;
+  font-weight: 600;
+}
+
+.partnerStatBox strong {
+  font-size: 13.5px;
+  color: var(--color-brown);
+}
+
+/* 📝 [피드백 반영] 상대방 정보 모달 - 받은 리뷰 목록 */
+.partnerReviewsArea {
+  width: 100%;
+  text-align: left;
+}
+
+.partnerReviewsTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.partnerReviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.partnerReviewItem {
+  background: var(--color-primary-pale);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.partnerReviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.partnerReviewerName {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+
+.partnerReviewRating {
+  font-size: 12px;
+  font-weight: 700;
+  color: #B8860B;
+  flex-shrink: 0;
+}
+
+.partnerReviewComment {
+  font-size: 12.5px;
+  color: #5D4037;
+  line-height: 1.4;
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+.partnerReviewDate {
+  display: block;
+  font-size: 10.5px;
+  color: var(--color-text-sub);
+  margin-top: 4px;
+}
+
+.partnerReviewEmpty {
+  font-size: 12.5px;
+  color: var(--color-text-sub);
+  text-align: left;
+}
+
+/* 📊 [피드백 반영] 청년 상대방 매칭 스탯 - "스탯보기" 토글 섹션 */
+.partnerStatsSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.partnerStatsToggleBtn {
+  width: 100%;
+  padding: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: var(--color-primary-pale);
+  color: var(--color-brown);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: var(--radius-full);
+  transition: all 0.2s;
+}
+
+.partnerStatsToggleBtn:hover {
+  background: #F5EFD9;
+}
+
 .modalBtnGroupVertical {
   display: flex;
   flex-direction: column;

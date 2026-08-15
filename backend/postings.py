@@ -27,7 +27,8 @@ def create_posting(
 ) -> JobPosting:
     """
     농부(고용주)가 공고를 등록할 때 호출.
-    task는 반드시 FARM_TASK_PROFILES에 정의된 업무(밭일/트렉터 운용/물건 나르기) 중 하나여야 함.
+    task는 반드시 FARM_TASK_PROFILES에 정의된 업무
+    (밭일/농기구 운용/물건 나르기/시설정비/선별 및 포장/가공) 중 하나여야 함.
     반환값: 생성된 JobPosting 객체
     """
     if task not in FARM_TASK_PROFILES:

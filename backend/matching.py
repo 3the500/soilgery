@@ -27,27 +27,65 @@ from aptitude_test import extract_stats
 # ---- 1. 농사 세부 업무별 이상적인 스텟 프로필 ----
 # [피드백 반영] aptitude_test.py의 새 농업 특화 스텟(체력/근력/숙련도/성실성/협동심/급여민감도)
 # 명칭 및 확대된 점수 폭(-4~6)에 맞춰 업무별 이상적인 스텟 프로필도 함께 조정했습니다.
+# [직무 개편 반영] 기존 "트렉터 운용"은 "농기구 운용"으로 이름을 변경했고,
+# 시설정비 / 선별 및 포장 / 가공 3개 직무를 새로 추가했습니다.
 FARM_TASK_PROFILES = {
     "밭일": {"근력": 4, "체력": 9, "숙련도": 1, "성실성": 9, "협동심": 3, "급여민감도": 1},
-    "트렉터 운용": {"근력": 3, "체력": 3, "숙련도": 8, "성실성": 5, "협동심": 2, "급여민감도": 4},
+    "농기구 운용": {"근력": 3, "체력": 3, "숙련도": 8, "성실성": 5, "협동심": 2, "급여민감도": 4},
     "물건 나르기": {"근력": 9, "체력": 8, "숙련도": 0, "성실성": 4, "협동심": 1, "급여민감도": 3},
+    "시설정비": {"근력": 6, "체력": 6, "숙련도": 7, "성실성": 5, "협동심": 2, "급여민감도": 3},
+    "선별 및 포장": {"근력": 2, "체력": 4, "숙련도": 3, "성실성": 8, "협동심": 6, "급여민감도": 2},
+    "가공": {"근력": 3, "체력": 4, "숙련도": 6, "성실성": 7, "협동심": 3, "급여민감도": 3},
 }
 
 
-# ---- 2. 스텟 기반 최적 업무 추천 (유클리드 거리, 기존과 동일한 순수 함수) ----
+# ---- 1-1. 업무별 스텟 가중치 (배점 차등) ----
+# [피드백 반영] 기존에는 모든 스텟을 동일한 비중(단순 유클리드 거리)으로 비교하다 보니,
+# 서로 다른 스텟 패턴을 가진 두 후보자라도 "전체 오차 합"이 우연히 같으면 AI 추천
+# 점수가 똑같이 나오는 문제가 있었습니다. (예: 체력·근력이 강점인 후보자와 성실성·
+# 협동심이 강점인 후보자가 같은 점수로 나오는 등)
+# 이를 해결하기 위해, 각 업무(FARM_TASK_PROFILES)에서 이상적인 스텟 값이 높을수록
+# "그 업무에서 더 중요하게 보는 스텟"으로 간주하여 순위를 매기고, 순위가 높은 스텟일수록
+# 후보자와의 차이가 점수에 더 크게 반영되도록 가중치를 차등 적용했습니다.
+# (업무별 이상적인 프로필이 바뀌어도 가중치가 그에 맞춰 자동으로 재계산됩니다.)
+_STAT_RANK_WEIGHTS = [3.0, 2.2, 1.6, 1.2, 1.0, 0.8]  # 1순위~6순위 스텟 가중치(내림차순)
+
+
+def _build_task_weights(profile: Dict[str, int]) -> Dict[str, float]:
+    """이상적인 스텟 값이 큰 순서대로 _STAT_RANK_WEIGHTS를 매겨 업무별 가중치를 만든다."""
+    ranked = sorted(profile.items(), key=lambda kv: kv[1], reverse=True)
+    return {stat: _STAT_RANK_WEIGHTS[i] for i, (stat, _) in enumerate(ranked)}
+
+
+TASK_STAT_WEIGHTS: Dict[str, Dict[str, float]] = {
+    task: _build_task_weights(profile) for task, profile in FARM_TASK_PROFILES.items()
+}
+
+
+def compute_fit_score(user_stats: Dict[str, int], task: str) -> float:
+    """
+    특정 업무(task)를 기준으로, 후보자 스텟과 이상적인 스텟 프로필 사이의
+    가중 거리를 계산한다. (값이 작을수록 그 업무에 적합)
+    업무별로 중요하게 보는 스텟일수록 TASK_STAT_WEIGHTS의 가중치가 커서,
+    그 스텟의 차이가 fit_score에 더 크게 반영된다.
+    """
+    profile = FARM_TASK_PROFILES[task]
+    weights = TASK_STAT_WEIGHTS[task]
+    return math.sqrt(
+        sum(weights[stat] * (user_stats[stat] - ideal) ** 2 for stat, ideal in profile.items())
+    )
+
+
+# ---- 2. 스텟 기반 최적 업무 추천 (업무별 가중 거리 기반) ----
 def recommend_farm_task(user_stats: Dict[str, int], top_n: int = 1) -> List[Dict]:
     """
     user_stats: {"근력": 5, "체력": 7, ...} 형태
     반환값: [{"task": "밭일", "distance": 3.2}, ...] 거리가 작을수록 적합
+    (거리는 업무별 TASK_STAT_WEIGHTS가 반영된 가중 거리)
     """
-
-    def distance(a: Dict[str, int], b: Dict[str, int]) -> float:
-        keys = a.keys()
-        return math.sqrt(sum((a[k] - b[k]) ** 2 for k in keys))
-
     scored = [
-        {"task": task, "distance": distance(user_stats, profile)}
-        for task, profile in FARM_TASK_PROFILES.items()
+        {"task": task, "distance": compute_fit_score(user_stats, task)}
+        for task in FARM_TASK_PROFILES
     ]
     scored.sort(key=lambda x: x["distance"])
     return scored[:top_n]
@@ -63,7 +101,7 @@ def request_match(user: User, db: Session) -> str:
     적성검사를 한 번도 하지 않은 사용자(스텟이 전부 0)는 모든 스텟이 0인
     지점에서 가장 가까운 업무로 "정상적으로" 계산되어 버리기 때문에,
     본인도 농부도 의도하지 않은 업무로 조용히 매칭 대기 등록이 될 수 있다.
-    (예: 물어보지도 않았는데 '트렉터 운용' 희망자로 등록되어, 정작 농부가
+    (예: 물어보지도 않았는데 '농기구 운용' 희망자로 등록되어, 정작 농부가
     '밭일' 후보자를 찾을 때는 보이지 않는 문제로 이어짐)
     그래서 매칭 신청 시점에 스텟이 전부 0이면 적성검사부터 완료하도록 막는다.
     """
@@ -99,14 +137,15 @@ def get_candidates_for_posting(posting_id: int, db: Session) -> List[Dict]:
         .all()
     )
 
-    ideal_profile = FARM_TASK_PROFILES[posting.task]
     candidates = []
     for user in seeking_users:
         stats = extract_stats(user)
+        if all(v == 0 for v in stats.values()):
+            continue  # 적성검사 미완료(스텟 전부 0) 청년은 후보에서 제외
         top_task = recommend_farm_task(stats, top_n=1)[0]["task"]
         if top_task != posting.task:
             continue
-        fit_score = math.sqrt(sum((stats[k] - ideal_profile[k]) ** 2 for k in stats))
+        fit_score = compute_fit_score(stats, posting.task)
         candidates.append({"user_id": user.id, "user": user, "stats": stats, "fit_score": fit_score})
 
     candidates.sort(key=lambda c: c["fit_score"])

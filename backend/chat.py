@@ -72,6 +72,26 @@ def get_match_info(match_id: int, requester_id: int, db: Session) -> dict:
     # 상대방 쪽 플래그를 봐야 함)
     partner_left = match.employer_left if is_employee else match.employee_left
 
+    # 📝 [피드백 반영] 채팅방 "정보 보기" 모달에서 상대방이 받은 리뷰(평점/후기) 목록도
+    # 함께 보여주기 위해 조회. 최신순으로 정렬.
+    partner_reviews = []
+    if partner:
+        reviews = (
+            db.query(Review)
+            .filter(Review.reviewee_id == partner_id)
+            .order_by(Review.created_at.desc())
+            .all()
+        )
+        for r in reviews:
+            reviewer = db.query(User).filter(User.id == r.reviewer_id).first()
+            partner_reviews.append({
+                "id": r.id,
+                "reviewer_name": reviewer.name if reviewer else "회원",
+                "rating": r.rating,
+                "comment": r.comment,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+            })
+
     return {
         "match_id": match_id,
         "partner_id": partner_id,
@@ -81,6 +101,21 @@ def get_match_info(match_id: int, requester_id: int, db: Session) -> dict:
         "partner_location": partner.location if partner else None,
         "partner_rating": float(partner.rating) if (partner and partner.rating) else 0.0,
         "partner_left": bool(partner_left),
+        # 🔎 [피드백 반영] 채팅방에서 상대방 프로필 클릭 시 "정보 보기" 모달에 쓰일
+        # 매칭 스탯 정보. (이메일 등 기본 계정 정보는 개인정보라 의도적으로 제외)
+        # 스탯은 청년에게만 의미 있는 정보라, 농부는 프론트에서 role을 보고 숨긴다.
+        "partner_level": partner.level if partner else None,
+        "partner_exp": partner.exp if partner else None,
+        "partner_stats": {
+            "stamina": partner.stamina,
+            "strength": partner.strength,
+            "intelligence": partner.intelligence,
+            "grit": partner.grit,
+            "personality": partner.personality,
+            "wage_pref": partner.wage_pref,
+        } if partner else None,
+        # 📝 [피드백 반영] 상대방이 받은 리뷰 목록
+        "partner_reviews": partner_reviews,
     }
 
 def send_message(match_id: int, sender_id: int, content: str, db: Session) -> Message:

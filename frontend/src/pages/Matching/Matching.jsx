@@ -13,16 +13,34 @@ const TASK_CARDS = [
     desc: '수확, 파종 등 기본 농작업',
   },
   {
-    value: '트렉터 운용',
+    value: '농기구 운용',
     emoji: '🚜',
-    title: '트랙터 · 농기계',
-    desc: '밭갈이, 로터리 기계 조작',
+    title: '농기구 운용',
+    desc: '트랙터, 관리기 등 농기계 조작',
   },
   {
     value: '물건 나르기',
     emoji: '📦',
     title: '운반 · 농가 정리',
     desc: '수확물 적재, 창고 정리',
+  },
+  {
+    value: '시설정비',
+    emoji: '🔧',
+    title: '시설정비',
+    desc: '하우스, 농기자재 등 시설 보수',
+  },
+  {
+    value: '선별 및 포장',
+    emoji: '🧺',
+    title: '선별 및 포장',
+    desc: '농산물 선별, 상품 포장 작업',
+  },
+  {
+    value: '가공',
+    emoji: '🏭',
+    title: '가공',
+    desc: '농산물 세척·건조·가공 작업',
   },
 ]
 
@@ -46,7 +64,7 @@ export default function Matching() {
   const [candidates, setCandidates] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const taskOptions = ['밭일', '트렉터 운용', '물건 나르기']
+  const taskOptions = ['밭일', '농기구 운용', '물건 나르기', '시설정비', '선별 및 포장', '가공']
 
   useEffect(() => {
     if (!user) return
@@ -231,7 +249,7 @@ export default function Matching() {
         <p className={styles.farmerSubText}>선택한 업무에 맞는 우수 청년 지원자를 AI가 자동 추천합니다.</p>
         <div className={styles.scoreHintRow}>
           <span className={styles.scoreHintIcon}>⚡</span>
-          <span className={styles.scoreHintText}>AI 추천 점수는 <strong>체력·성실성·숙련도·협동심</strong> 등 6개 적성 항목을 해당 업무 프로필과 비교 분석하여 산출됩니다.</span>
+          <span className={styles.scoreHintText}>AI 추천 점수는 <strong>체력·성실성·숙련도·협동심</strong> 등 6개 적성 항목을, 선택한 업무에서 더 중요한 항목일수록 가중치를 두어 비교 분석한 뒤 산출됩니다.</span>
         </div>
 
         <div className={styles.taskCleanGrid}>
@@ -259,7 +277,11 @@ export default function Matching() {
           candidates.map((c, index) => {
             if (!c) return null
             const rank = index + 1
-            const matchPercent = Math.min(99, Math.max(78, Math.round(99 - (c.fit_score || 0) * 3.2)))
+            // [피드백 반영] fit_score(백엔드에서 업무별 스텟 가중치를 반영해 계산)를
+            // 그대로 사용하되, 예전에는 78~99점으로 범위를 너무 좁게 묶어놔서
+            // 서로 다른 스텟 패턴의 후보자도 같은 점수로 보이는 문제가 있었다.
+            // 아래쪽 범위를 넓혀 실제 적합도 차이가 점수에 드러나도록 조정했다.
+            const matchPercent = Math.min(99, Math.max(40, Math.round(99 - (c.fit_score || 0) * 1.3)))
             const levelInfo = calculateLevel(c.exp || 0)
             const ratingNum = c.rating ? Number(c.rating).toFixed(1) : '5.0'
 

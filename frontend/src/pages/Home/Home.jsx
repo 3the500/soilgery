@@ -483,6 +483,14 @@ export default function Home() {
   const handleToggleSeeking = async () => {
     if (!user || togglingSeeking) return
     const nextStatus = user.is_seeking === false
+
+    // [피드백 반영] 적성검사를 아직 하지 않은(스텟 전부 0) 청년이 이 버튼으로
+    // 바로 매칭을 켜지 못하도록, 먼저 적성검사 안내 모달을 띄운다.
+    if (nextStatus && !isFarmer && isStatsEmpty(user)) {
+      setShowAptitudeNoticeModal(true)
+      return
+    }
+
     setTogglingSeeking(true)
     try {
       await authAPI.updateMe({ is_seeking: nextStatus })
@@ -495,7 +503,7 @@ export default function Home() {
       )
     } catch (err) {
       console.error('매칭 상태 변경 실패:', err)
-      showToast('매칭 상태 변경 중 오류가 발생했습니다.', 'error')
+      showToast(err.response?.data?.detail || '매칭 상태 변경 중 오류가 발생했습니다.', 'error')
     } finally {
       setSubmittingEdit(false)
       setTogglingSeeking(false)
@@ -626,15 +634,18 @@ export default function Home() {
                 <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
               </div>
               <div className={styles.accountActionBody}>
-                <button
-                  className={`btn btn-outline ${styles.settingItemBtn}`}
-                  onClick={() => {
-                    setActiveHeaderTab(null);
-                    handleGoAptitude();
-                  }}
-                >
-                  🌱 적성검사 다시받기
-                </button>
+                {/* [피드백 반영] 농부는 적성검사 대상이 아니므로 버튼 자체를 노출하지 않음 */}
+                {!isFarmer && (
+                  <button
+                    className={`btn btn-outline ${styles.settingItemBtn}`}
+                    onClick={() => {
+                      setActiveHeaderTab(null);
+                      handleGoAptitude();
+                    }}
+                  >
+                    🌱 적성검사 다시받기
+                  </button>
+                )}
                 <button
                   className={`btn btn-outline ${styles.settingItemBtn}`}
                   onClick={() => {
@@ -984,7 +995,7 @@ export default function Home() {
         {/* 3️⃣ [⚡ 찾기 탭] 컨텐츠 */}
         {bottomTab === 'matching' && (
           <div className={styles.tabContentFade}>
-            {/* ⚡ 중앙 커다란 자동매칭 히어로 카드 & 화면 1/3 초대형 활성화 버튼 */}
+            {/* ⚡ 중앙 커다란 자동매칭 히어로 카드 */}
             <section className={styles.aiMatchingHeroSection}>
               <div className={`glass-card ${styles.aiMatchingHeroCard}`}>
                 <div className={styles.aiMatchingHeroHeader}>
@@ -1003,36 +1014,56 @@ export default function Home() {
                     )}
                   </p>
 
-                  {/* 📝 모든 매칭 상태 문구를 버튼 위 상단에 배치 */}
-                  <div className={styles.heroStatusTextWrapper}>
-                    <div className={styles.heroStatusMainBadge}>
-                      <span className={styles.heroStatusLabel}>현재 매칭 상태:</span>
-                      <strong className={user?.is_seeking !== false ? styles.heroStatusActiveText : styles.heroStatusPausedText}>
-                        {user?.is_seeking !== false ? '🟢 소일거리 매칭 진행 중' : '⚪ 소일거리 매칭 일시정지'}
-                      </strong>
+                  {/* 📝 [피드백 반영] 농부는 "구직 희망" 개념이 없다(청년의 구직 희망
+                      여부에 따라 농부가 후보를 고르는 구조). 그래서 매칭 ON/OFF 토글 대신,
+                      곧바로 업무별 후보자 탐색 화면으로 안내하는 버튼만 보여준다. */}
+                  {!isFarmer && (
+                    <div className={styles.heroStatusTextWrapper}>
+                      <div className={styles.heroStatusMainBadge}>
+                        <span className={styles.heroStatusLabel}>현재 매칭 상태:</span>
+                        <strong className={user?.is_seeking !== false ? styles.heroStatusActiveText : styles.heroStatusPausedText}>
+                          {user?.is_seeking !== false ? '🟢 소일거리 매칭 진행 중' : '⚪ 소일거리 매칭 일시정지'}
+                        </strong>
+                      </div>
+                      <p className={styles.heroStatusHintText}>
+                        {user?.is_seeking !== false
+                          ? '👇 아래 버튼을 터치하면 매칭이 일시정지됩니다'
+                          : '👇 아래 버튼을 터치하면 매칭이 시작됩니다'}
+                      </p>
                     </div>
-                    <p className={styles.heroStatusHintText}>
-                      {user?.is_seeking !== false
-                        ? '👇 아래 버튼을 터치하면 매칭이 일시정지됩니다'
-                        : '👇 아래 버튼을 터치하면 매칭이 시작됩니다'}
-                    </p>
-                  </div>
+                  )}
+                  {isFarmer && (
+                    <div className={styles.heroStatusTextWrapper}>
+                      <p className={styles.heroStatusHintText}>
+                        👇 아래 버튼을 눌러 필요한 업무를 선택하고, 매칭을 희망하는 청년 후보를 살펴보세요
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                {/* 🔴 화면 1/3을 차지하고 중앙에 아이콘 이미지 하나만 배치된 대형 버튼 */}
-                <button
-                  type="button"
-                  className={`${styles.giantSeekingToggleBtn} ${
-                    user?.is_seeking !== false ? styles.giantSeekingActive : styles.giantSeekingPaused
-                  }`}
-                  onClick={handleToggleSeeking}
-                  disabled={togglingSeeking}
-                  title={user?.is_seeking !== false ? '터치하여 매칭 일시정지' : '터치하여 매칭 활성화'}
-                >
-                  <div className={styles.giantSeekingSingleIcon}>
-                    {togglingSeeking ? '⏳' : '⏻'}
-                  </div>
-                </button>
+                {isFarmer ? (
+                  <button
+                    type="button"
+                    className={`btn btn-primary ${styles.emptyCtaBtn}`}
+                    onClick={() => navigate('/matching')}
+                  >
+                    🌾 업무별 청년 후보 보러가기
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={`${styles.giantSeekingToggleBtn} ${
+                      user?.is_seeking !== false ? styles.giantSeekingActive : styles.giantSeekingPaused
+                    }`}
+                    onClick={handleToggleSeeking}
+                    disabled={togglingSeeking}
+                    title={user?.is_seeking !== false ? '터치하여 매칭 일시정지' : '터치하여 매칭 활성화'}
+                  >
+                    <div className={styles.giantSeekingSingleIcon}>
+                      {togglingSeeking ? '⏳' : '⏻'}
+                    </div>
+                  </button>
+                )}
               </div>
             </section>
           </div>
