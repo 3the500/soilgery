@@ -14,7 +14,16 @@ import {
   Sparkles,
   MapPin,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Target,
+  CheckCircle,
+  Zap,
+  Star,
+  Flame,
+  Dumbbell,
+  Award,
+  Trophy,
+  Medal
 } from 'lucide-react'
 import avatarYouth from '../../assets/icons/avatar_youth.png'
 import avatarFarmer from '../../assets/icons/avatar_farmer.png'
@@ -213,18 +222,18 @@ export default function Matching() {
                       🌱 홈으로 돌아가기
                     </button>
                     <button className={styles.cancelMatchBtn} onClick={handleCancelMatch}>
-                      매칭 대기 취소하기
+                      소일거리 매칭 일시정지하기
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className={styles.readyNoticeCard}>
                   <p className={styles.readyText}>
-                    위 추천 분야 조건으로 나를 찾아줄 농부 회원에게 <strong>구직(매칭)</strong>을 신청하시겠습니까?
+                    위 추천 분야 조건으로 나를 찾아줄 농가에게 <strong>소일거리 매칭</strong>을 시작하시겠습니까?
                   </p>
                   <div className={styles.actionRowVertical}>
                     <button className={`btn btn-primary ${styles.startMatchBtn}`} onClick={handleRequestMatch}>
-                      ⚡ 이 조건으로 매칭 신청하기 ⚡
+                      ⚡ 소일거리 매칭 시작하기
                     </button>
                     <button className={styles.secondaryBtn} onClick={() => navigate('/home?tab=matching')}>
                       홈으로 돌아가기
@@ -314,43 +323,49 @@ export default function Matching() {
             const ratingNum = c.rating ? Number(c.rating).toFixed(1) : '5.0'
 
             const rankClass = rank === 1 ? styles.rankCardGold : rank === 2 ? styles.rankCardSilver : rank === 3 ? styles.rankCardBronze : ''
-            const rankBadgeText = rank === 1 ? '🥇 1위 최우수 추천' : rank === 2 ? '🥈 2위 우수 추천' : rank === 3 ? '🥉 3위 추천' : null
+            const rankBadgeInfo = rank === 1
+              ? { text: '1위 최우수 추천', Icon: Award, color: '#D97706' }
+              : rank === 2
+              ? { text: '2위 우수 추천', Icon: Medal, color: '#64748B' }
+              : rank === 3
+              ? { text: '3위 추천', Icon: Medal, color: '#B45309' }
+              : null
 
             // 💡 눈에 띄는 핵심 추천 이유 태그 생성
             const stats = c.stats || {}
-            const reasons = [] // { label, emoji, color }
+            const reasons = [] // { label, Icon, color, iconColor }
 
             // 직무 적합도 (matchPercent 기반)
             if (matchPercent >= 90)
-              reasons.push({ label: '직무 적합 최적!', emoji: '🎯', color: 'green' })
+              reasons.push({ label: '직무 적합 최적!', Icon: Target, color: 'green', iconColor: '#16A34A' })
             else if (matchPercent >= 84)
-              reasons.push({ label: '직무 적합 우수!', emoji: '✅', color: 'green' })
+              reasons.push({ label: '직무 적합 우수!', Icon: CheckCircle, color: 'green', iconColor: '#16A34A' })
 
             // 즉시 투입 가능 여부
             if (c.is_seeking)
-              reasons.push({ label: '즉시 투입 가능!', emoji: '⚡', color: 'amber' })
+              reasons.push({ label: '즉시 투입 가능!', Icon: Zap, color: 'amber', iconColor: '#D97706' })
 
             // 평점 기반
             if (Number(c.rating) >= 4.8)
-              reasons.push({ label: '평점 최상위!', emoji: '🌟', color: 'gold' })
+              reasons.push({ label: '평점 최상위!', Icon: Star, color: 'gold', iconColor: '#EAB308' })
             else if (Number(c.rating) >= 4.5)
-              reasons.push({ label: '후기 평점 우수!', emoji: '⭐', color: 'gold' })
+              reasons.push({ label: '후기 평점 우수!', Icon: Star, color: 'gold', iconColor: '#EAB308' })
 
             // 성실성 최상위
             if ((stats.grit || 0) >= 8)
-              reasons.push({ label: '성실성 탁월!', emoji: '🔥', color: 'orange' })
+              reasons.push({ label: '성실성 탁월!', Icon: Flame, color: 'orange', iconColor: '#EA580C' })
 
             // 체력
             if ((stats.stamina || 0) >= 8)
-              reasons.push({ label: '체력 최상급!', emoji: '💪', color: 'blue' })
+              reasons.push({ label: '체력 최상급!', Icon: Dumbbell, color: 'blue', iconColor: '#2563EB' })
 
             // 숙련도 (농기계 등)
             if ((stats.intelligence || 0) >= 8)
-              reasons.push({ label: '농기계 숙련자!', emoji: '🚜', color: 'teal' })
+              reasons.push({ label: '농기계 숙련자!', Icon: Tractor, color: 'teal', iconColor: '#0D9488' })
 
             // 경험 풍부
             if ((c.exp || 0) >= 300)
-              reasons.push({ label: '현장 경험 풍부!', emoji: '🏆', color: 'purple' })
+              reasons.push({ label: '현장 경험 풍부!', Icon: Trophy, color: 'purple', iconColor: '#7C3AED' })
 
             // 최대 3개만 표시
             const topReasons = reasons.slice(0, 3)
@@ -361,14 +376,16 @@ export default function Matching() {
                 {/* 상단: 순위뱃지(좌) / AI추천점수(우) */}
                 <div className={styles.cardTopRow}>
                   <div className={styles.cardTopLeft}>
-                    {rankBadgeText && (
-                      <span className={`${styles.rankBadge} ${styles[`rankBadge${rank}`]}`}>
-                        {rankBadgeText}
+                    {rankBadgeInfo && (
+                      <span className={`${styles.rankBadge} ${styles[`rankBadge${rank}`]}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <rankBadgeInfo.Icon size={14} color={rankBadgeInfo.color} strokeWidth={2.4} />
+                        {rankBadgeInfo.text}
                       </span>
                     )}
                   </div>
-                  <div className={styles.fitScoreBadge}>
-                    ⚡ AI 추천 점수 <strong>{matchPercent}점</strong>
+                  <div className={styles.fitScoreBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <Zap size={14} color="#D97706" fill="#FEF3C7" strokeWidth={2.4} />
+                    AI 추천 점수 <strong>{matchPercent}점</strong>
                   </div>
                 </div>
 
@@ -383,8 +400,8 @@ export default function Matching() {
                   <div className={styles.candidateNameInfo}>
                     <span className={styles.candidateName}>{c.name || '청년 지원자'}</span>
                     {c.location && (
-                      <span className={styles.candidateLocation}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                      <span className={styles.candidateLocation} style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                        <MapPin size={13} color="currentColor" strokeWidth={2.2} />
                         {c.location}
                       </span>
                     )}
@@ -396,15 +413,25 @@ export default function Matching() {
 
                 {/* 평점·레벨 + 추천이유 한 줄 통합 */}
                 <div className={styles.cardInfoRow}>
-                  <span className={styles.metricItem}>⭐ <strong>{ratingNum}점</strong></span>
+                  <span className={styles.metricItem} style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <Star size={14} color="#EAB308" fill="#FDE047" strokeWidth={2.2} />
+                    <strong>{ratingNum}점</strong>
+                  </span>
                   <span className={styles.metricDot}>·</span>
-                  <span className={styles.metricItem}>🏆 <strong>Lv.{levelInfo.level}</strong> {levelInfo.title}</span>
+                  <span className={styles.metricItem} style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <Trophy size={14} color="#895129" strokeWidth={2.2} />
+                    <strong>Lv.{levelInfo.level}</strong> {levelInfo.title}
+                  </span>
                   {topReasons.length > 0 && <span className={styles.metricDot}>·</span>}
-                  {topReasons.map((r, i) => (
-                    <span key={i} className={`${styles.reasonTag} ${styles[`reasonTag_${r.color}`]}`}>
-                      {r.emoji} {r.label}
-                    </span>
-                  ))}
+                  {topReasons.map((r, i) => {
+                    const ReasonIcon = r.Icon
+                    return (
+                      <span key={i} className={`${styles.reasonTag} ${styles[`reasonTag_${r.color}`]}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <ReasonIcon size={13} color={r.iconColor} strokeWidth={2.3} />
+                        {r.label}
+                      </span>
+                    )
+                  })}
                 </div>
 
                 <button className={styles.matchBtn} onClick={() => handleCreateMatch(c.user_id)}>이 청년과 매칭하기 (대화방 개설)</button>

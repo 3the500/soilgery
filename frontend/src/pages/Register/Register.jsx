@@ -2,10 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import styles from './Register.module.css'
+import avatarYouth from '../../assets/icons/avatar_youth.png'
+import avatarFarmer from '../../assets/icons/avatar_farmer.png'
+import mascotSoilyi from '../../assets/icons/character_soilyi.png'
 
 const ROLES = [
-  { value: '청년', emoji: '🌱', label: '청년', desc: '농촌 체험·부업을 원해요', key: 'youth' },
-  { value: '농부', emoji: '👨‍🌾', label: '농부', desc: '일손이 필요해요', key: 'farmer' },
+  { value: '청년', avatar: avatarYouth, label: '청년', desc: '농촌 체험·부업을 원해요', key: 'youth' },
+  { value: '농부', avatar: avatarFarmer, label: '농부', desc: '일손이 필요해요', key: 'farmer' },
 ]
 
 export default function Register() {
@@ -66,7 +69,7 @@ export default function Register() {
 
       <div className={`glass-card ${styles.card}`}>
         <div className={styles.header}>
-          <span className={styles.headerIcon}>🌱</span>
+          <img src={mascotSoilyi} alt="소일이" className={styles.headerMascotImg} />
           <h1>소일거리 가입</h1>
           <p>충북 농촌과 청년을 잇는 첫걸음</p>
         </div>
@@ -91,7 +94,9 @@ export default function Register() {
                     className={`${styles.roleCard} ${activeClass}`}
                     onClick={() => selectRole(r.value)}
                   >
-                    <span className={styles.roleEmoji}>{r.emoji}</span>
+                    <span className={styles.roleAvatarRing}>
+                      <img src={r.avatar} alt={r.label} />
+                    </span>
                     <strong>{r.label}</strong>
                     <span className={styles.roleDesc}>{r.desc}</span>
                   </button>

@@ -1,8 +1,8 @@
-.wrapper {
+﻿.wrapper {
   min-height: 100vh;
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(ellipse at 10% 0%, rgba(45, 106, 52, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 10% 0%, rgba(230, 168, 0, 0.08) 0%, transparent 60%),
     radial-gradient(ellipse at 90% 100%, rgba(192, 57, 43, 0.05) 0%, transparent 60%);
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   position: fixed;
   top: -100px; right: -80px;
   width: 320px; height: 320px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 106, 52, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(230, 168, 0, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -75,7 +75,7 @@
   font-weight: 800;
   color: var(--color-primary-dark);
   background: var(--color-primary-pale);
-  border: 1px solid rgba(45, 106, 52, 0.3);
+  border: 1px solid rgba(230, 168, 0, 0.3);
   padding: 4px 11px;
   border-radius: var(--radius-full);
   letter-spacing: 0.1px;
@@ -108,7 +108,7 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.08);
+  box-shadow: 0 8px 24px rgba(230, 168, 0, 0.08);
 }
 
 .emptyNoticeIcon {
@@ -139,7 +139,7 @@
 /* ?�� 추천 ?�업 분야 ?�내 카드 */
 .recommendTaskCard {
   background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
-  border: 1.5px solid rgba(45, 106, 52, 0.6);
+  border: 1.5px solid rgba(230, 168, 0, 0.6);
   border-radius: var(--radius-xl);
   padding: 24px;
   display: flex;
@@ -153,7 +153,7 @@
   font-weight: 800;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(45, 106, 52, 0.5);
+  border: 1px solid rgba(230, 168, 0, 0.5);
   padding: 3px 12px;
   border-radius: var(--radius-full);
   width: fit-content;
@@ -179,7 +179,7 @@
   font-weight: 700;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(45, 106, 52, 0.5);
+  border: 1px solid rgba(230, 168, 0, 0.5);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   transition: all 0.2s;
@@ -193,7 +193,7 @@
   margin-top: 4px;
   padding: 14px 16px;
   background: #ffffff;
-  border: 1px dashed rgba(45, 106, 52, 0.6);
+  border: 1px dashed rgba(230, 168, 0, 0.6);
   border-radius: var(--radius-md);
 }
 
@@ -233,7 +233,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.3);
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.3);
   animation: floatIcon 3s ease-in-out infinite;
 }
 
@@ -386,7 +386,7 @@
 
 .selectBox:focus {
   border-color: var(--color-primary-light);
-  box-shadow: 0 0 0 3.5px rgba(45, 106, 52, 0.2);
+  box-shadow: 0 0 0 3.5px rgba(230, 168, 0, 0.2);
 }
 
 
@@ -746,13 +746,13 @@
 .matchBtn {
   margin-top: 4px;
   padding: 15px;
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #1A1209;
   border-radius: var(--radius-full);
   font-size: 15px;
   font-weight: 700;
   transition: all var(--transition);
-  box-shadow: 0 4px 18px rgba(45, 106, 52, 0.35);
+  box-shadow: 0 4px 18px rgba(230, 168, 0, 0.35);
 }
 
 .candidateMetricsInline {
@@ -819,7 +819,7 @@
 
 .matchBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(45, 106, 52, 0.45);
+  box-shadow: 0 6px 24px rgba(230, 168, 0, 0.45);
 }
 
 .emptyText {

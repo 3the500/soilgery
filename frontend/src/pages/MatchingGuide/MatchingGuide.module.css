@@ -1,4 +1,4 @@
-.wrapper {
+﻿.wrapper {
   min-height: 100vh;
   background-color: var(--color-bg);
   background-image:
@@ -18,7 +18,7 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 106, 52, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(230, 168, 0, 0.18) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -138,10 +138,10 @@
 }
 
 .stepTabChipActive {
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%) !important;
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%) !important;
   color: #1A1209 !important;
   border-color: #F5B000 !important;
-  box-shadow: 0 4px 12px rgba(45, 106, 52, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(230, 168, 0, 0.3) !important;
 }
 
 /* ?�� 메인 컨테?�너 */
@@ -220,7 +220,7 @@
 .overviewCard:hover {
   transform: translateY(-2px);
   border-color: #F5B000;
-  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.2);
+  box-shadow: 0 8px 24px rgba(230, 168, 0, 0.2);
 }
 
 .overviewCardTop {
@@ -308,7 +308,7 @@
   border: 1.5px solid #FDE68A;
   border-radius: var(--radius-xl);
   padding: 20px;
-  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.08);
+  box-shadow: 0 8px 24px rgba(230, 168, 0, 0.08);
 }
 
 .highlightHeader {
@@ -470,7 +470,7 @@
 }
 
 .nextBtn {
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #1A1209;
   border: none;
   font-size: 13.5px;
@@ -479,13 +479,13 @@
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.35);
+  box-shadow: 0 4px 14px rgba(230, 168, 0, 0.35);
   white-space: nowrap;
 }
 
 .nextBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(45, 106, 52, 0.45);
+  box-shadow: 0 6px 18px rgba(230, 168, 0, 0.45);
 }
 
 .finishMatchBtn {

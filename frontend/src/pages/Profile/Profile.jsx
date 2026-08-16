@@ -13,7 +13,14 @@ import {
   Brain,
   Flame,
   Users,
-  Coins
+  Coins,
+  Camera,
+  Loader2,
+  Star,
+  Sparkles,
+  User,
+  Shield,
+  Compass
 } from 'lucide-react'
 
 // [피드백 반영] 농업 특화 스텟 라벨 및 고유 테마 컬러
@@ -123,7 +130,9 @@ export default function Profile() {
               alt="프로필 사진"
               className={styles.avatarImg}
             />
-            <span className={styles.avatarEditBadge}>{uploadingPhoto ? '⏳' : '📷'}</span>
+            <span className={styles.avatarEditBadge} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {uploadingPhoto ? <Loader2 size={13} className="spin" /> : <Camera size={13} color="#FFFFFF" strokeWidth={2.4} />}
+            </span>
           </div>
           <input
             ref={photoInputRef}
@@ -138,20 +147,27 @@ export default function Profile() {
             <span className={styles.userRoleTag}>{user?.role}</span>
             {/* 🌾 [피드백 반영] 직업(청년) 바로 오른쪽에 AI 추천 업무 표시 */}
             {!isFarmer && (
-              <span className={styles.recommendedTaskTag}>
-                {recommendedTask ? `✨ 추천업무: ${recommendedTask}` : '적성검사 필요'}
+              <span className={styles.recommendedTaskTag} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <Sparkles size={13} color="#E6A800" strokeWidth={2.2} />
+                {recommendedTask ? `추천업무: ${recommendedTask}` : '적성검사 필요'}
               </span>
             )}
           </div>
           <div className={styles.ratingBox}>
-            <span>⭐ 평점</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <Star size={14} color="#EAB308" fill="#FDE047" strokeWidth={2.2} />
+              평점
+            </span>
             <strong>{user?.rating ? Number(user?.rating).toFixed(1) : '0.0'} / 5.0</strong>
           </div>
         </section>
 
         {/* 기본 계정 정보 */}
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>📋 기본 계정 정보</h3>
+          <h3 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <User size={17} color="#895129" strokeWidth={2.2} />
+            기본 계정 정보
+          </h3>
           <div className={`glass-card ${styles.infoCard}`}>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>이름</span>
@@ -175,7 +191,10 @@ export default function Profile() {
         {/* 스탯 정보 - 육각형 지표 + 숫자 지표를 함께 표시 */}
         {!isFarmer && (
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>📊 내 매칭 스탯</h3>
+            <h3 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Compass size={17} color="#895129" strokeWidth={2.2} />
+              내 매칭 스탯
+            </h3>
             <div className={`glass-card ${styles.statsRow}`}>
               {/* 🔷 [피드백 반영] 왼쪽: 육각형 지표 (스텟이 0이어도 작은 육각형이 보임) */}
               <StatHexagon

@@ -16,9 +16,16 @@ import {
   User,
   Sprout,
   MessageCircle,
-  Bot
+  Bot,
+  Trophy,
+  Bell,
+  CheckCircle2,
+  Pause,
+  Play,
+  BookOpen,
+  Compass,
+  Sparkles
 } from 'lucide-react'
-import logoSprout from '../../assets/icons/logo_sprout.jpg'
 import avatarYouth from '../../assets/icons/avatar_youth.png'
 import avatarFarmer from '../../assets/icons/avatar_farmer.png'
 import mascotSoilyi from '../../assets/icons/character_soilyi.png'
@@ -566,7 +573,10 @@ export default function Home() {
       {/* 상단 헤더 */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <span className={styles.logo}><img src={logoSprout} alt="소일거리 로고" className={styles.logoImg} /> 소일거리</span>
+          <span className={styles.logo}>
+            <img src={mascotSoilyi} alt="소일거리" className={styles.logoImg} />
+            소일거리
+          </span>
           {user?.name && (
             <span className={styles.userLoginNotice}>
               {user.name} 님 로그인 중
@@ -620,7 +630,15 @@ export default function Home() {
                         )}
                         <div className={styles.welcomeNoticeHeader}>
                           <span className={styles.welcomeNoticeIcon}>
-                            {n.type === 'level' ? '🏆' : n.type === 'review' ? '⭐' : n.type === 'match' ? <img src={navChat} alt="매칭" style={{width:'1.1em',height:'1.1em',objectFit:'contain',verticalAlign:'middle'}} /> : <img src={logoSprout} alt="소일거리" style={{width:'1.1em',height:'1.1em',objectFit:'contain',verticalAlign:'middle'}} />}
+                            {n.type === 'level' ? (
+                              <Trophy size={18} color="#D97706" />
+                            ) : n.type === 'review' ? (
+                              <Star size={18} color="#EAB308" fill="#FDE047" />
+                            ) : n.type === 'match' ? (
+                              <MessageCircle size={18} color="#0284C7" />
+                            ) : (
+                              <img src={mascotSoilyi} alt="소일거리" style={{ width: '22px', height: '22px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+                            )}
                           </span>
                           <div style={{ flex: 1, paddingRight: n.canDismiss ? '20px' : '0' }}>
                             <strong>{n.title}</strong>
@@ -651,6 +669,17 @@ export default function Home() {
                 <button className={styles.panelCloseBtn} onClick={() => setActiveHeaderTab(null)}>접기 ▲</button>
               </div>
               <div className={styles.accountActionBody}>
+                {/* 🌾 소일거리란? 소개 페이지 바로가기 */}
+                <button
+                  className={`btn btn-outline ${styles.settingItemBtn}`}
+                  style={{ borderColor: 'var(--c-honey-gold)', background: 'var(--c-honey-cream)', color: 'var(--c-honey-brown)', fontWeight: 800 }}
+                  onClick={() => {
+                    setActiveHeaderTab(null);
+                    navigate('/about');
+                  }}
+                >
+                  🌾 소일거리란?
+                </button>
                 {/* 📖 매칭 가이드 (도움말) 페이지 바로가기 */}
                 <button
                   className={`btn btn-outline ${styles.settingItemBtn}`}
@@ -823,12 +852,21 @@ export default function Home() {
                       type="button"
                       className={styles.recommendedTaskTag}
                       onClick={() => setShowTaskAnalysisModal(true)}
-                      title="AI 분석 상세하게 보기"
+                      title="AI 맞춤 분석 상세하게 보기"
                     >
-                      ✨ 추천업무: {recommendedTask.task} 🔍
+                      <Sparkles size={14} color="#D97706" style={{ flexShrink: 0 }} />
+                      <span>추천업무: <strong>{recommendedTask.task}</strong></span>
+                      <span style={{ fontSize: '11px', opacity: 0.8, marginLeft: '2px' }}>🔍</span>
                     </button>
                   ) : (
-                    <span className={styles.recommendedTaskTag}>적성검사 필요</span>
+                    <button
+                      type="button"
+                      className={styles.recommendedTaskTag}
+                      onClick={() => setShowAptitudeNoticeModal(true)}
+                    >
+                      <Sparkles size={14} color="#D97706" />
+                      <span>적성검사 후 맞춤업무 확인 ➔</span>
+                    </button>
                   )
                 )}
               </div>
@@ -1094,15 +1132,15 @@ export default function Home() {
                     disabled={togglingSeeking}
                   >
                     {togglingSeeking ? (
-                      '⏳ 상태 변경 중...'
+                      '상태 변경 중...'
                     ) : user?.is_seeking !== false ? (
                       <>
-                        <span style={{ fontSize: '18px', marginRight: '6px' }}>⏸️</span>
+                        <Pause size={17} strokeWidth={2.6} style={{ marginRight: '6px' }} />
                         소일거리 매칭 일시정지하기
                       </>
                     ) : (
                       <>
-                        <span style={{ fontSize: '18px', marginRight: '6px' }}>▶️</span>
+                        <Play size={17} strokeWidth={2.6} style={{ marginRight: '6px' }} fill="currentColor" />
                         소일거리 매칭 다시 시작하기
                       </>
                     )}
@@ -1139,9 +1177,9 @@ export default function Home() {
                     </p>
                     <button
                       className={`btn btn-primary ${styles.emptyCtaBtn}`}
-                      onClick={handleAutoMatching}
+                      onClick={() => handleSelectTab('matching')}
                     >
-                      {isFarmer ? '⚡ AI 청년 매칭 받아보기' : '⚡ AI 농부 매칭 받아보기'}
+                      {isFarmer ? '🌾 업무별 청년 후보 보러가기' : '⚡ 나에게 맞는 농가 찾으러 가기'}
                     </button>
                   </div>
                 ) : (
@@ -1231,14 +1269,29 @@ export default function Home() {
           onClick={() => handleSelectTab('matching')}
         >
           <span className={styles.bottomNavIcon}>
-            <Sprout
-              size={24}
-              strokeWidth={bottomTab === 'matching' ? 2.6 : 2.2}
-              color="#16A34A"
-              fill={bottomTab === 'matching' ? '#DCFCE7' : 'none'}
-            />
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* 좌측 벼 이삭 */}
+              <path d="M7 16V9C7 7.5 8 6.5 9 6.5C10 6.5 10.5 7.5 10.5 8.5V16" stroke="#E6A800" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M7 9C5.8 8.5 5 7.5 5.5 6C6.5 6.2 7.5 7 8 8" stroke="#E6A800" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M7 11.5C5.8 11 5 10 5.5 8.5C6.5 8.7 7.5 9.5 8 10.5" stroke="#E6A800" strokeWidth="1.5" strokeLinecap="round" />
+              
+              {/* 중앙 긴 벼 이삭 */}
+              <path d="M12 21V4C12 2.5 13.5 1.5 14.5 1.5C15.5 1.5 16.5 2.5 16.5 4V14" stroke="#FFB300" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M12 4.5C10.5 4 9.5 2.8 10.2 1.2C11.5 1.5 12.8 2.5 13.5 3.8" stroke="#FFB300" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M12 7.5C10.5 7 9.5 5.8 10.2 4.2C11.5 4.5 12.8 5.5 13.5 6.8" stroke="#FFB300" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M12 10.5C10.5 10 9.5 8.8 10.2 7.2C11.5 7.5 12.8 8.5 13.5 9.8" stroke="#FFB300" strokeWidth="1.8" strokeLinecap="round" />
+              
+              {/* 우측 벼 이삭 */}
+              <path d="M17 19V11C17 9.5 18 8.5 19 8.5C20 8.5 20.5 9.5 20.5 10.5V18" stroke="#E6A800" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M17 11C18.2 10.5 19 9.5 18.5 8C17.5 8.2 16.5 9 16 10" stroke="#E6A800" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M17 13.5C18.2 13 19 12 18.5 10.5C17.5 10.7 16.5 11.5 16 12.5" stroke="#E6A800" strokeWidth="1.5" strokeLinecap="round" />
+              
+              {/* 벼 줄기 하단 초록 잎사귀 2개 */}
+              <path d="M5 21C5 17 8 16 12 16" stroke="#16A34A" strokeWidth="2" strokeLinecap="round" />
+              <path d="M19 21C19 17.5 16 16.5 12 16.5" stroke="#15803D" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           </span>
-          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'matching' ? '#15803D' : '#166534' }}>
+          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'matching' ? '#D97706' : '#895129' }}>
             {isFarmer ? '청년 찾기' : '농부 찾기'}
           </span>
         </button>
@@ -1441,11 +1494,13 @@ export default function Home() {
         </div>
       )}
 
-      {/* 🌱 적성검사 안내 당근/토스 럭셔리 모달 팝업 */}
+      {/* 🍯 적성검사 안내 모달 팝업 (공식 소일이 마스코트 적용) */}
       {showAptitudeNoticeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowAptitudeNoticeModal(false)}>
           <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ padding: '26px 20px', textAlign: 'center' }}>
-            <div className={styles.noticeModalIcon}>🌱</div>
+            <div className={styles.noticeModalIcon}>
+              <img src={mascotSoilyi} alt="소일이" style={{ width: '68px', height: '68px', objectFit: 'contain', margin: '0 auto 8px', mixBlendMode: 'multiply' }} />
+            </div>
             <h3 className={styles.noticeModalTitle}>맞춤 적성검사 안내</h3>
             <p className={styles.noticeModalDesc}>
               나에게 딱 맞는 농가 일자리를 AI 추천받기 위해<br />
@@ -1467,7 +1522,7 @@ export default function Home() {
                   navigate('/aptitude');
                 }}
               >
-                🌱 적성검사 시작하기
+                🌱 적성검사 시작하기 (1분 소요)
               </button>
             </div>
           </div>

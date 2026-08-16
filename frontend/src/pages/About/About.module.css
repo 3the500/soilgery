@@ -1,0 +1,694 @@
+/* ═══════════════════════════════════════════════════════
+   소일거리란? (About) 소개 페이지 스타일시트 — 허니콤 디자인 시스템
+═══════════════════════════════════════════════════════ */
+.wrapper {
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+  padding-bottom: 30px;
+}
+
+/* 🔝 상단 네비게이션 헤더 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(250, 248, 240, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  color: var(--c-honey-brown);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  background: var(--c-honey-cream);
+  border-color: var(--c-honey-gold);
+  transform: translateX(-2px);
+}
+
+.headerTitle {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--c-honey-brown);
+  letter-spacing: -0.4px;
+}
+
+/* 메인 컨테이너 */
+.main {
+  flex: 1;
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 🔢 상단 4단계 스텝 인디케이터 */
+.stepIndicatorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  padding: 6px 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stepDotBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  border-radius: 14px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.stepDotNumber {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-sub);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.stepDotLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.stepDotActive {
+  background: var(--c-honey-cream);
+}
+
+.stepDotActive .stepDotNumber {
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
+  color: #FFFFFF;
+  border-color: var(--c-honey-gold);
+  box-shadow: 0 2px 8px rgba(230, 168, 0, 0.4);
+}
+
+.stepDotActive .stepDotLabel {
+  color: var(--c-honey-brown);
+  font-weight: 800;
+}
+
+.stepDotPassed .stepDotNumber {
+  background: var(--c-honey-gold);
+  color: #FFFFFF;
+  border-color: var(--c-honey-gold);
+}
+
+/* 🖼️ 메인 컨텐츠 카드 */
+.contentCard {
+  background: var(--color-surface);
+  border: 2px solid var(--c-honey-soft);
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tagBadge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--c-honey-cream);
+  border: 1.5px solid var(--c-honey-gold);
+  color: var(--c-honey-brown);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+}
+
+/* 🎨 비주얼 박스 공통 */
+.visualBox {
+  width: 100%;
+  min-height: 190px;
+  background: linear-gradient(180deg, #FFFDF8 0%, var(--c-honey-cream) 100%);
+  border: 1.5px solid #F0E6D2;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🌟 1페이지: 충주 공식 CI 엠블럼 + 소일이 */
+.chungjuEmblemWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.chungjuLogoCard {
+  background: var(--color-surface);
+  border: 2px solid #E6A800;
+  border-radius: 18px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 18px rgba(230, 168, 0, 0.16);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.2s;
+}
+
+.chungjuLogoCard:hover {
+  transform: translateY(-2px);
+}
+
+.chungjuCiMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+
+.chungjuCiTextGroup {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 2px;
+}
+
+.chungjuCiSub {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #8C7864;
+  letter-spacing: -0.2px;
+}
+
+.chungjuCiMain {
+  font-size: 16.5px;
+  font-weight: 900;
+  color: var(--c-honey-dark);
+  letter-spacing: -0.4px;
+}
+
+.ciEng {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0284C7;
+  letter-spacing: 0.5px;
+  margin-left: 2px;
+}
+
+.chungjuIcon {
+  font-size: 22px;
+}
+
+.chungjuText {
+  font-size: 15px;
+  color: var(--c-honey-brown);
+}
+
+.sloganText {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #8C7864;
+}
+
+.heartConnector {
+  animation: pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.25); }
+}
+
+.mascotCircleArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: soilyiFloat 2.8s ease-in-out infinite;
+}
+
+.storyMascotImg {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 4px 10px rgba(230, 168, 0, 0.3));
+}
+
+.mascotNameBadge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--c-honey-brown);
+  background: var(--color-surface);
+  border: 1px solid var(--c-honey-gold);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* 🌟 2페이지: 전국 실사 지도 (충주 강조) */
+.mapPhotoScene {
+  width: 100%;
+  height: 240px;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F8F9FA;
+}
+
+.koreaMapBgImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.cityNode {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--c-honey-gold);
+  box-shadow: 0 3px 10px rgba(137, 81, 41, 0.12);
+  z-index: 10;
+}
+
+.cityPulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #E6A800;
+  box-shadow: 0 0 6px #E6A800;
+}
+
+.nodeSeoul      { top: 18px; left: 16%; transform: translateX(-50%); }
+.nodeGangwon    { top: 22px; right: 10%; }
+.nodeGyeongsang { bottom: 18px; right: 12%; }
+.nodeJeolla     { bottom: 18px; left: 12%; }
+
+.movingYouthStream {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.flyingYouth {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--c-honey-gold);
+  background: var(--c-honey-cream);
+  box-shadow: 0 4px 12px rgba(230, 168, 0, 0.45);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flyingYouth img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fly1 {
+  animation: moveSeoulToChungju 3.6s infinite ease-in-out;
+}
+
+.fly2 {
+  animation: moveJeollaToChungju 4.0s infinite ease-in-out 1.2s;
+}
+
+.fly3 {
+  animation: moveYeongnamToChungju 3.8s infinite ease-in-out 2.2s;
+}
+
+/* 🛫 1. 서울·수도권 ➔ 충주 붉은 핀 도착 경로 */
+@keyframes moveSeoulToChungju {
+  0%   { top: 22px; left: 18%; transform: scale(0.6); opacity: 0; }
+  20%  { opacity: 1; transform: scale(1.05); }
+  85%  { top: 26%; left: 51%; transform: scale(0.95); opacity: 1; }
+  100% { top: 26%; left: 51%; transform: scale(0.3); opacity: 0; }
+}
+
+/* 🛫 2. 호남권 ➔ 충주 붉은 핀 도착 경로 */
+@keyframes moveJeollaToChungju {
+  0%   { top: 80%; left: 16%; transform: scale(0.6); opacity: 0; }
+  20%  { opacity: 1; transform: scale(1.05); }
+  85%  { top: 26%; left: 51%; transform: scale(0.95); opacity: 1; }
+  100% { top: 26%; left: 51%; transform: scale(0.3); opacity: 0; }
+}
+
+/* 🛫 3. 영남권 ➔ 충주 붉은 핀 도착 경로 */
+@keyframes moveYeongnamToChungju {
+  0%   { top: 78%; left: 82%; transform: scale(0.6); opacity: 0; }
+  20%  { opacity: 1; transform: scale(1.05); }
+  85%  { top: 26%; left: 51%; transform: scale(0.95); opacity: 1; }
+  100% { top: 26%; left: 51%; transform: scale(0.3); opacity: 0; }
+}
+
+.chungjuHub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  z-index: 5;
+}
+
+.hubBeacon {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(230, 168, 0, 0.3);
+  animation: beaconPulse 2s infinite ease-out;
+}
+
+@keyframes beaconPulse {
+  0%   { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.hubCenter {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFC107 0%, #E6A800 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  border: 2.5px solid #FFFFFF;
+}
+
+.hubTitle {
+  font-size: 14px;
+  font-weight: 900;
+  color: #FFFFFF;
+  background: rgba(26, 18, 9, 0.85);
+  backdrop-filter: blur(6px);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--c-honey-gold);
+  margin-top: 4px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* 🌟 3페이지: 실제 충주 논밭 사진 배경 & 청년/농부 플로팅 협력 */
+.collabSceneWithPhoto {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chungjuFarmBgPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+}
+
+.chungjuFarmPhotoOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(26, 18, 9, 0.25) 0%, rgba(26, 18, 9, 0.65) 100%);
+  backdrop-filter: blur(1px);
+}
+
+.collabFloatingLayer {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  padding: 0 12px;
+}
+
+.collabGlassCard {
+  flex: 1;
+  max-width: 135px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+
+.collabGlassCard:hover {
+  transform: translateY(-3px);
+}
+
+.collabAvatarRing {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2.5px solid var(--c-honey-gold);
+  box-shadow: 0 4px 12px rgba(230, 168, 0, 0.35);
+  overflow: hidden;
+  background: #FFFFFF;
+}
+
+.collabAvatarRing img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.collabGlassCard strong {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--c-honey-dark);
+}
+
+.collabGlassCard span {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--c-honey-brown);
+  line-height: 1.2;
+}
+
+.collabHandshakeIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  z-index: 6;
+}
+
+.handshakePulse {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  animation: pulse 1.8s infinite ease-in-out;
+}
+
+.handshakeLabel {
+  font-size: 10.5px;
+  font-weight: 900;
+  color: #1A1209;
+  background: linear-gradient(135deg, #FFD54F 0%, #FFC107 100%);
+  border: 1px solid #FFA000;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+/* 🌟 4페이지: 소일이와 시작하기 */
+.startScene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.startMascotHero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: soilyiFloat 2.6s ease-in-out infinite;
+}
+
+@keyframes soilyiFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+.startGlowRing {
+  position: absolute;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 193, 7, 0.45) 0%, transparent 70%);
+  animation: pulse 2.2s infinite ease-in-out;
+}
+
+.startMascotImg {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 6px 14px rgba(230, 168, 0, 0.4));
+}
+
+.startFeatureGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.startFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--c-honey-dark);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-border);
+  padding: 5px 12px;
+  border-radius: 12px;
+}
+
+/* 📄 텍스트 컨텐츠 영역 */
+.textContentArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pageTitle {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--c-honey-dark);
+  line-height: 1.4;
+  letter-spacing: -0.4px;
+}
+
+.pageDesc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--color-text-sub);
+}
+
+.highlightBox {
+  background: var(--c-honey-cream);
+  border-left: 3.5px solid var(--c-honey-gold);
+  padding: 10px 14px;
+  border-radius: 0 12px 12px 0;
+}
+
+.highlightBox p {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-honey-brown);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 🔘 하단 액션 버튼 바 */
+.bottomActionBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.navBtnPrev {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.navBtnNext {
+  flex: 2;
+  padding: 14px 20px;
+  font-size: 14.5px;
+  font-weight: 800;
+}

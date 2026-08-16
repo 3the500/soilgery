@@ -2,15 +2,18 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import styles from './Login.module.css'
+import { useToast } from '../../context/ToastContext'
+import mascotSoilyi from '../../assets/icons/character_soilyi.png'
+import chungjuFarmImg from '../../assets/icons/chungju_farm.jpg'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -21,9 +24,12 @@ export default function Login() {
     setLoading(true)
     try {
       await login({ email: form.email, password: form.password })
+      showToast('로그인되었습니다. 환영합니다! 🌾', 'success')
       navigate('/home')
     } catch (err) {
-      setError(err.response?.data?.detail || '로그인에 실패했습니다')
+      const msg = err.response?.data?.detail || '로그인에 실패했습니다'
+      setError(msg)
+      showToast(msg, 'error')
     } finally {
       setLoading(false)
     }
@@ -31,14 +37,18 @@ export default function Login() {
 
   return (
     <div className={styles.wrapper}>
-      {/* 배경 장식 */}
+      {/* 🌾 충주 농촌 들녘 배경 사진 & 앰버 웜 글래스 오버레이 */}
+      <img src={chungjuFarmImg} alt="충주 농촌 들녘" className={styles.bgPhoto} />
+      <div className={styles.bgOverlay} />
+
+      {/* 배경 조명 장식 */}
       <div className={styles.bgOrb1} />
       <div className={styles.bgOrb2} />
 
       <div className={`glass-card ${styles.card}`}>
         {/* 로고 */}
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🌱</span>
+          <img src={mascotSoilyi} alt="소일이" className={styles.logoMascotImg} />
           <h1 className={styles.logoText}>소일거리</h1>
           <p className={styles.logoSub}>충북 청년 × 농부 AI 매칭</p>
         </div>

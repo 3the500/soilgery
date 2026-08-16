@@ -1,59 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Gowun+Dodum&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Gowun+Batang:wght@700&family=Gowun+Dodum&display=swap');
 
 /* ═══════════════════════════════════════════════════════
-   소일거리 디자인 시스템 v2 — 충주 도농융합 프리미엄
-   컨셉: 충주 사과 + 남한강 + 농촌 들녘 + 도시 미니멀
+   소일거리 디자인 시스템 v2 — 최고 가독성 Pretendard + 감성 농촌 브랜드 로고 타이포
 ═══════════════════════════════════════════════════════ */
 :root {
   /* ═══════════════════════════════════════════════════════
-     소일거리 6-Color 마스터 팔레트
-     1. 다크 포레스트 그린: #28372F | 2. 딥 그린: #224836
-     3. 헌터 그린:         #315B41 | 4. 머스터드 골드: #C48F29
-     5. 딥 러스트 브라운:   #8B3913 | 6. 웜 브라운:     #9B4B18
+     🍯 소일거리 Honeycomb (허니콤) 럭셔리 웜 라이트 테마
+     베이스: 허니 크림 (#FFFDF7 / #FAFAF5) + 순백 카드 (#FFFFFF)
+     포인트: 앰버 골드 (#E6A800 / #FFC107) + 딥 허니 브라운 (#895129)
+     텍스트: 딥 다크 웜 (#1A1209) — 최고 가독성
   ═══════════════════════════════════════════════════════ */
-  --c-dark-forest:  #28372F; /* 1번: 타이틀, 메인 텍스트, 최고 대비 */
-  --c-deep-green:   #224836; /* 2번: 메인 CTA, 청년 테마, 내 말풍선 */
-  --c-hunter-green: #315B41; /* 3번: 버튼 호버, 서브 뱃지, 지표 강조 */
-  --c-mustard-gold: #C48F29; /* 4번: 별점, EXP, 풍년지수, 추천 뱃지 */
-  --c-deep-rust:    #8B3913; /* 5번: 농부 테마, 중요 수치, 경고/취소 */
-  --c-warm-brown:   #9B4B18; /* 6번: 농촌 토양 엑센트, 서브 텍스트 */
+  --c-honey-gold:    #E6A800; /* 리치 앰버 골드 — 핵심 CTA, 메인 브랜드 */
+  --c-honey-bright:  #FFC107; /* 밝은 허니 골드 — 버튼 호버, 뱃지 */
+  --c-honey-soft:    #F9E076; /* 부드러운 허니 옐로우 — 포인트 하이라이트 */
+  --c-honey-cream:   #FFF8DC; /* 연한 크림빛 틴트 배경 */
+  --c-honey-pale:    #FFFDF2; /* 극연한 허니 틴트 */
+  
+  --c-honey-brown:   #895129; /* 딥 허니 브라운 — 서브 텍스트, 타이틀 포인트 */
+  --c-honey-dark:    #1A1209; /* 딥 웜 다크 — 본문 최고 가독성 */
 
-  /* ── Primary: 딥 그린 계열 ───────────────────────── */
-  --color-primary:       var(--c-deep-green);
-  --color-primary-light: var(--c-hunter-green);
-  --color-primary-pale:  #EDF4EF;     /* 맑은 포레스트 틴트 배경 */
-  --color-primary-dark:  var(--c-dark-forest);
+  /* ── Primary & Accent ────────────────────────────── */
+  --color-primary:       var(--c-honey-gold);
+  --color-primary-light: var(--c-honey-bright);
+  --color-primary-pale:  var(--c-honey-cream);
+  --color-primary-dark:  var(--c-honey-brown);
 
-  /* ── Accent: 머스터드 골드 & 러스트 ──────────────── */
-  --color-gold:          var(--c-mustard-gold);
-  --color-gold-pale:     #FBF5E8;     /* 따뜻한 골드 틴트 배경 */
-  --color-rust:          var(--c-deep-rust);
-  --color-rust-pale:     #FCEEE8;     /* 연한 러스트빛 배경 */
-  --color-warm-brown:    var(--c-warm-brown);
+  --color-gold:          var(--c-honey-gold);
+  --color-gold-pale:     var(--c-honey-cream);
+  --color-accent:        var(--c-honey-brown);
+  --color-accent-light:  #B5783A;
+  --color-accent-pale:   var(--c-honey-cream);
 
-  --color-accent:        var(--c-deep-rust);
-  --color-accent-light:  #A84517;
-  --color-accent-pale:   #FCEEE8;
+  /* ── Background & Surface (따뜻한 허니 크림 & 퓨어 화이트) ── */
+  --color-bg:            #FAF8F0;     /* 따뜻하고 편안한 허니 크림 배경 */
+  --color-bg-warm:       #F5EFE0;
+  --color-surface:       #FFFFFF;     /* 깨끗한 순백 카드 표면 */
+  --color-surface-2:     #FBF8EE;     /* 인풋 및 보조 컨테이너 배경 */
+  --color-border:        #EAE1CE;     /* 따뜻한 허니 그레이지 보더 */
+  --color-border-light:  #F4EEDF;
 
-  /* ── Background & Surface (따뜻한 웜 오트밀 & 퓨어 화이트) ── */
-  --color-bg:            #F7F5EE;     /* 부드러운 웜 아이보리 */
-  --color-bg-warm:       #EFECE1;
-  --color-surface:       #FFFFFF;     /* 선명하고 깨끗한 화이트 카드 */
-  --color-surface-2:     #F7F4EB;     /* 인풋/보조 배경 */
-  --color-border:        #E2DCCA;     /* 웜 그레이지 보더 */
-  --color-border-light:  #ECE7DA;
-
-  /* ── Text (가독성 최우선 세팅) ────────────────────── */
-  --color-text:          #28372F;     /* 1번 다크 포레스트 — 최고 가독성 */
-  --color-text-sub:      #5E6D64;     /* 딥 슬레이트 포레스트 서브 텍스트 */
-  --color-text-muted:    #8A968E;     /* 보조/메타 텍스트 */
+  /* ── Text (가독성 100% 최우선) ───────────────────── */
+  --color-text:          var(--c-honey-dark);  /* 딥 웜 다크 (#1A1209) */
+  --color-text-sub:      #6B5C4D;              /* 웜 슬레이트 서브 텍스트 */
+  --color-text-muted:    #9E8F7F;              /* 메타/약한 텍스트 */
 
   /* ── Legacy 지원 ────────────────────────────────── */
-  --color-primary-gold:  var(--c-mustard-gold);
-  --color-brown:         var(--c-warm-brown);
-  --color-brown-light:   #B86027;
-  --color-error:         var(--c-deep-rust);
-  --color-warning:       var(--c-mustard-gold);
+  --color-primary-gold:  var(--c-honey-gold);
+  --color-brown:         var(--c-honey-brown);
+  --color-brown-light:   #B5783A;
+  --color-error:         #E53935;
+  --color-warning:       var(--c-honey-gold);
 
   /* ── Radius ─────────────────────────────────────── */
   --radius-xs:   4px;
@@ -63,12 +60,12 @@
   --radius-xl:   26px;
   --radius-full: 9999px;
 
-  /* ── Shadows (깊이감과 입체감 부여) ───────────────── */
-  --shadow-xs:    0 1px 3px rgba(40, 55, 47, 0.05);
-  --shadow-sm:    0 2px 8px rgba(40, 55, 47, 0.08);
-  --shadow-card:  0 6px 20px rgba(40, 55, 47, 0.07), 0 2px 6px rgba(139, 57, 19, 0.03);
-  --shadow-float: 0 10px 30px rgba(34, 72, 54, 0.16), 0 3px 8px rgba(0,0,0,0.04);
-  --shadow-accent:0 4px 16px rgba(196, 143, 41, 0.25);
+  /* ── Shadows (풍요로운 앰버 골드 틴트 섀도우) ──────── */
+  --shadow-xs:    0 1px 3px rgba(26, 18, 9, 0.05);
+  --shadow-sm:    0 2px 8px rgba(26, 18, 9, 0.07);
+  --shadow-card:  0 6px 20px rgba(137, 81, 41, 0.07), 0 2px 6px rgba(230, 168, 0, 0.04);
+  --shadow-float: 0 10px 32px rgba(137, 81, 41, 0.14), 0 3px 8px rgba(0,0,0,0.03);
+  --shadow-accent:0 4px 16px rgba(230, 168, 0, 0.32);
 
   /* ── Transition ──────────────────────────────────── */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -82,16 +79,24 @@
 html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* 들녘 느낌의 미세 질감 */
+  text-rendering: optimizeLegibility;
+  line-height: 1.55;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  /* 🍯 인프런/토스 스타일의 정갈하고 깨끗한 화이트 & 크림 배경 */
+  background-color: #FAF8F0;
   background-image:
-    radial-gradient(ellipse at 20% 0%, rgba(45, 106, 52, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 100%, rgba(192, 57, 43, 0.04) 0%, transparent 60%);
+    radial-gradient(circle at 15% 0%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 10%, rgba(255, 248, 220, 0.6) 0%, transparent 60%),
+    radial-gradient(circle at 80% 90%, rgba(230, 168, 0, 0.06) 0%, transparent 50%);
+  background-attachment: fixed;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -138,52 +143,52 @@ img { display: block; max-width: 100%; }
 }
 
 /* Primary: 충주 농원 그린 */
-/* Primary: 딥 그린 CTA */
+/* Primary: 🍯 풍요로운 허니 앰버 골드 CTA */
 .btn-primary {
-  background: linear-gradient(135deg, var(--c-hunter-green) 0%, var(--c-deep-green) 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(34, 72, 54, 0.35);
+  box-shadow: 0 4px 18px rgba(230, 168, 0, 0.38);
   letter-spacing: 0.3px;
 }
 .btn-primary:hover  {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 72, 54, 0.42);
-  background: linear-gradient(135deg, #3C6D4F 0%, #295640 100%);
+  box-shadow: 0 8px 26px rgba(230, 168, 0, 0.48);
+  background: linear-gradient(135deg, #FFCD38 0%, #E69D00 100%);
 }
 .btn-primary:active { transform: scale(0.98); }
 
 /* Farmer / Warm Brown CTA */
 .btn-farmer {
-  background: linear-gradient(135deg, var(--c-warm-brown) 0%, var(--c-deep-rust) 100%);
+  background: linear-gradient(135deg, #B5783A 0%, var(--c-honey-brown) 100%);
   color: #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(139, 57, 19, 0.32);
+  box-shadow: 0 4px 16px rgba(137, 81, 41, 0.32);
 }
 .btn-farmer:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(139, 57, 19, 0.42);
+  box-shadow: 0 8px 24px rgba(137, 81, 41, 0.42);
 }
 
 /* Gold / Accent CTA */
 .btn-gold {
-  background: linear-gradient(135deg, #D49E35 0%, var(--c-mustard-gold) 100%);
+  background: linear-gradient(135deg, #FFD54F 0%, var(--c-honey-gold) 100%);
   color: #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(196, 143, 41, 0.35);
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.35);
 }
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(196, 143, 41, 0.45);
+  box-shadow: 0 8px 24px rgba(230, 168, 0, 0.45);
 }
 
 /* Outline */
 .btn-outline {
   background: var(--color-surface);
-  color: var(--c-deep-green);
-  border: 1.5px solid var(--c-hunter-green);
+  color: var(--c-honey-brown);
+  border: 1.5px solid var(--c-honey-gold);
 }
 .btn-outline:hover {
-  background: var(--color-primary-pale);
-  color: var(--c-dark-forest);
-  border-color: var(--c-deep-green);
+  background: var(--c-honey-cream);
+  color: var(--c-honey-dark);
+  border-color: var(--c-honey-gold);
   transform: translateY(-1px);
 }
 .btn-outline:active { transform: scale(0.98); }
@@ -240,11 +245,24 @@ img { display: block; max-width: 100%; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-primary-light); }
 
-/* ── 반응형 ─────────────────────────────────────────── */
+/* ── 모바일 앱 환경 최적화 (Safe Area Insets & 터치 스크롤) ──────── */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
 @media (max-width: 480px) {
   .btn { padding: 13px 18px; font-size: 14px; }
   .input-field { padding: 13px 15px; font-size: 14px; }
   .container { padding: 0 16px; }
+  
+  /* 모바일 가로 스크롤 방지 및 안정적인 뷰포트 고정 */
+  body {
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
 }
 
 /* ── 충주 사과 뱃지 ─────────────────────────────────── */

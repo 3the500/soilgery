@@ -4,7 +4,9 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--color-bg);
+  background-color: #FDF9E8;
+  background-image: radial-gradient(circle at 10% 0%, rgba(255, 193, 7, 0.14) 0%, transparent 60%),
+                    radial-gradient(circle at 90% 100%, rgba(255, 243, 196, 0.6) 0%, transparent 50%);
   position: relative;
   overflow: hidden;
 }
@@ -122,24 +124,25 @@
 
 .aiAvatar {
   font-size: 20px;
-  width: 38px;
-  height: 38px;
-  background: var(--color-primary-pale);
-  border: 1.5px solid var(--color-primary-light);
+  width: 44px;
+  height: 44px;
+  background: var(--c-honey-cream);
+  border: 1.5px solid var(--c-honey-gold);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+  box-shadow: 0 2px 8px rgba(230, 168, 0, 0.25);
   overflow: hidden;
 }
 
 .aiAvatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  background-color: transparent !important;
 }
 
 .msgContentArea {
@@ -183,11 +186,12 @@
 }
 
 .userBubble {
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
-  color: #1A1209;
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 2px rgba(137, 81, 41, 0.4);
   font-weight: 700;
   border-top-right-radius: 4px;
-  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.3);
+  box-shadow: 0 4px 14px rgba(230, 168, 0, 0.28);
 }
 
 .msgTime {
@@ -318,14 +322,14 @@
 .capsuleSubmitBtn {
   font-size: 13.5px;
   font-weight: 800;
-  color: #1A1209;
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  color: #1A1209 !important;
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   border: none;
   padding: 9px 18px;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 3px 10px rgba(45, 106, 52, 0.35);
+  box-shadow: 0 3px 10px rgba(230, 168, 0, 0.35);
 }
 
 .capsuleSubmitBtn:disabled {

@@ -36,8 +36,19 @@
   min-width: 0;
 }
 
-.logo { font-size: 17px; font-weight: 800; color: var(--color-brown); letter-spacing: -0.5px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-.logoImg { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; mix-blend-mode: multiply; }
+.logo {
+  font-family: 'Gowun Dodum', 'Gaegu', 'Gowun Batang', cursive, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--c-honey-brown);
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-shadow: 0 1px 2px rgba(137, 81, 41, 0.08);
+}
+.logoImg { width: 27px; height: 27px; object-fit: contain; mix-blend-mode: multiply; background-color: transparent !important; }
 .navIconImg { 
   width: 24px; 
   height: 24px; 
@@ -517,7 +528,8 @@
 .avatarEmoji { font-size: 40px; }
 .avatarImg {
   width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 4px;
   border-radius: 50%;
 }
 .avatarEditBadge {
@@ -549,99 +561,118 @@
   padding: 4px 16px; border-radius: var(--radius-full);
 }
 
-/* 🧑‍🌾 청년 회원 전용 (깨끗한 퓨어 화이트 & 실버 블루 믹스) */
+/* 🧑‍🌾 청년 회원 전용 (화이트 & 앰버 골드 믹스) */
 .youthUserMainCard {
   position: relative;
   overflow: hidden;
-  padding-top: 40px !important;
-  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%) !important;
-  border: 2px solid #94A3B8 !important;
-  box-shadow: 0 14px 36px rgba(148, 163, 184, 0.22) !important;
+  padding-top: 50px !important;
+  background: var(--color-surface) !important;
+  border: 2px solid var(--c-honey-soft) !important;
+  box-shadow: 0 14px 36px rgba(230, 168, 0, 0.12) !important;
 }
 
 .youthUserMainCard::before {
-  content: "청년 회원";
+  content: "🌱  소일거리 청년 회원";
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 28px;
-  background: linear-gradient(90deg, #475569 0%, #64748B 100%);
+  height: 38px;
+  background: linear-gradient(90deg, #E6A800 0%, #FFC107 50%, #E6A800 100%);
   color: #FFFFFF;
-  font-size: 11.5px;
-  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(137, 81, 41, 0.45);
+  font-size: 14.5px;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 8px rgba(230, 168, 0, 0.25);
 }
 
 .youthRoleTag {
-  background: #E2E8F0 !important;
-  color: #1E293B !important;
-  border: 1.5px solid #94A3B8 !important;
+  background: var(--c-honey-cream) !important;
+  color: var(--c-honey-brown) !important;
+  border: 1.5px solid var(--c-honey-gold) !important;
   font-weight: 800 !important;
 }
 
 .youthAvatarRing {
-  border: 3px solid #64748B !important;
-  box-shadow: 0 6px 18px rgba(100, 116, 139, 0.3) !important;
+  border: 3.5px solid var(--c-honey-gold) !important;
+  box-shadow: 0 6px 18px rgba(230, 168, 0, 0.28) !important;
 }
 
 /* 👨‍🌾 농부 회원 전용 (풍요로운 황금 옐로우 & 골드 믹스) */
 .farmerUserMainCard {
   position: relative;
   overflow: hidden;
-  padding-top: 40px !important;
-  background: linear-gradient(135deg, #FFFBEB 0%, #FEF08A 100%) !important;
-  border: 2.2px solid #EAB308 !important;
-  box-shadow: 0 14px 36px rgba(234, 179, 8, 0.28) !important;
+  padding-top: 50px !important;
+  background: var(--color-surface) !important;
+  border: 2.2px solid #E6A800 !important;
+  box-shadow: 0 14px 36px rgba(137, 81, 41, 0.12) !important;
 }
 
 .farmerUserMainCard::before {
-  content: "농부 회원";
+  content: "🌾  소일거리 농가 회원";
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 28px;
-  background: linear-gradient(90deg, #CA8A04 0%, #EAB308 100%);
+  height: 38px;
+  background: linear-gradient(90deg, #895129 0%, #B5783A 50%, #895129 100%);
   color: #FFFFFF;
-  font-size: 11.5px;
-  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(26, 18, 9, 0.5);
+  font-size: 14.5px;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 8px rgba(137, 81, 41, 0.25);
 }
 
 .farmerRoleTag {
-  background: #FACC15 !important;
+  background: #FFF3C4 !important;
   color: #713F12 !important;
-  border: 1.5px solid #CA8A04 !important;
+  border: 1.5px solid #E6A800 !important;
   font-weight: 800 !important;
 }
 
 .farmerAvatarRing {
-  border: 3px solid #EAB308 !important;
-  box-shadow: 0 6px 18px rgba(234, 179, 8, 0.38) !important;
+  border: 3.5px solid #E6A800 !important;
+  box-shadow: 0 6px 18px rgba(230, 168, 0, 0.38) !important;
 }
 
 .recommendedTaskTag {
-  font-size: 12px; font-weight: 700;
-  background: #FFF3C4;
-  color: #8B5129;
-  border: 1px solid rgba(255, 193, 7, 0.6);
-  padding: 4px 14px; border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFF9DB 0%, #FFE082 100%);
+  color: #5C3806 !important;
+  border: 1.5px solid #FFC107;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
   white-space: nowrap;
   font-family: inherit;
-  cursor: default;
+  box-shadow: 0 3px 10px rgba(230, 168, 0, 0.22);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
 }
 
 button.recommendedTaskTag {
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: recTaskPulse 3s infinite ease-in-out;
 }
 
 button.recommendedTaskTag:hover {
-  background: var(--color-primary-light);
-  color: #1A1209;
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(135deg, #FFE082 0%, #FFB300 100%);
+  color: #211100 !important;
+  border-color: #FFA000;
+  box-shadow: 0 6px 16px rgba(230, 168, 0, 0.38);
+}
+
+@keyframes recTaskPulse {
+  0%, 100% { box-shadow: 0 3px 10px rgba(230, 168, 0, 0.22); }
+  50%      { box-shadow: 0 4px 16px rgba(230, 168, 0, 0.45); }
 }
 
 /* 🏆 럭셔리 레벨 카드 & 경험치(EXP) 게이지바 디자인 */
@@ -1041,16 +1072,16 @@ button.recommendedTaskTag:hover {
 }
 
 .aiMatchingHeroIconArea {
-  width: 76px;
-  height: 76px;
+  width: 96px;
+  height: 96px;
   background: linear-gradient(135deg, #FFF8DC 0%, #FFF3C4 100%);
-  border: 2px solid var(--color-primary-light);
+  border: 2.5px solid var(--c-honey-bright);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 4px;
-  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+  box-shadow: 0 8px 24px rgba(230, 168, 0, 0.35);
   animation: heroFloat 3.5s ease-in-out infinite;
 }
 
@@ -1060,11 +1091,12 @@ button.recommendedTaskTag:hover {
 }
 
 .aiMatchingHeroMascotImg {
-  width: 62px;
-  height: 62px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
-  border-radius: 50%;
-  filter: drop-shadow(0 4px 8px rgba(40, 55, 47, 0.15));
+  mix-blend-mode: multiply;
+  background-color: transparent !important;
+  filter: drop-shadow(0 4px 10px rgba(137, 81, 41, 0.2));
 }
 
 .aiMatchingHeroTitle {
@@ -1130,42 +1162,51 @@ button.recommendedTaskTag:hover {
 }
 
 /* 🌟 매칭 활성/비활성 일반 규격 액션 버튼 */
+/* 🌟 매칭 활성/비활성 일반 규격 액션 버튼 (허니콤 웜 골드/브라운 고대비) */
 .seekingActiveBtn {
   width: 100%;
   padding: 16px 24px;
-  background: linear-gradient(135deg, var(--c-hunter-green) 0%, var(--c-deep-green) 100%);
-  color: #FFFFFF !important;
-  font-size: 15.5px;
-  font-weight: 800;
+  background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
+  color: #3D2206 !important;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.2px;
   border-radius: var(--radius-full);
-  box-shadow: 0 4px 18px rgba(34, 72, 54, 0.35);
+  box-shadow: 0 4px 18px rgba(230, 168, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
   transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .seekingActiveBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(34, 72, 54, 0.45);
-  background: linear-gradient(135deg, #3C6D4F 0%, #295640 100%);
+  box-shadow: 0 8px 26px rgba(230, 168, 0, 0.45);
+  background: linear-gradient(135deg, #FFE082 0%, #FFA000 100%);
+  color: #211100 !important;
 }
 
 .seekingPausedBtn {
   width: 100%;
   padding: 16px 24px;
   background: var(--color-surface);
-  color: var(--c-dark-forest) !important;
+  color: var(--c-honey-brown) !important;
   font-size: 15.5px;
   font-weight: 800;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--c-honey-gold);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .seekingPausedBtn:hover {
   transform: translateY(-2px);
-  border-color: var(--c-deep-green);
-  background: var(--color-primary-pale);
-  color: var(--c-deep-green) !important;
+  border-color: var(--c-honey-gold);
+  background: var(--c-honey-cream);
+  color: var(--c-honey-dark) !important;
 }
 
 .heroActionButton {
@@ -1173,6 +1214,78 @@ button.recommendedTaskTag:hover {
   padding: 16px 24px;
   font-size: 15.5px;
   font-weight: 800;
+}
+
+/* 🌟 자소설닷컴 스타일: 빠른 큐레이션 네비게이션 그리드 */
+.quickCurationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.quickCurationTitle {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--c-honey-brown);
+  letter-spacing: -0.3px;
+}
+
+.quickCurationGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.quickCurationItem {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 16px;
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quickCurationItem:hover {
+  transform: translateY(-2px);
+  border-color: var(--c-honey-gold);
+  box-shadow: var(--shadow-card);
+  background: var(--c-honey-cream);
+}
+
+.quickCurationIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.quickCurationItem:hover .quickCurationIconBox {
+  transform: scale(1.08);
+}
+
+.qcGreen  { background: #DCFCE7; border: 1px solid #BBF7D0; }
+.qcGold   { background: #FEF3C7; border: 1px solid #FDE68A; }
+.qcBlue   { background: #E0F2FE; border: 1px solid #BAE6FD; }
+.qcOrange { background: #FFEDD5; border: 1px solid #FED7AA; }
+
+.quickCurationLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  line-height: 1.25;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
 }
 
 /* ── Empty State CTA 영역 ────────────── */

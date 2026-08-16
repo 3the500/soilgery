@@ -10,6 +10,7 @@ import Matching from './pages/Matching/Matching'
 import Support from './pages/Support/Support'
 import Chat from './pages/Chat/Chat'
 import MatchingGuide from './pages/MatchingGuide/MatchingGuide'
+import About from './pages/About/About'
 
 // 로그인 안 했으면 /login으로 리다이렉트
 function PrivateRoute({ children }) {
@@ -37,6 +38,7 @@ function AppRoutes() {
       <Route path="/matching" element={<PrivateRoute><Matching /></PrivateRoute>} />
       <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
       <Route path="/guide/matching" element={<PrivateRoute><MatchingGuide /></PrivateRoute>} />
+      <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
 
       {/* 채팅 관련 라우트 추가 */}
       <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />

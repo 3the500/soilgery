@@ -12,7 +12,7 @@
 .bgOrb1 {
   position: fixed; top: -100px; right: -60px;
   width: 340px; height: 340px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 106, 52, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(230, 168, 0, 0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -37,7 +37,7 @@
 .header { text-align: center; margin-bottom: 32px; }
 .headerIcon {
   font-size: 38px; display: block; margin-bottom: 8px;
-  filter: drop-shadow(0 4px 10px rgba(45, 106, 52, 0.3));
+  filter: drop-shadow(0 4px 10px rgba(230, 168, 0, 0.3));
 }
 .header h1 {
   font-size: 24px; font-weight: 900;
@@ -50,16 +50,16 @@
 
 /* ?�원가??버튼 ??충주 ?�원 그린 */
 .form button[type="submit"] {
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #FEFCF8;
   font-weight: 700;
   letter-spacing: 0.3px;
-  box-shadow: 0 4px 18px rgba(45, 106, 52, 0.38);
+  box-shadow: 0 4px 18px rgba(230, 168, 0, 0.38);
   transition: all var(--transition);
 }
 .form button[type="submit"]:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(45, 106, 52, 0.45);
+  box-shadow: 0 8px 28px rgba(230, 168, 0, 0.45);
 }
 
 /* ??�� ?�택 */
@@ -97,10 +97,41 @@
 .roleCardActiveYouth {
   border-color: var(--color-primary) !important;
   background: var(--color-primary-pale) !important;
-  box-shadow: 0 0 0 3px rgba(45, 106, 52, 0.2);
+  box-shadow: 0 0 0 3px rgba(230, 168, 0, 0.2);
 }
 
-.roleEmoji { font-size: 30px; margin-bottom: 2px; }
+.headerMascotImg {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+  display: block;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 4px 12px rgba(230, 168, 0, 0.3));
+}
+
+.roleAvatarRing {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--c-honey-gold);
+  background: var(--c-honey-cream);
+  box-shadow: 0 4px 10px rgba(137, 81, 41, 0.12);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.roleAvatarRing img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  background-color: transparent;
+}
+
 .roleCard strong { font-size: 15px; font-weight: 700; color: var(--color-text); }
 .roleDesc { font-size: 11.5px; color: var(--color-text-muted); text-align: center; }
 
@@ -125,7 +156,7 @@
   margin-left: 4px;
   padding: 3px 10px;
   background: var(--color-primary-pale);
-  border: 1px solid rgba(45, 106, 52, 0.3);
+  border: 1px solid rgba(230, 168, 0, 0.3);
   border-radius: var(--radius-full);
   display: inline-block;
   transition: all 0.2s;

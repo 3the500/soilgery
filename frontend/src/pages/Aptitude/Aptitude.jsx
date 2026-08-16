@@ -5,6 +5,7 @@ import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Aptitude.module.css'
+import mascotSoilyi from '../../assets/icons/character_soilyi.png'
 import {
   Sparkles,
   Sprout,
@@ -272,7 +273,9 @@ export default function Aptitude() {
 
         <div className={styles.container}>
           <div className={`glass-card ${styles.introCard}`}>
-            <div className={styles.introIconBadge}>🌱</div>
+            <div className={styles.introIconBadge}>
+              <img src={mascotSoilyi} alt="소일이" style={{ width: '64px', height: '64px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+            </div>
             <h1 className={styles.introTitle}>맞춤 적성검사 안내</h1>
             <p className={styles.introDesc}>
               왜 적성검사를 진행하나요? 🤔

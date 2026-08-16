@@ -1,4 +1,4 @@
-.wrapper {
+﻿.wrapper {
   min-height: 100vh;
   background-color: var(--color-bg);
   background-image:
@@ -18,7 +18,7 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 106, 52, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(230, 168, 0, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -301,7 +301,7 @@
 }
 
 .navBtnNext {
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #1A1209;
   border: none;
   font-size: 14px;
@@ -310,7 +310,7 @@
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.35);
+  box-shadow: 0 4px 14px rgba(230, 168, 0, 0.35);
 }
 
 .navBtnNext:hover {
@@ -495,17 +495,17 @@
   font-size: 15px;
   font-weight: 800;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  background: linear-gradient(135deg, var(--c-honey-bright) 0%, var(--c-honey-gold) 100%);
   color: #1A1209;
   border: none;
-  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.35);
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.35);
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .startBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(45, 106, 52, 0.45);
+  box-shadow: 0 6px 20px rgba(230, 168, 0, 0.45);
 }
 
 .reTestBtn {
