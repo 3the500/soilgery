@@ -1,49 +1,97 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Gowun+Dodum&display=swap');
 
-/* ── Honeycomb 토스풍 미니멀 디자인 시스템 ────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   소일거리 디자인 시스템 v2 — 충주 도농융합 프리미엄
+   컨셉: 충주 사과 + 남한강 + 농촌 들녘 + 도시 미니멀
+═══════════════════════════════════════════════════════ */
 :root {
-  --color-primary:       #E6A800;     /* 짙은 Amber Gold — 주 포인트 */
-  --color-primary-light: #FFC107;     /* Honeycomb 노랑 — 버튼/강조 */
-  --color-primary-pale:  #FFF8DC;     /* 크림 연노랑 — 배지/호버 배경 */
-  --color-accent:        #F9E076;     /* 라이트 골드 — 보조 accent */
+  /* ═══════════════════════════════════════════════════════
+     소일거리 6-Color 마스터 팔레트
+     1. 다크 포레스트 그린: #28372F | 2. 딥 그린: #224836
+     3. 헌터 그린:         #315B41 | 4. 머스터드 골드: #C48F29
+     5. 딥 러스트 브라운:   #8B3913 | 6. 웜 브라운:     #9B4B18
+  ═══════════════════════════════════════════════════════ */
+  --c-dark-forest:  #28372F; /* 1번: 타이틀, 메인 텍스트, 최고 대비 */
+  --c-deep-green:   #224836; /* 2번: 메인 CTA, 청년 테마, 내 말풍선 */
+  --c-hunter-green: #315B41; /* 3번: 버튼 호버, 서브 뱃지, 지표 강조 */
+  --c-mustard-gold: #C48F29; /* 4번: 별점, EXP, 풍년지수, 추천 뱃지 */
+  --c-deep-rust:    #8B3913; /* 5번: 농부 테마, 중요 수치, 경고/취소 */
+  --c-warm-brown:   #9B4B18; /* 6번: 농촌 토양 엑센트, 서브 텍스트 */
 
-  --color-bg:            #FAFAF5;     /* 따뜻한 크림 미색 배경 */
-  --color-surface:       #FFFFFF;     /* 카드 순백 */
-  --color-surface-2:     #F5F2E8;     /* 보조 서피스 — 인풋 배경 */
-  --color-border:        #E2D9C3;     /* 선명하고 따뜻한 베이지 보더 */
+  /* ── Primary: 딥 그린 계열 ───────────────────────── */
+  --color-primary:       var(--c-deep-green);
+  --color-primary-light: var(--c-hunter-green);
+  --color-primary-pale:  #EDF4EF;     /* 맑은 포레스트 틴트 배경 */
+  --color-primary-dark:  var(--c-dark-forest);
 
-  --color-text:          #1A1209;     /* 가독성 높은 다크 텍스트 */
-  --color-text-sub:      #7A6E65;     /* 보조 텍스트 — 웜 그레이브라운 */
-  --color-error:         #E53935;
-  --color-warning:       #F9E076;
+  /* ── Accent: 머스터드 골드 & 러스트 ──────────────── */
+  --color-gold:          var(--c-mustard-gold);
+  --color-gold-pale:     #FBF5E8;     /* 따뜻한 골드 틴트 배경 */
+  --color-rust:          var(--c-deep-rust);
+  --color-rust-pale:     #FCEEE8;     /* 연한 러스트빛 배경 */
+  --color-warm-brown:    var(--c-warm-brown);
 
-  --color-brown:         #895129;     /* 브랜드 브라운 — 로고/헤더 포인트 */
-  --color-brown-light:   #B5783A;
+  --color-accent:        var(--c-deep-rust);
+  --color-accent-light:  #A84517;
+  --color-accent-pale:   #FCEEE8;
 
+  /* ── Background & Surface (따뜻한 웜 오트밀 & 퓨어 화이트) ── */
+  --color-bg:            #F7F5EE;     /* 부드러운 웜 아이보리 */
+  --color-bg-warm:       #EFECE1;
+  --color-surface:       #FFFFFF;     /* 선명하고 깨끗한 화이트 카드 */
+  --color-surface-2:     #F7F4EB;     /* 인풋/보조 배경 */
+  --color-border:        #E2DCCA;     /* 웜 그레이지 보더 */
+  --color-border-light:  #ECE7DA;
+
+  /* ── Text (가독성 최우선 세팅) ────────────────────── */
+  --color-text:          #28372F;     /* 1번 다크 포레스트 — 최고 가독성 */
+  --color-text-sub:      #5E6D64;     /* 딥 슬레이트 포레스트 서브 텍스트 */
+  --color-text-muted:    #8A968E;     /* 보조/메타 텍스트 */
+
+  /* ── Legacy 지원 ────────────────────────────────── */
+  --color-primary-gold:  var(--c-mustard-gold);
+  --color-brown:         var(--c-warm-brown);
+  --color-brown-light:   #B86027;
+  --color-error:         var(--c-deep-rust);
+  --color-warning:       var(--c-mustard-gold);
+
+  /* ── Radius ─────────────────────────────────────── */
+  --radius-xs:   4px;
   --radius-sm:   8px;
   --radius-md:   14px;
-  --radius-lg:   22px;
-  --radius-xl:   30px;
+  --radius-lg:   20px;
+  --radius-xl:   26px;
   --radius-full: 9999px;
 
-  --shadow-card:  0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
-  --shadow-float: 0 16px 48px rgba(139, 81, 41, 0.12), 0 2px 8px rgba(0, 0, 0, 0.03);
-  --shadow-glow:  0 0 20px rgba(255, 193, 7, 0.25);
+  /* ── Shadows (깊이감과 입체감 부여) ───────────────── */
+  --shadow-xs:    0 1px 3px rgba(40, 55, 47, 0.05);
+  --shadow-sm:    0 2px 8px rgba(40, 55, 47, 0.08);
+  --shadow-card:  0 6px 20px rgba(40, 55, 47, 0.07), 0 2px 6px rgba(139, 57, 19, 0.03);
+  --shadow-float: 0 10px 30px rgba(34, 72, 54, 0.16), 0 3px 8px rgba(0,0,0,0.04);
+  --shadow-accent:0 4px 16px rgba(196, 143, 41, 0.25);
 
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ── Transition ──────────────────────────────────── */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition:      0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── 리셋 ────────────────────────────────────────── */
+/* ── 리셋 ────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
-  font-family: 'Noto Sans KR', 'Inter', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* 들녘 느낌의 미세 질감 */
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(45, 106, 52, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(192, 57, 43, 0.04) 0%, transparent 60%);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -51,7 +99,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 input, textarea, select { font-family: inherit; }
 img { display: block; max-width: 100%; }
 
-/* ── 레이아웃 유틸 ────────────────────────────────── */
+/* 커스텀 생성 아이콘의 흰색 네모 배경을 투명하게 융합 */
+.icon-transparent,
+[class*="navIconImg"],
+[class*="statIcon"] img,
+[class*="taskIcon"] img,
+[class*="logoImg"] {
+  mix-blend-mode: multiply;
+  background-color: transparent !important;
+}
+
+/* ── 레이아웃 ───────────────────────────────────────── */
 .container {
   width: 100%;
   max-width: 480px;
@@ -59,19 +117,10 @@ img { display: block; max-width: 100%; }
   padding: 0 20px;
 }
 
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
 
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* ── 공통 버튼 (미세 그라데이션 적용) ───────────────── */
+/* ── 공통 버튼 ──────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -82,47 +131,76 @@ img { display: block; max-width: 100%; }
   border-radius: var(--radius-full);
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Primary: 충주 농원 그린 */
+/* Primary: 딥 그린 CTA */
 .btn-primary {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
-  color: #1A1209;
-  box-shadow: 0 4px 18px rgba(245, 176, 0, 0.35);
+  background: linear-gradient(135deg, var(--c-hunter-green) 0%, var(--c-deep-green) 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(34, 72, 54, 0.35);
+  letter-spacing: 0.3px;
 }
-.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 176, 0, 0.45); }
+.btn-primary:hover  {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 72, 54, 0.42);
+  background: linear-gradient(135deg, #3C6D4F 0%, #295640 100%);
+}
 .btn-primary:active { transform: scale(0.98); }
 
+/* Farmer / Warm Brown CTA */
+.btn-farmer {
+  background: linear-gradient(135deg, var(--c-warm-brown) 0%, var(--c-deep-rust) 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(139, 57, 19, 0.32);
+}
+.btn-farmer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 57, 19, 0.42);
+}
+
+/* Gold / Accent CTA */
+.btn-gold {
+  background: linear-gradient(135deg, #D49E35 0%, var(--c-mustard-gold) 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(196, 143, 41, 0.35);
+}
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(196, 143, 41, 0.45);
+}
+
+/* Outline */
 .btn-outline {
-  background: var(--color-primary-pale);
-  color: var(--color-brown);
-  border: 1.5px solid rgba(255, 193, 7, 0.5);
+  background: var(--color-surface);
+  color: var(--c-deep-green);
+  border: 1.5px solid var(--c-hunter-green);
 }
 .btn-outline:hover {
-  background: var(--color-primary-light);
-  color: #1A1209;
-  border-color: var(--color-primary-light);
+  background: var(--color-primary-pale);
+  color: var(--c-dark-forest);
+  border-color: var(--c-deep-green);
   transform: translateY(-1px);
 }
 .btn-outline:active { transform: scale(0.98); }
 
-/* ── 공통 인풋 (패딩, 포커스링, 대비 강화) ───────────── */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* ── 인풋 ───────────────────────────────────────────── */
+.input-group { display: flex; flex-direction: column; gap: 7px; }
 .input-group label {
-  font-size: 13.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   color: var(--color-text-sub);
+  letter-spacing: 0.2px;
 }
 .input-field {
   width: 100%;
-  padding: 15px 18px;
-  background: var(--color-surface-2);
-  border: 1.5px solid #E2D9C3;
+  padding: 14px 16px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text);
   font-size: 15px;
@@ -131,87 +209,72 @@ img { display: block; max-width: 100%; }
 }
 .input-field:focus {
   border-color: var(--color-primary-light);
-  box-shadow: 0 0 0 3.5px rgba(255, 193, 7, 0.2);
+  box-shadow: 0 0 0 3px rgba(62, 139, 70, 0.18);
 }
-.input-field::placeholder { color: #9E9080; }
+.input-field::placeholder { color: var(--color-text-muted); }
 
-/* ── 카드 ─────────────────────────────────────────── */
+/* ── 카드 ───────────────────────────────────────────── */
 .glass-card {
   background: var(--color-surface);
-  border: 1px solid rgba(237, 232, 213, 0.8);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
+  /* 미세 질감 */
+  background-image: linear-gradient(135deg, rgba(255,252,248,1) 0%, rgba(247,243,236,0.6) 100%);
 }
 
-/* ── 에러 메시지 ───────────────────────────────────── */
+/* ── 에러 ───────────────────────────────────────────── */
 .error-msg {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--color-error);
+  color: var(--color-accent);
   padding: 12px 16px;
-  background: rgba(229, 57, 53, 0.08);
+  background: var(--color-accent-pale);
   border-radius: var(--radius-sm);
-  border-left: 3.5px solid var(--color-error);
+  border-left: 3px solid var(--color-accent);
 }
 
-/* ── 스크롤바 ──────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: #DCD4C0; border-radius: 3px; }
+/* ── 스크롤바 ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-primary-light); }
 
-/* 📱 모바일 디바이스 최적화 (Galaxy S25+, iPhone 등 모바일 핏) */
+/* ── 반응형 ─────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .btn {
-    padding: 12px 18px;
-    font-size: 14px;
-  }
-  .input-field {
-    padding: 12px 15px;
-    font-size: 14px;
-  }
-  .container {
-    padding: 0 16px;
-  }
+  .btn { padding: 13px 18px; font-size: 14px; }
+  .input-field { padding: 13px 15px; font-size: 14px; }
+  .container { padding: 0 16px; }
 }
 
-/* 🍎🌾 충주 명품 사과 & 농원 들녘 햇살 꾸안꾸 그래픽 시스템 */
-.shine-effect {
-  position: relative;
-  overflow: hidden;
+/* ── 충주 사과 뱃지 ─────────────────────────────────── */
+.badge-chungju-apple {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, var(--color-accent-pale) 0%, #F8D7D4 100%);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.3px;
 }
+
+/* ── 빛 효과 ─────────────────────────────────────────── */
+.shine-effect { position: relative; overflow: hidden; }
 .shine-effect::after {
   content: '';
   position: absolute;
   top: -50%; left: -60%;
   width: 50%; height: 200%;
-  background: linear-gradient(
-    60deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(60deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0) 100%);
   transform: rotate(30deg);
-  animation: sweetShine 4.5s infinite ease-in-out;
+  animation: sweetShine 5s infinite ease-in-out;
   pointer-events: none;
 }
-
 @keyframes sweetShine {
   0% { left: -60%; }
   25%, 100% { left: 140%; }
-}
-
-/* 🍎 충주 사과 파스텔 미니 뱃지 */
-.badge-chungju-apple {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: linear-gradient(135deg, #FFF0F0 0%, #FFE0E0 100%);
-  border: 1px solid #FFB2B2;
-  color: #D32F2F;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 6px rgba(211, 47, 47, 0.12);
 }

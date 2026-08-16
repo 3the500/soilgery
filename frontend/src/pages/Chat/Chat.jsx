@@ -4,18 +4,25 @@ import { useAuth } from '../../store/AuthContext'
 import api, { chatAPI, reviewAPI, API_BASE_URL } from '../../api/index'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Chat.module.css'
-import avatarYouth from '../../assets/icons/avatar_youth.jpg'
-import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
+import {
+  Zap,
+  Dumbbell,
+  Brain,
+  Flame,
+  Users,
+  Coins
+} from 'lucide-react'
+import avatarYouth from '../../assets/icons/avatar_youth.png'
+import avatarFarmer from '../../assets/icons/avatar_farmer.png'
 
 // 👤 [피드백 반영] 상대방 정보 보기 모달에 표시할 매칭 스탯 라벨
-// (Profile.jsx의 STAT_DISPLAY와 동일한 항목/순서로 맞춰 통일감 있게 표시)
 const PARTNER_STAT_DISPLAY = [
-  { field: 'stamina', label: '체력', icon: '⚡' },
-  { field: 'strength', label: '근력', icon: '💪' },
-  { field: 'intelligence', label: '숙련도', icon: '🧠' },
-  { field: 'grit', label: '성실성', icon: '🔥' },
-  { field: 'personality', label: '협동심', icon: '🤝' },
-  { field: 'wage_pref', label: '급여민감도', icon: '💰' },
+  { field: 'stamina', label: '체력', Icon: Zap, bg: '#FEF3C7', color: '#D97706' },
+  { field: 'strength', label: '근력', Icon: Dumbbell, bg: '#FCEEE8', color: '#8B3913' },
+  { field: 'intelligence', label: '숙련도', Icon: Brain, bg: '#EBF4FA', color: '#2563EB' },
+  { field: 'grit', label: '성실성', Icon: Flame, bg: '#FEE2E2', color: '#DC2626' },
+  { field: 'personality', label: '협동심', Icon: Users, bg: '#EDF4EF', color: '#224836' },
+  { field: 'wage_pref', label: '급여민감도', Icon: Coins, bg: '#FFFBEB', color: '#C48F29' },
 ]
 
 // 🖼️🎬 [피드백 반영] 채팅 이미지/동영상 공유 - 서버(chat.py) 정책과 동일한 클라이언트 측 사전 검증
@@ -322,7 +329,7 @@ export default function Chat() {
           style={{ cursor: partner ? 'pointer' : 'default' }}
         >
           <img
-            src={partner?.partner_profile_image || (partner?.partner_role === '농부' ? '/images/farmer.png' : '/images/chung.png')}
+            src={partner?.partner_profile_image || (partner?.partner_role === '농부' ? avatarFarmer : avatarYouth)}
             alt={partner?.partner_name || '상대방 프로필'}
             className={styles.partnerAvatarImg}
           />
@@ -541,7 +548,7 @@ export default function Chat() {
         <div className={styles.modalOverlay} onClick={() => setShowPartnerInfoModal(false)}>
           <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
             <img
-              src={partner.partner_profile_image || (partner.partner_role === '농부' ? '/images/farmer.png' : '/images/chung.png')}
+              src={partner.partner_profile_image || (partner.partner_role === '농부' ? avatarFarmer : avatarYouth)}
               alt={partner.partner_name || '상대방 프로필'}
               className={styles.partnerInfoAvatarImg}
             />
@@ -596,12 +603,20 @@ export default function Chat() {
                         items={PARTNER_STAT_DISPLAY.map((s) => ({ label: s.label, value: partner.partner_stats[s.field] ?? 0 }))}
                       />
                       <div className={styles.partnerStatsNumeric}>
-                        {PARTNER_STAT_DISPLAY.map((s) => (
-                          <div key={s.field} className={styles.partnerStatBox}>
-                            <span>{s.icon} {s.label}</span>
-                            <strong>{partner.partner_stats[s.field] ?? 0}</strong>
-                          </div>
-                        ))}
+                        {PARTNER_STAT_DISPLAY.map((s) => {
+                          const IconComp = s.Icon
+                          return (
+                            <div key={s.field} className={styles.partnerStatBox}>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                <IconComp size={15} color={s.color} strokeWidth={2.4} />
+                                {s.label}
+                              </span>
+                              <strong style={{ color: (partner.partner_stats[s.field] ?? 0) > 0 ? s.color : 'inherit' }}>
+                                {partner.partner_stats[s.field] ?? 0}
+                              </strong>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   )}

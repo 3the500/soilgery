@@ -37,8 +37,15 @@
 }
 
 .logo { font-size: 17px; font-weight: 800; color: var(--color-brown); letter-spacing: -0.5px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-.logoImg { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
-.navIconImg { width: 24px; height: 24px; object-fit: contain; display: block; filter: none; }
+.logoImg { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; mix-blend-mode: multiply; }
+.navIconImg { 
+  width: 24px; 
+  height: 24px; 
+  object-fit: contain; 
+  display: block; 
+  mix-blend-mode: multiply; 
+  background-color: transparent;
+}
 
 
 .userLoginNotice {
@@ -942,15 +949,54 @@ button.recommendedTaskTag:hover {
 }
 
 .statBox {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 4px; padding: 14px 8px;
-  background: var(--color-surface-2);
-  border: 1.5px solid #E2D9C3;
-  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
 }
-.statIcon { font-size: 22px; }
-.statName { font-size: 11.5px; color: var(--color-text-sub); font-weight: 600; }
-.statVal  { font-size: 18px; font-weight: 800; color: var(--color-brown); }
+
+.statBox:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.statIconWrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(40, 55, 47, 0.08);
+}
+
+.statIconImg {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.statName {
+  font-size: 12.5px;
+  color: var(--c-dark-forest);
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.statVal {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
 
 /* ── ⚡ 중앙 대형 AI 자동매칭 히어로 섹션 ───────────── */
 .aiMatchingHeroSection {
@@ -1013,8 +1059,12 @@ button.recommendedTaskTag:hover {
   50%       { transform: translateY(-6px); }
 }
 
-.aiMatchingHeroIcon {
-  font-size: 42px;
+.aiMatchingHeroMascotImg {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 4px 8px rgba(40, 55, 47, 0.15));
 }
 
 .aiMatchingHeroTitle {
@@ -1079,69 +1129,50 @@ button.recommendedTaskTag:hover {
   opacity: 0.85;
 }
 
-/* 🔴 화면 1/3을 차지하고 중앙에 아이콘 이미지 하나만 배치된 대형 메인 버튼 */
-.giantSeekingToggleBtn {
+/* 🌟 매칭 활성/비활성 일반 규격 액션 버튼 */
+.seekingActiveBtn {
   width: 100%;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-xl);
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  outline: none;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--c-hunter-green) 0%, var(--c-deep-green) 100%);
+  color: #FFFFFF !important;
+  font-size: 15.5px;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 18px rgba(34, 72, 54, 0.35);
+  transition: all var(--transition);
 }
 
-.giantSeekingActive {
-  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-  border: 4px solid #81C784;
-  color: #ffffff;
-  box-shadow: 0 18px 50px rgba(46, 125, 50, 0.45), 0 4px 14px rgba(0, 0, 0, 0.1);
+.seekingActiveBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(34, 72, 54, 0.45);
+  background: linear-gradient(135deg, #3C6D4F 0%, #295640 100%);
 }
 
-.giantSeekingActive:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 22px 58px rgba(46, 125, 50, 0.55);
+.seekingPausedBtn {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--color-surface);
+  color: var(--c-dark-forest) !important;
+  font-size: 15.5px;
+  font-weight: 800;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
 }
 
-.giantSeekingActive:active {
-  transform: translateY(0) scale(0.98);
+.seekingPausedBtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--c-deep-green);
+  background: var(--color-primary-pale);
+  color: var(--c-deep-green) !important;
 }
 
-.giantSeekingPaused {
-  background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
-  border: 4px solid #9E9E9E;
-  color: #424242;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.giantSeekingPaused:hover {
-  transform: translateY(-4px) scale(1.015);
-  background: linear-gradient(135deg, #D6D6D6 0%, #AEAEAE 100%);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.15);
-}
-
-.giantSeekingPaused:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.giantSeekingSingleIcon {
-  font-size: 84px;
-  font-weight: 900;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulseSingleIcon 2.2s ease-in-out infinite;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2));
-}
-
-@keyframes pulseSingleIcon {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.16); }
+.heroActionButton {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 15.5px;
+  font-weight: 800;
 }
 
 /* ── Empty State CTA 영역 ────────────── */
@@ -1702,22 +1733,22 @@ button.recommendedTaskTag:hover {
   color: #1A1209;
 }
 
-/* 📱 5대 고정 하단 탭 바 스타일 */
+/* 📱 5대 고정 하단 탭 바 스타일 (6-Color 프리미엄 & 가시성 극대화) */
 .bottomNav {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   max-width: 480px;
   margin: 0 auto;
-  height: 64px;
-  background: rgba(250, 250, 245, 0.96);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(226, 217, 195, 0.85);
+  height: 68px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px;
+  padding: 0 8px;
   z-index: 150;
-  box-shadow: 0 -4px 20px rgba(139, 81, 41, 0.06);
+  box-shadow: 0 -6px 24px rgba(40, 55, 47, 0.08);
 }
 
 .bottomNavItem {
@@ -1725,49 +1756,71 @@ button.recommendedTaskTag:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   flex: 1;
   height: 100%;
   color: var(--color-text-sub);
   position: relative;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
   border: none;
+  border-radius: var(--radius-md);
+  padding: 6px 0;
+}
+
+.bottomNavItem:hover {
+  color: var(--c-deep-green);
 }
 
 .bottomNavIcon {
-  font-size: 19px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bottomNavIcon img,
+.navIconImg {
+  width: 26px !important;
+  height: 26px !important;
+  object-fit: contain;
+  mix-blend-mode: multiply;
   transition: transform 0.2s;
 }
 
 .bottomNavLabel {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
   letter-spacing: -0.3px;
+  color: inherit;
+  transition: color 0.2s;
 }
 
+/* 활성화된 탭: 딥 그린 컬러 & 알약형 인디케이터 */
 .bottomNavActive {
-  color: var(--color-brown);
+  color: var(--c-deep-green) !important;
 }
 
 .bottomNavActive .bottomNavIcon {
-  transform: translateY(-2px) scale(1.15);
+  transform: translateY(-2px) scale(1.18);
 }
 
 .bottomNavActive .bottomNavLabel {
-  font-weight: 800;
-  color: var(--color-brown);
+  font-weight: 900;
+  color: var(--c-deep-green) !important;
 }
 
 .bottomNavActive::after {
   content: '';
   position: absolute;
-  bottom: 3px;
-  width: 4px;
-  height: 4px;
-  background: var(--color-brown);
-  border-radius: 50%;
+  bottom: 4px;
+  width: 22px;
+  height: 3.5px;
+  background: linear-gradient(90deg, var(--c-hunter-green) 0%, var(--c-deep-green) 100%);
+  border-radius: var(--radius-full);
 }
 
 .bottomNavBadge {

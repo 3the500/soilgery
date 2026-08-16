@@ -4,19 +4,28 @@ import { matchingAPI, aptitudeAPI } from '../../api/index'
 import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import styles from './Matching.module.css'
-import taskHarvest from '../../assets/icons/task_harvest.jpg'
-import taskEquipment from '../../assets/icons/task_equipment.jpg'
-import taskTransport from '../../assets/icons/task_transport.jpg'
-import avatarYouth from '../../assets/icons/avatar_youth.jpg'
-import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
+import {
+  Apple,
+  Tractor,
+  Package,
+  Wrench,
+  Boxes,
+  Factory,
+  Sparkles,
+  MapPin,
+  Clock,
+  ArrowRight
+} from 'lucide-react'
+import avatarYouth from '../../assets/icons/avatar_youth.png'
+import avatarFarmer from '../../assets/icons/avatar_farmer.png'
 
 const TASK_CARDS = [
-  { value: '밭일', img: taskHarvest, emoji: '🍎', title: '밭일 · 과수 수확', desc: '수확, 파종 등 기본 농작업' },
-  { value: '농기구 운용', img: taskEquipment, emoji: '🚜', title: '농기구 운용', desc: '트랙터, 관리기 등 농기계 조작' },
-  { value: '물건 나르기', img: taskTransport, emoji: '📦', title: '운반 · 농가 정리', desc: '수확물 적재, 창고 정리' },
-  { value: '시설정비', img: null, emoji: '🔧', title: '시설정비', desc: '하우스, 농기자재 등 시설 보수' },
-  { value: '선별 및 포장', img: null, emoji: '🧺', title: '선별 및 포장', desc: '농산물 선별, 상품 포장 작업' },
-  { value: '가공', img: null, emoji: '🏭', title: '가공', desc: '농산물 세척·건조·가공 작업' },
+  { value: '밭일', Icon: Apple, color: '#C0392B', bg: '#FCEEE8', border: '#F8B49B', title: '밭일 · 과수 수확', desc: '수확, 파종 등 기본 농작업' },
+  { value: '농기구 운용', Icon: Tractor, color: '#2E7CA8', bg: '#EBF4FA', border: '#BFDBFE', title: '농기구 운용', desc: '트랙터, 관리기 등 농기계 조작' },
+  { value: '물건 나르기', Icon: Package, color: '#8B3913', bg: '#F5EEE5', border: '#D9CDB8', title: '운반 · 농가 정리', desc: '수확물 적재, 창고 정리' },
+  { value: '시설정비', Icon: Wrench, color: '#28372F', bg: '#EDF4EF', border: '#A7F3D0', title: '시설정비', desc: '하우스, 농기자재 등 시설 보수' },
+  { value: '선별 및 포장', Icon: Boxes, color: '#C48F29', bg: '#FEF3C7', border: '#FCD34D', title: '선별 및 포장', desc: '농산물 선별, 상품 포장 작업' },
+  { value: '가공', Icon: Factory, color: '#9B4B18', bg: '#FCEEE8', border: '#F8B49B', title: '가공', desc: '농산물 세척·건조·가공 작업' },
 ]
 
 function calculateLevel(exp = 0) {
@@ -259,6 +268,7 @@ export default function Matching() {
         <div className={styles.taskCleanGrid}>
           {TASK_CARDS.map((cat) => {
             const isSelected = selectedTask === cat.value
+            const IconComp = cat.Icon
             return (
               <button
                 key={cat.value}
@@ -266,10 +276,21 @@ export default function Matching() {
                 className={`${styles.taskCleanBtn} ${isSelected ? styles.taskCleanBtnActive : ''}`}
                 onClick={() => handleSelectTask(cat.value)}
               >
-                {cat.img
-                  ? <img src={cat.img} alt={cat.title} className={styles.cleanEmojiImg} />
-                  : <span className={styles.cleanEmoji}>{cat.emoji}</span>
-                }
+                <div style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  backgroundColor: cat.bg,
+                  border: `1.5px solid ${cat.border}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(40, 55, 47, 0.08)',
+                  marginBottom: '8px',
+                  transition: 'transform 0.2s',
+                }}>
+                  <IconComp size={24} color={cat.color} strokeWidth={2.3} />
+                </div>
                 <span className={styles.cleanTitle}>{cat.title}</span>
                 <span className={styles.cleanDesc}>{cat.desc}</span>
                 {isSelected && <span className={styles.cleanSelected}>✔ 선택됨</span>}

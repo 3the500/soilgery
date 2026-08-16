@@ -5,6 +5,15 @@ import { useAuth } from '../../store/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Aptitude.module.css'
+import {
+  Sparkles,
+  Sprout,
+  Clock,
+  Brain,
+  CheckCircle2,
+  HelpCircle,
+  RotateCcw
+} from 'lucide-react'
 
 const OPTIONS = ['예', '아니요']
 
@@ -271,21 +280,57 @@ export default function Aptitude() {
 
             <div className={styles.introFeatureList}>
               <div className={styles.introFeatureItem}>
-                <span className={styles.featureEmoji}>🤖</span>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: '#EBF4FA',
+                  border: '1.5px solid #BFDBFE',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Brain size={20} color="#2563EB" strokeWidth={2.2} />
+                </div>
                 <div>
                   <strong>내 일손 역량 맞춤 분석</strong>
                   <p>내 체력·근력·성향을 종합 분석하여 일손 역량 지표로 측정해 드립니다.</p>
                 </div>
               </div>
               <div className={styles.introFeatureItem}>
-                <span className={styles.featureEmoji}>🌾</span>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: '#EDF4EF',
+                  border: '1.5px solid #A7F3D0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Sprout size={20} color="#224836" strokeWidth={2.2} />
+                </div>
                 <div>
                   <strong>나에게 딱 맞는 농가 일자리 추천</strong>
                   <p>내가 힘들어하지 않고 재밌게 수행할 수 있는 맞춤 소일거리를 정확하게 찾아드립니다.</p>
                 </div>
               </div>
               <div className={styles.introFeatureItem}>
-                <span className={styles.featureEmoji}>⏱️</span>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: '#FEF3C7',
+                  border: '1.5px solid #FCD34D',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Clock size={20} color="#D97706" strokeWidth={2.2} />
+                </div>
                 <div>
                   <strong>1분 내외의 가벼운 검사</strong>
                   <p>솔직하게 '예/아니요'로 답변해주시면 즉시 분석이 완료됩니다.</p>

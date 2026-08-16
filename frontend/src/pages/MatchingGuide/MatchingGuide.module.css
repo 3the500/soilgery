@@ -18,12 +18,12 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 202, 40, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(45, 106, 52, 0.18) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* 🔝 상단 헤더 */
+/* ?�� ?�단 ?�더 */
 .header {
   position: sticky;
   top: 0;
@@ -77,13 +77,13 @@
   font-size: 12px;
   font-weight: 800;
   color: #92400E;
-  background: #FEF3C7;
-  border: 1px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(45,106,52,0.3);
   padding: 4px 10px;
   border-radius: var(--radius-full);
 }
 
-/* 📊 진행 바 */
+/* ?�� 진행 �?*/
 .progressBarTrack {
   width: 100%;
   height: 4px;
@@ -99,7 +99,7 @@
   transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 🏷️ 단계별 탭 칩 스크롤 */
+/* ?���??�계�???�??�크�?*/
 .stepTabScroll {
   overflow-x: auto;
   padding: 12px 16px;
@@ -138,13 +138,13 @@
 }
 
 .stepTabChipActive {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%) !important;
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%) !important;
   color: #1A1209 !important;
   border-color: #F5B000 !important;
-  box-shadow: 0 4px 12px rgba(245, 176, 0, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(45, 106, 52, 0.3) !important;
 }
 
-/* 📦 메인 컨테이너 */
+/* ?�� 메인 컨테?�너 */
 .mainContainer {
   max-width: 680px;
   width: 100%;
@@ -155,7 +155,7 @@
   gap: 20px;
 }
 
-/* 스텝 헤더 섹션 */
+/* ?�텝 ?�더 ?�션 */
 .stepHeaderSection {
   display: flex;
   flex-direction: column;
@@ -190,7 +190,7 @@
   line-height: 1.45;
 }
 
-/* 🌐 0단계: 개요 그리드 */
+/* ?�� 0?�계: 개요 그리??*/
 .overviewSection {
   display: flex;
   flex-direction: column;
@@ -214,13 +214,13 @@
   gap: 6px;
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(139, 81, 41, 0.05);
+  box-shadow: 0 4px 16px rgba(28, 24, 16, 0.05);
 }
 
 .overviewCard:hover {
   transform: translateY(-2px);
   border-color: #F5B000;
-  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.2);
 }
 
 .overviewCardTop {
@@ -233,7 +233,7 @@
   font-size: 11px;
   font-weight: 900;
   color: #92400E;
-  background: #FEF3C7;
+  background: var(--color-primary-pale);
   padding: 2px 8px;
   border-radius: 99px;
 }
@@ -278,7 +278,7 @@
 .tipsTitle {
   font-size: 13.5px;
   font-weight: 800;
-  color: #78350F;
+  color: var(--color-primary-dark);
   margin: 0;
 }
 
@@ -295,7 +295,7 @@
   margin: 0;
 }
 
-/* 🎯 1~4단계: 상세 뷰 */
+/* ?�� 1~4?�계: ?�세 �?*/
 .detailStepSection {
   display: flex;
   flex-direction: column;
@@ -308,7 +308,7 @@
   border: 1.5px solid #FDE68A;
   border-radius: var(--radius-xl);
   padding: 20px;
-  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.08);
 }
 
 .highlightHeader {
@@ -320,8 +320,8 @@
 .highlightIcon {
   font-size: 36px;
   line-height: 1;
-  background: #FEF3C7;
-  border: 1.5px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 1.5px solid rgba(45,106,52,0.3);
   padding: 10px;
   border-radius: var(--radius-lg);
   flex-shrink: 0;
@@ -403,7 +403,7 @@
   line-height: 1.4;
 }
 
-/* 📱 하단 고정 플로팅 액션 바 */
+/* ?�� ?�단 고정 ?�로???�션 �?*/
 .bottomActionBar {
   position: fixed;
   bottom: 0;
@@ -470,7 +470,7 @@
 }
 
 .nextBtn {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   border: none;
   font-size: 13.5px;
@@ -479,13 +479,13 @@
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.35);
   white-space: nowrap;
 }
 
 .nextBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(245, 176, 0, 0.45);
+  box-shadow: 0 6px 18px rgba(45, 106, 52, 0.45);
 }
 
 .finishMatchBtn {
@@ -518,7 +518,7 @@
   }
 }
 
-/* 📱 모바일 반응형 최적화 */
+/* ?�� 모바??반응??최적??*/
 @media (max-width: 540px) {
   .overviewGrid {
     grid-template-columns: 1fr;
@@ -545,3 +545,5 @@
     font-size: 12.5px;
   }
 }
+
+

@@ -18,12 +18,12 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 202, 40, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(45, 106, 52, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* 🔝 상단 프리미엄 헤더 */
+/* ?�� ?�단 ?�리미엄 ?�더 */
 .header {
   position: sticky;
   top: 0;
@@ -77,13 +77,13 @@
   font-size: 12px;
   font-weight: 800;
   color: #92400E;
-  background: #FEF3C7;
-  border: 1px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(45,106,52,0.3);
   padding: 4px 10px;
   border-radius: var(--radius-full);
 }
 
-/* 📊 진행 바 */
+/* ?�� 진행 �?*/
 .progressBarTrack {
   width: 100%;
   height: 4px;
@@ -99,7 +99,7 @@
   transition: width 0.3s ease;
 }
 
-/* 📦 메인 컨테이너 */
+/* ?�� 메인 컨테?�너 */
 .container {
   max-width: 640px;
   width: 100%;
@@ -110,7 +110,7 @@
   gap: 20px;
 }
 
-/* 💡 1. 검사 시작 전 인트로 카드 */
+/* ?�� 1. 검???�작 ???�트�?카드 */
 .introCard {
   padding: 32px 24px;
   display: flex;
@@ -127,8 +127,8 @@
   width: 68px;
   height: 68px;
   font-size: 36px;
-  background: #FEF3C7;
-  border: 2px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 2px solid rgba(45,106,52,0.3);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -147,7 +147,7 @@
 .introDesc {
   font-size: 14px;
   font-weight: 700;
-  color: #78350F;
+  color: var(--color-primary-dark);
   margin-bottom: 22px;
 }
 
@@ -192,7 +192,7 @@
   line-height: 1.4;
 }
 
-/* 📝 2. 질문 문항 카드 */
+/* ?�� 2. 질문 문항 카드 */
 .questionForm {
   display: flex;
   flex-direction: column;
@@ -219,8 +219,8 @@
   font-size: 11.5px;
   font-weight: 900;
   color: #92400E;
-  background: #FEF3C7;
-  border: 1px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(45,106,52,0.3);
   padding: 3px 10px;
   border-radius: 99px;
 }
@@ -301,7 +301,7 @@
 }
 
 .navBtnNext {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   border: none;
   font-size: 14px;
@@ -310,7 +310,7 @@
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.35);
 }
 
 .navBtnNext:hover {
@@ -335,7 +335,7 @@
   cursor: not-allowed;
 }
 
-/* 📊 3. 검사 결과 메인 카드 */
+/* ?�� 3. 검??결과 메인 카드 */
 .resultMainCard {
   background: var(--color-surface);
   border: 1.5px solid rgba(237, 232, 213, 0.9);
@@ -412,7 +412,7 @@
 .statValue {
   font-size: 15px;
   font-weight: 900;
-  color: #78350F;
+  color: var(--color-primary-dark);
 }
 
 .recommendNoticeBox {
@@ -430,8 +430,8 @@
   font-size: 11.5px;
   font-weight: 800;
   color: #92400E;
-  background: #FEF3C7;
-  border: 1px solid #FCD34D;
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(45,106,52,0.3);
   padding: 3px 10px;
   border-radius: var(--radius-full);
   width: fit-content;
@@ -477,7 +477,7 @@
 
 .detailReasonText {
   font-size: 12.5px;
-  color: #78350F;
+  color: var(--color-primary-dark);
   line-height: 1.45;
   margin: 0;
 }
@@ -495,17 +495,17 @@
   font-size: 15px;
   font-weight: 800;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   border: none;
-  box-shadow: 0 4px 16px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.35);
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .startBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(245, 176, 0, 0.45);
+  box-shadow: 0 6px 20px rgba(45, 106, 52, 0.45);
 }
 
 .reTestBtn {
@@ -525,9 +525,10 @@
   background: #F5F0E8;
 }
 
-/* 📱 모바일 반응형 핏 */
+/* ?�� 모바??반응????*/
 @media (max-width: 540px) {
   .statGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+

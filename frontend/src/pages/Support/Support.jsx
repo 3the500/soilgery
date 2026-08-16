@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../store/AuthContext'
 import { supportAPI } from '../../api/index'
 import styles from './Support.module.css'
-import soilyiImg from '../../assets/icons/character_soilyi.jpg'
+import soilyiImg from '../../assets/icons/character_soilyi.png'
 
 const DEFAULT_WELCOME_MSG = {
   sender: 'ai',

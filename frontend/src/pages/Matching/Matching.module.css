@@ -2,8 +2,8 @@
   min-height: 100vh;
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(ellipse at 10% 0%, rgba(255, 236, 179, 0.45) 0%, transparent 60%),
-    radial-gradient(ellipse at 90% 100%, rgba(220, 245, 215, 0.4) 0%, transparent 60%);
+    radial-gradient(ellipse at 10% 0%, rgba(45, 106, 52, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(192, 57, 43, 0.05) 0%, transparent 60%);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -13,29 +13,25 @@
 
 .bgOrb {
   position: fixed;
-  top: -100px;
-  right: -80px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 202, 40, 0.18) 0%, transparent 70%);
+  top: -100px; right: -80px;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(45, 106, 52, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* 🔝 상단 프리미엄 헤더 */
+/* ?�� ?�단 ?�리미엄 ?�더 */
 .header {
   position: sticky;
-  top: 0;
-  z-index: 40;
+  top: 0; z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  background: rgba(254, 252, 247, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(237, 232, 213, 0.9);
+  padding: 13px 18px;
+  background: rgba(244, 240, 232, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(217, 205, 184, 0.9);
 }
 
 .headerLeft {
@@ -44,21 +40,22 @@
 }
 
 .backBtn {
-  background: none;
-  border: 1.5px solid #E2D9C3;
-  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-sub);
   font-size: 13px;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 6px 13px;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
+  letter-spacing: 0.1px;
 }
 
 .backBtn:hover {
-  background: var(--color-surface);
-  border-color: #FACC15;
-  color: var(--color-brown);
+  background: var(--color-primary-pale);
+  border-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
 }
 
 .headerTitle {
@@ -76,11 +73,12 @@
 .roleHeaderBadge {
   font-size: 12px;
   font-weight: 800;
-  color: #78350F;
-  background: #FEF3C7;
-  border: 1px solid #FCD34D;
-  padding: 4px 10px;
+  color: var(--color-primary-dark);
+  background: var(--color-primary-pale);
+  border: 1px solid rgba(45, 106, 52, 0.3);
+  padding: 4px 11px;
   border-radius: var(--radius-full);
+  letter-spacing: 0.1px;
 }
 
 .container {
@@ -110,7 +108,7 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(245, 176, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(45, 106, 52, 0.08);
 }
 
 .emptyNoticeIcon {
@@ -138,16 +136,16 @@
   gap: 20px;
 }
 
-/* 💡 추천 농업 분야 안내 카드 */
+/* ?�� 추천 ?�업 분야 ?�내 카드 */
 .recommendTaskCard {
   background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
-  border: 1.5px solid rgba(255, 193, 7, 0.6);
+  border: 1.5px solid rgba(45, 106, 52, 0.6);
   border-radius: var(--radius-xl);
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+  box-shadow: 0 12px 36px rgba(28, 24, 16, 0.09);
 }
 
 .taskCardBadge {
@@ -155,7 +153,7 @@
   font-weight: 800;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(255, 193, 7, 0.5);
+  border: 1px solid rgba(45, 106, 52, 0.5);
   padding: 3px 12px;
   border-radius: var(--radius-full);
   width: fit-content;
@@ -173,7 +171,7 @@
   line-height: 1.5;
 }
 
-/* 🔍 [피드백 반영] AI 분석 근거 "상세하게 보기" / "접기" 토글 */
+/* ?�� [?�드�?반영] AI 분석 근거 "?�세?�게 보기" / "?�기" ?��? */
 .detailToggleBtn {
   align-self: flex-start;
   margin-top: 4px;
@@ -181,7 +179,7 @@
   font-weight: 700;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(255, 193, 7, 0.5);
+  border: 1px solid rgba(45, 106, 52, 0.5);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   transition: all 0.2s;
@@ -195,7 +193,7 @@
   margin-top: 4px;
   padding: 14px 16px;
   background: #ffffff;
-  border: 1px dashed rgba(255, 193, 7, 0.6);
+  border: 1px dashed rgba(45, 106, 52, 0.6);
   border-radius: var(--radius-md);
 }
 
@@ -206,7 +204,7 @@
   white-space: pre-line;
 }
 
-/* 💡 AI 매칭 진행 중 상태 카드 */
+/* ?�� AI 매칭 진행 �??�태 카드 */
 .seekingNoticeCard {
   background: var(--color-surface);
   border: 2px solid var(--color-primary-light);
@@ -215,7 +213,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 16px 48px rgba(139, 81, 41, 0.12);
+  box-shadow: 0 16px 48px rgba(28, 24, 16, 0.12);
 }
 
 .seekingHeader {
@@ -235,7 +233,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.3);
   animation: floatIcon 3s ease-in-out infinite;
 }
 
@@ -321,7 +319,7 @@
   flex-direction: column;
   gap: 16px;
   text-align: center;
-  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+  box-shadow: 0 12px 36px rgba(28, 24, 16, 0.09);
 }
 
 .readyText {
@@ -362,7 +360,7 @@
   padding: 16px 20px;
   border-radius: var(--radius-xl);
   border: 1px solid rgba(237, 232, 213, 0.8);
-  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 12px 36px rgba(28, 24, 16, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .selectGroup label {
@@ -388,12 +386,12 @@
 
 .selectBox:focus {
   border-color: var(--color-primary-light);
-  box-shadow: 0 0 0 3.5px rgba(255, 193, 7, 0.2);
+  box-shadow: 0 0 0 3.5px rgba(45, 106, 52, 0.2);
 }
 
 
 
-/* 🌾 [디자인 업그레이드] 농부 헤더 카드 & 3열 세그먼트 탭 칩 */
+/* ?�� [?�자???�그?�이?? ?��? ?�더 카드 & 3???�그먼트 ??�?*/
 .farmerHeaderCard {
   background: var(--color-surface);
   border: 1.5px solid rgba(237, 232, 213, 0.9);
@@ -402,7 +400,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09);
+  box-shadow: 0 12px 36px rgba(28, 24, 16, 0.09);
   margin-bottom: 8px;
 }
 
@@ -411,13 +409,13 @@
   font-weight: 800;
   color: #713F12;
   background: #FEF9C3;
-  border: 1px solid #FACC15;
+  border: 1px solid var(--color-primary-light);
   padding: 4px 12px;
   border-radius: var(--radius-full);
   width: fit-content;
 }
 
-/* AI 점수 안내 힌트 줄 */
+/* AI ?�수 ?�내 ?�트 �?*/
 .scoreHintRow {
   display: flex;
   align-items: flex-start;
@@ -436,11 +434,11 @@
 
 .scoreHintText {
   font-size: 12px;
-  color: #78350F;
+  color: var(--color-primary-dark);
   line-height: 1.4;
 }
 
-/* 🌟 직관적인 업무 선택 카드 그리드 */
+/* ?�� 직�??�인 ?�무 ?�택 카드 그리??*/
 .taskCleanGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -529,7 +527,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  box-shadow: 0 12px 36px rgba(139, 81, 41, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 12px 36px rgba(28, 24, 16, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
   transition: transform var(--transition), border-color var(--transition);
 }
 
@@ -538,7 +536,7 @@
   border-color: var(--color-primary-light);
 }
 
-/* 프로필 이미지 + 이름 + 위치 행 */
+/* ?�로???��?지 + ?�름 + ?�치 ??*/
 .candidateNameRow {
   display: flex;
   align-items: center;
@@ -591,7 +589,7 @@
   font-weight: 500;
 }
 
-/* 🟢 구직 활성 상태 뱃지 */
+/* ?�� 구직 ?�성 ?�태 뱃�? */
 .seekingBadge {
   font-size: 11.5px;
   font-weight: 700;
@@ -612,14 +610,14 @@
   border-radius: 99px;
 }
 
-/* 카드 내부 구분선 */
+/* 카드 ?��? 구분??*/
 .cardDivider {
   height: 1px;
   background: rgba(226, 217, 195, 0.7);
   margin: 0 -2px;
 }
 
-/* 평점·레벨·추천이유 한 줄 통합 */
+/* ?�점·?�벨·추천?�유 ??�??�합 */
 .cardInfoRow {
   display: flex;
   align-items: center;
@@ -641,7 +639,7 @@
   white-space: nowrap;
 }
 
-/* 추천 이유 태그 기본 — 눈에 띄게 강조 */
+/* 추천 ?�유 ?�그 기본 ???�에 ?�게 강조 */
 .reasonTag {
   font-size: 12px;
   font-weight: 800;
@@ -662,7 +660,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* green — 직무 적합 */
+/* green ??직무 ?�합 */
 .reasonTag_green {
   color: #14532D;
   background: linear-gradient(135deg, #DCFCE7, #86EFAC);
@@ -670,23 +668,23 @@
   box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
 }
 
-/* amber — 즉시 투입 */
+/* amber ??즉시 ?�입 */
 .reasonTag_amber {
   color: #92400E;
-  background: linear-gradient(135deg, #FEF3C7, #FCD34D);
+  background: linear-gradient(135deg, var(--color-primary-pale), rgba(45,106,52,0.3));
   border-color: #D97706;
   box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
 }
 
-/* gold — 평점 */
+/* gold ???�점 */
 .reasonTag_gold {
-  color: #78350F;
+  color: var(--color-primary-dark);
   background: linear-gradient(135deg, #FFFBEB, #FDE68A);
   border-color: #CA8A04;
   box-shadow: 0 2px 8px rgba(202, 138, 4, 0.25);
 }
 
-/* orange — 성실성 */
+/* orange ???�실??*/
 .reasonTag_orange {
   color: #9A3412;
   background: linear-gradient(135deg, #FFF7ED, #FDBA74);
@@ -694,7 +692,7 @@
   box-shadow: 0 2px 8px rgba(234, 88, 12, 0.22);
 }
 
-/* blue — 체력 */
+/* blue ??체력 */
 .reasonTag_blue {
   color: #1E3A8A;
   background: linear-gradient(135deg, #DBEAFE, #93C5FD);
@@ -702,7 +700,7 @@
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.22);
 }
 
-/* teal — 숙련도 */
+/* teal ???�련??*/
 .reasonTag_teal {
   color: #134E4A;
   background: linear-gradient(135deg, #CCFBF1, #5EEAD4);
@@ -710,7 +708,7 @@
   box-shadow: 0 2px 8px rgba(13, 148, 136, 0.22);
 }
 
-/* purple — 경험 */
+/* purple ??경험 */
 .reasonTag_purple {
   color: #4C1D95;
   background: linear-gradient(135deg, #F3E8FF, #C084FC);
@@ -718,7 +716,7 @@
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.22);
 }
 
-/* 카드 상단 행: 좌(순위+구직상태) / 우(AI 추천 점수) */
+/* 카드 ?�단 ?? �??�위+구직?�태) / ??AI 추천 ?�수) */
 .cardTopRow {
   display: flex;
   align-items: flex-start;
@@ -748,13 +746,13 @@
 .matchBtn {
   margin-top: 4px;
   padding: 15px;
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   border-radius: var(--radius-full);
   font-size: 15px;
   font-weight: 700;
   transition: all var(--transition);
-  box-shadow: 0 4px 18px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 4px 18px rgba(45, 106, 52, 0.35);
 }
 
 .candidateMetricsInline {
@@ -771,10 +769,10 @@
   background: #FFFDF0;
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  border: 1px solid #FACC15;
+  border: 1px solid var(--color-primary-light);
 }
 
-/* 🏆 1, 2, 3위 순위 뱃지 및 카드 하이라이트 */
+/* ?�� 1, 2, 3???�위 뱃�? �?카드 ?�이?�이??*/
 .rankBadgeRow {
   margin-bottom: 4px;
 }
@@ -787,7 +785,7 @@
 }
 
 .rankBadge1 {
-  background: linear-gradient(135deg, #FEF08A 0%, #FACC15 100%);
+  background: linear-gradient(135deg, #FEF08A 0%, var(--color-primary-light) 100%);
   color: #713F12;
   border: 1px solid #CA8A04;
 }
@@ -821,7 +819,7 @@
 
 .matchBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(245, 176, 0, 0.45);
+  box-shadow: 0 6px 24px rgba(45, 106, 52, 0.45);
 }
 
 .emptyText {
@@ -831,7 +829,7 @@
   font-size: 14px;
 }
 
-/* 📱 모바일 스마트폰 화면 핏 최적화 */
+/* ?�� 모바???�마?�폰 ?�면 ??최적??*/
 @media (max-width: 640px) {
   .container {
     padding: 16px 14px 40px;
@@ -843,7 +841,7 @@
   .farmerHeaderCard {
     padding: 16px 14px;
   }
-  /* 모바일: 3열 유지, 각 카드 폰트만 줄이기 */
+  /* 모바?? 3???��?, �?카드 ?�트�?줄이�?*/
   .taskCleanGrid {
     gap: 8px;
   }
@@ -867,3 +865,4 @@
     padding: 18px 16px;
   }
 }
+

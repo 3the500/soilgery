@@ -5,23 +5,32 @@ import { authAPI, matchingAPI, reviewAPI } from '../../api'
 import { useToast } from '../../context/ToastContext'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Home.module.css'
+import {
+  Zap,
+  Dumbbell,
+  Brain,
+  Flame,
+  Users,
+  Coins,
+  Star,
+  User,
+  Sprout,
+  MessageCircle,
+  Bot
+} from 'lucide-react'
 import logoSprout from '../../assets/icons/logo_sprout.jpg'
-import avatarYouth from '../../assets/icons/avatar_youth.jpg'
-import avatarFarmer from '../../assets/icons/avatar_farmer.jpg'
-import navReview from '../../assets/icons/nav_review.jpg'
-import navMyinfo from '../../assets/icons/nav_myinfo.jpg'
-import navMatching from '../../assets/icons/nav_matching.jpg'
-import navChat from '../../assets/icons/nav_chat.jpg'
-import navAi from '../../assets/icons/nav_ai.jpg'
+import avatarYouth from '../../assets/icons/avatar_youth.png'
+import avatarFarmer from '../../assets/icons/avatar_farmer.png'
+import mascotSoilyi from '../../assets/icons/character_soilyi.png'
 
-// [피드백 반영] 농업 특화 스텟 라벨 (컬럼명은 기존 그대로 유지, 표시 이름만 구체화)
+// [피드백 반영] 농업 특화 스텟 라벨 및 고유 테마 컬러 정의 (Lucide React 벡터 아이콘)
 const STAT_DISPLAY = [
-  { field: 'stamina', label: '체력', icon: '⚡' },
-  { field: 'strength', label: '근력', icon: '💪' },
-  { field: 'intelligence', label: '숙련도', icon: '🧠' },
-  { field: 'grit', label: '성실성', icon: '🔥' },
-  { field: 'personality', label: '협동심', icon: '🤝' },
-  { field: 'wage_pref', label: '급여민감도', icon: '💰' },
+  { field: 'stamina', label: '체력', Icon: Zap, bg: '#FEF3C7', color: '#D97706', border: '#FCD34D' },
+  { field: 'strength', label: '근력', Icon: Dumbbell, bg: '#FCEEE8', color: '#8B3913', border: '#F8B49B' },
+  { field: 'intelligence', label: '숙련도', Icon: Brain, bg: '#EBF4FA', color: '#2563EB', border: '#BFDBFE' },
+  { field: 'grit', label: '성실성', Icon: Flame, bg: '#FEE2E2', color: '#DC2626', border: '#FECACA' },
+  { field: 'personality', label: '협동심', Icon: Users, bg: '#EDF4EF', color: '#224836', border: '#A7F3D0' },
+  { field: 'wage_pref', label: '급여민감도', Icon: Coins, bg: '#FFFBEB', color: '#C48F29', border: '#FDE68A' },
 ]
 
 const PROFILE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
@@ -792,7 +801,7 @@ export default function Home() {
                 title="프로필 사진 등록/변경"
               >
                 <img
-                  src={user?.profile_image || (isFarmer ? '/images/farmer.png' : '/images/chung.png')}
+                  src={user?.profile_image || (isFarmer ? avatarFarmer : avatarYouth)}
                   alt="프로필 사진"
                   className={styles.avatarImg}
                 />
@@ -958,13 +967,21 @@ export default function Home() {
                   />
                   {/* 🔢 오른쪽: 기존 숫자 지표 */}
                   <div className={styles.statsNumeric}>
-                    {STAT_DISPLAY.map((s) => (
-                      <div key={s.field} className={styles.statBox}>
-                        <span className={styles.statIcon}>{s.icon}</span>
-                        <span className={styles.statName}>{s.label}</span>
-                        <strong className={styles.statVal}>{user?.[s.field] ?? 0}</strong>
-                      </div>
-                    ))}
+                    {STAT_DISPLAY.map((s) => {
+                      const val = user?.[s.field] ?? 0
+                      const IconComp = s.Icon
+                      return (
+                        <div key={s.field} className={styles.statBox} style={{ borderTop: `3px solid ${s.border}` }}>
+                          <div className={styles.statIconWrapper} style={{ backgroundColor: s.bg, borderColor: s.border }}>
+                            <IconComp size={20} color={s.color} strokeWidth={2.4} />
+                          </div>
+                          <span className={styles.statName}>{s.label}</span>
+                          <strong className={styles.statVal} style={{ color: val > 0 ? s.color : 'var(--color-text-muted)' }}>
+                            {val}
+                          </strong>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               </section>
@@ -1019,7 +1036,7 @@ export default function Home() {
                 <div className={styles.aiMatchingHeroHeader}>
                   <span className={styles.aiMatchingHeroBadge}>✨ Smart Match</span>
                   <div className={styles.aiMatchingHeroIconArea}>
-                    <span className={styles.aiMatchingHeroIcon} title="마스코트 소일이">🌱</span>
+                    <img src={mascotSoilyi} alt="소일이" className={styles.aiMatchingHeroMascotImg} />
                   </div>
                   <h3 className={styles.aiMatchingHeroTitle}>
                     {isFarmer ? '⚡ 최적의 청년 일손 찾기' : '⚡ 나에게 딱 맞는 농부(일자리) 찾기'}
@@ -1062,7 +1079,7 @@ export default function Home() {
                 {isFarmer ? (
                   <button
                     type="button"
-                    className={`btn btn-primary ${styles.emptyCtaBtn}`}
+                    className={`btn btn-primary ${styles.heroActionButton}`}
                     onClick={() => navigate('/matching')}
                   >
                     🌾 업무별 청년 후보 보러가기
@@ -1070,16 +1087,25 @@ export default function Home() {
                 ) : (
                   <button
                     type="button"
-                    className={`${styles.giantSeekingToggleBtn} ${
-                      user?.is_seeking !== false ? styles.giantSeekingActive : styles.giantSeekingPaused
+                    className={`btn ${
+                      user?.is_seeking !== false ? styles.seekingActiveBtn : styles.seekingPausedBtn
                     }`}
                     onClick={handleToggleSeeking}
                     disabled={togglingSeeking}
-                    title={user?.is_seeking !== false ? '터치하여 매칭 일시정지' : '터치하여 매칭 활성화'}
                   >
-                    <div className={styles.giantSeekingSingleIcon}>
-                      {togglingSeeking ? '⏳' : '⏻'}
-                    </div>
+                    {togglingSeeking ? (
+                      '⏳ 상태 변경 중...'
+                    ) : user?.is_seeking !== false ? (
+                      <>
+                        <span style={{ fontSize: '18px', marginRight: '6px' }}>⏸️</span>
+                        소일거리 매칭 일시정지하기
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ fontSize: '18px', marginRight: '6px' }}>▶️</span>
+                        소일거리 매칭 다시 시작하기
+                      </>
+                    )}
                   </button>
                 )}
               </div>
@@ -1129,7 +1155,11 @@ export default function Home() {
                       }}
                     >
                       <span className={styles.chatPartnerAvatar}>
-                        <img src={m.partner_role === '농부' ? avatarFarmer : avatarYouth} alt={m.partner_role} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'50%'}} />
+                        <img
+                          src={m.partner_profile_image || (m.partner_role === '농부' ? avatarFarmer : avatarYouth)}
+                          alt={m.partner_role || '프로필'}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                        />
                       </span>
                       <div className={styles.chatListItemBody}>
                         <div className={styles.chatListItemTitleRow}>
@@ -1157,47 +1187,97 @@ export default function Home() {
 
       </main>
 
-      {/* 📱 5대 필수 하단 고정 탭 바 */}
+      {/* 📱 5대 필수 하단 고정 탭 바 (선명하고 직관적인 고유 컬러 테마) */}
       <nav className={styles.bottomNav}>
+        {/* 1. 리뷰 관리: 🌟 노란색 별 (골드 옐로우) */}
         <button
           className={`${styles.bottomNavItem} ${bottomTab === 'review' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('review')}
         >
-          <span className={styles.bottomNavIcon}><img src={navReview} alt="리뷰" className={styles.navIconImg} /></span>
-          <span className={styles.bottomNavLabel}>리뷰 관리</span>
+          <span className={styles.bottomNavIcon}>
+            <Star
+              size={24}
+              strokeWidth={bottomTab === 'review' ? 2.6 : 2.2}
+              color="#EAB308"
+              fill={bottomTab === 'review' ? '#FACC15' : '#FEF08A'}
+            />
+          </span>
+          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'review' ? '#CA8A04' : '#713F12' }}>
+            리뷰 관리
+          </span>
         </button>
 
+        {/* 2. 내정보: 👤 딥 포레스트 그린 */}
         <button
           className={`${styles.bottomNavItem} ${bottomTab === 'profile' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('profile')}
         >
-          <span className={styles.bottomNavIcon}><img src={navMyinfo} alt="내정보" className={styles.navIconImg} /></span>
-          <span className={styles.bottomNavLabel}>내정보</span>
+          <span className={styles.bottomNavIcon}>
+            <User
+              size={24}
+              strokeWidth={bottomTab === 'profile' ? 2.6 : 2.2}
+              color="#224836"
+              fill={bottomTab === 'profile' ? '#A7F3D0' : 'none'}
+            />
+          </span>
+          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'profile' ? '#224836' : '#28372F' }}>
+            내정보
+          </span>
         </button>
 
+        {/* 3. 일거리 매칭: 🌱 싱그러운 그린 새싹 */}
         <button
           className={`${styles.bottomNavItem} ${bottomTab === 'matching' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('matching')}
         >
-          <span className={styles.bottomNavIcon}><img src={navMatching} alt="매칭" className={styles.navIconImg} /></span>
-          <span className={styles.bottomNavLabel}>{isFarmer ? '청년 찾기' : '농부 찾기'}</span>
+          <span className={styles.bottomNavIcon}>
+            <Sprout
+              size={24}
+              strokeWidth={bottomTab === 'matching' ? 2.6 : 2.2}
+              color="#16A34A"
+              fill={bottomTab === 'matching' ? '#DCFCE7' : 'none'}
+            />
+          </span>
+          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'matching' ? '#15803D' : '#166534' }}>
+            {isFarmer ? '청년 찾기' : '농부 찾기'}
+          </span>
         </button>
 
+        {/* 4. 채팅방: 💬 쾌적한 남한강 스카이블루 / 틸 */}
         <button
           className={`${styles.bottomNavItem} ${bottomTab === 'chat' ? styles.bottomNavActive : ''}`}
           onClick={() => handleSelectTab('chat')}
         >
-          <span className={styles.bottomNavIcon}><img src={navChat} alt="채팅" className={styles.navIconImg} /></span>
-          <span className={styles.bottomNavLabel}>채팅방</span>
+          <span className={styles.bottomNavIcon}>
+            <MessageCircle
+              size={24}
+              strokeWidth={bottomTab === 'chat' ? 2.6 : 2.2}
+              color="#0284C7"
+              fill={bottomTab === 'chat' ? '#E0F2FE' : 'none'}
+            />
+          </span>
+          <span className={styles.bottomNavLabel} style={{ color: bottomTab === 'chat' ? '#0369A1' : '#075985' }}>
+            채팅방
+          </span>
           {unreadCount > 0 && <span className={styles.bottomNavBadge}>{unreadCount}</span>}
         </button>
 
+        {/* 5. 소일이: 🤖 따뜻한 오렌지 러스트 */}
         <button
           className={styles.bottomNavItem}
           onClick={() => navigate('/support')}
         >
-          <span className={styles.bottomNavIcon}><img src={navAi} alt="AI상담사" className={styles.navIconImg} /></span>
-          <span className={styles.bottomNavLabel}>AI상담사</span>
+          <span className={styles.bottomNavIcon}>
+            <Bot
+              size={24}
+              strokeWidth={2.2}
+              color="#EA580C"
+              fill="#FFEDD5"
+            />
+          </span>
+          <span className={styles.bottomNavLabel} style={{ color: '#C2410C' }}>
+            소일이
+          </span>
         </button>
       </nav>
 

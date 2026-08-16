@@ -9,45 +9,44 @@
   overflow: hidden;
 }
 
-/* 🔝 프리미엄 상단 헤더 */
+/* ?�� ?�리미엄 ?�단 ?�더 */
 .header {
   position: sticky;
-  top: 0;
-  z-index: 100;
+  top: 0; z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  background: rgba(254, 252, 247, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(237, 232, 213, 0.9);
+  padding: 13px 18px;
+  background: rgba(244, 240, 232, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(217, 205, 184, 0.9);
 }
 
 .backBtn {
-  background: none;
-  border: 1.5px solid #E2D9C3;
-  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-sub);
   font-size: 13px;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 6px 13px;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .backBtn:hover {
-  background: var(--color-surface);
-  border-color: #FACC15;
-  color: var(--color-brown);
+  background: var(--color-primary-pale);
+  border-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
 }
 
 .clearBtn {
   font-size: 12px;
   font-weight: 700;
-  color: #78350F;
-  background: #FEF3C7;
-  border: 1.5px solid #FCD34D;
+  color: var(--color-accent);
+  background: var(--color-accent-pale);
+  border: 1.5px solid rgba(192, 57, 43, 0.3);
   padding: 6px 12px;
   border-radius: var(--radius-full);
   transition: all var(--transition);
@@ -55,8 +54,9 @@
 }
 
 .clearBtn:hover {
-  background: #FDE68A;
-  color: #1A1209;
+  background: var(--color-accent);
+  color: #FEFCF8;
+  border-color: var(--color-accent);
 }
 
 .headerCenter {
@@ -68,8 +68,8 @@
 .headerTitle {
   font-size: 16px;
   font-weight: 800;
-  color: var(--color-brown);
-  letter-spacing: -0.3px;
+  color: var(--color-primary-dark);
+  letter-spacing: -0.4px;
 }
 
 .onlineBadge {
@@ -79,7 +79,7 @@
   margin-top: 1px;
 }
 
-/* 💬 토스 챗봇 메인 채팅 영역 */
+/* ?�� ?�스 챗봇 메인 채팅 ?�역 */
 .chatContainer {
   flex: 1;
   padding: 16px 18px 20px;
@@ -183,11 +183,11 @@
 }
 
 .userBubble {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   font-weight: 700;
   border-top-right-radius: 4px;
-  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.3);
 }
 
 .msgTime {
@@ -197,7 +197,7 @@
   margin-bottom: 2px;
 }
 
-/* 🤖 AI 타이핑 로딩 애니메이션 */
+/* ?�� AI ?�?�핑 로딩 ?�니메이??*/
 .typingIndicator {
   display: flex;
   align-items: center;
@@ -232,7 +232,7 @@
   40%           { transform: scale(1); }
 }
 
-/* 💡 자주 묻는 질문 토스 퀵 칩 바 */
+/* ?�� ?�주 묻는 질문 ?�스 ??�?�?*/
 .faqQuickBar {
   padding: 10px 16px;
   background: rgba(250, 250, 245, 0.98);
@@ -281,7 +281,7 @@
   transform: translateY(-1px);
 }
 
-/* 💊 토스 캡슐형 하단 입력 바 */
+/* ?�� ?�스 캡슐???�단 ?�력 �?*/
 .footer {
   position: sticky;
   bottom: 0;
@@ -319,13 +319,13 @@
   font-size: 13.5px;
   font-weight: 800;
   color: #1A1209;
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   border: none;
   padding: 9px 18px;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 3px 10px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 3px 10px rgba(45, 106, 52, 0.35);
 }
 
 .capsuleSubmitBtn:disabled {
@@ -334,7 +334,7 @@
   transform: none;
 }
 
-/* 📱 스마트폰 모바일 디바이스 (iOS Safari / 안드로이드 Chrome) 반응형 최적화 */
+/* ?�� ?�마?�폰 모바???�바?�스 (iOS Safari / ?�드로이??Chrome) 반응??최적??*/
 @media (max-width: 600px) {
   .wrapper {
     height: 100dvh;

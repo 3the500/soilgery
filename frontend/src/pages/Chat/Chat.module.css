@@ -1,4 +1,4 @@
-.chatContainer {
+﻿.chatContainer {
   max-width: 480px;
   margin: 0 auto;
   height: 100dvh;
@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-/* 🔝 헤더 */
+/* ?�� ?�더 */
 .header {
   display: flex;
   align-items: center;
@@ -27,7 +27,7 @@
   font-weight: 800;
   color: var(--color-brown);
   background: var(--color-primary-pale);
-  border: 1px solid rgba(255, 193, 7, 0.45);
+  border: 1px solid rgba(45, 106, 52, 0.45);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   display: flex;
@@ -58,17 +58,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+  box-shadow: 0 2px 8px rgba(45, 106, 52, 0.25);
 }
 
-/* 🖼️ [피드백 반영] 채팅방 상단 헤더의 실제 프로필 사진 */
+/* ?���?[?�드�?반영] 채팅�??�단 ?�더???�제 ?�로???�진 */
 .partnerAvatarImg {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 1.5px solid var(--color-primary-light);
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+  box-shadow: 0 2px 8px rgba(45, 106, 52, 0.25);
   flex-shrink: 0;
 }
 
@@ -106,14 +106,14 @@
   border-color: var(--color-error);
 }
 
-/* 📌 상단 AI 매칭 핀 카드 */
+/* ?�� ?�단 AI 매칭 ?� 카드 */
 .contextPinCard {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
   background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
-  border-bottom: 1px solid rgba(255, 193, 7, 0.5);
+  border-bottom: 1px solid rgba(45, 106, 52, 0.5);
   font-size: 12.5px;
   flex-shrink: 0;
 }
@@ -123,7 +123,7 @@
   font-weight: 800;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(255, 193, 7, 0.5);
+  border: 1px solid rgba(45, 106, 52, 0.5);
   padding: 2px 8px;
   border-radius: var(--radius-full);
 }
@@ -132,7 +132,7 @@
   color: #5D4037;
 }
 
-/* 🚨 [피드백 반영] 채팅방 최초 입장 시 노출되는 "캡처 후 신고" 안내 배너 */
+/* ?�� [?�드�?반영] 채팅�?최초 ?�장 ???�출?�는 "캡처 ???�고" ?�내 배너 */
 .reportNoticeBanner {
   display: flex;
   align-items: flex-start;
@@ -175,7 +175,7 @@
   line-height: 1.5;
 }
 
-/* 💬 메시지 리스트 스크롤 영역 */
+/* ?�� 메시지 리스???�크�??�역 */
 .messageListArea {
   flex: 1;
   padding: 16px 16px 10px;
@@ -185,7 +185,7 @@
   gap: 12px;
 }
 
-/* 📅 날짜 구분선 */
+/* ?�� ?�짜 구분??*/
 .dateSeparatorRow {
   display: flex;
   align-items: center;
@@ -198,12 +198,12 @@
   font-weight: 700;
   color: var(--color-brown);
   background: var(--color-primary-pale);
-  border: 1px solid rgba(255, 193, 7, 0.45);
+  border: 1px solid rgba(45, 106, 52, 0.45);
   padding: 3px 12px;
   border-radius: var(--radius-full);
 }
 
-/* 💬 말풍선 행 및 애니메이션 */
+/* ?�� 말풍????�??�니메이??*/
 .messageRow {
   display: flex;
   align-items: flex-end;
@@ -239,7 +239,7 @@
   overflow: hidden;
 }
 
-/* 🖼️ [피드백 반영] 말풍선 옆 아바타의 실제 프로필 사진 */
+/* ?���?[?�드�?반영] 말풍?????�바?�???�제 ?�로???�진 */
 .avatarImg {
   width: 100%;
   height: 100%;
@@ -276,7 +276,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-/* 🖼️🎬 [피드백 반영] 채팅 이미지/동영상 첨부 말풍선 */
+/* ?��️�?[?�드�?반영] 채팅 ?��?지/?�영??첨�? 말풍??*/
 .attachmentImage {
   display: block;
   max-width: 220px;
@@ -293,8 +293,8 @@
 }
 
 .myBubble {
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
-  color: #1A1209;
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
+  color: #FEFCF8;
   font-weight: 600;
   border-radius: 18px 18px 2px 18px;
 }
@@ -313,7 +313,7 @@
   padding: 0 2px;
 }
 
-/* ⚡ 빠른 인사말 퀵 칩 */
+/* ??빠른 ?�사�???�?*/
 .quickReplyContainer {
   display: flex;
   align-items: center;
@@ -332,11 +332,11 @@
   font-weight: 700;
   color: var(--color-brown);
   background: #ffffff;
-  border: 1px solid rgba(255, 193, 7, 0.6);
+  border: 1px solid rgba(45, 106, 52, 0.6);
   border-radius: var(--radius-full);
   padding: 6px 13px;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(139, 81, 41, 0.06);
+  box-shadow: 0 2px 6px rgba(28, 24, 16, 0.06);
   transition: all 0.2s;
 }
 
@@ -346,7 +346,7 @@
   transform: translateY(-1px);
 }
 
-/* ⌨️ 둥근 캡슐 DM 입력 하단 바 */
+/* ?�️ ?�근 캡슐 DM ?�력 ?�단 �?*/
 .inputArea {
   display: flex;
   align-items: center;
@@ -370,21 +370,21 @@
 
 .capsuleInput:focus {
   border-color: var(--color-primary-light);
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+  box-shadow: 0 0 0 3px rgba(45, 106, 52, 0.25);
 }
 
 .sendButtonCapsule {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   font-size: 18px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(245, 176, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(45, 106, 52, 0.4);
   transition: all 0.2s;
   flex-shrink: 0;
 }
@@ -398,7 +398,7 @@
   cursor: not-allowed;
 }
 
-/* 🖼️🎬 [피드백 반영] 사진/동영상 첨부 버튼 */
+/* ?��️�?[?�드�?반영] ?�진/?�영??첨�? 버튼 */
 .attachButton {
   width: 40px;
   height: 40px;
@@ -420,7 +420,7 @@
   cursor: not-allowed;
 }
 
-/* 🥕 당근마켓 스타일 화면 중앙 커스텀 퇴장 모달 팝업 */
+/* ?�� ?�근마켓 ?��????�면 중앙 커스?� ?�장 모달 ?�업 */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -464,7 +464,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.3);
 }
 
 .modalTitle {
@@ -489,7 +489,7 @@
   line-height: 1.4;
 }
 
-/* ⭐️ 5성 별점 인터랙터 */
+/* ⭐️ 5??별점 ?�터?�터 */
 .starRatingSelector {
   display: flex;
   align-items: center;
@@ -498,7 +498,7 @@
   background: var(--color-primary-pale);
   padding: 10px 16px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 193, 7, 0.45);
+  border: 1px solid rgba(45, 106, 52, 0.45);
 }
 
 .starBtn {
@@ -513,7 +513,7 @@
 
 .starActive {
   color: #F5B000;
-  text-shadow: 0 2px 8px rgba(245, 176, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(45, 106, 52, 0.4);
 }
 
 .ratingNumText {
@@ -564,16 +564,16 @@
   padding: 13px;
   font-size: 14px;
   font-weight: 800;
-  background: linear-gradient(135deg, #FFCA28 0%, #F5B000 100%);
+  background: linear-gradient(135deg, #3E8B46 0%, #2D6A34 100%);
   color: #1A1209;
   border-radius: var(--radius-full);
-  box-shadow: 0 4px 16px rgba(245, 176, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.35);
   transition: all 0.2s;
 }
 
 .modalConfirmBtn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(245, 176, 0, 0.45);
+  box-shadow: 0 6px 20px rgba(45, 106, 52, 0.45);
 }
 
 .modalConfirmBtn:disabled {
@@ -581,7 +581,7 @@
   cursor: not-allowed;
 }
 
-/* 👤 [피드백 반영] 채팅방 상대방 "정보 보기" 모달 전용 스타일 */
+/* ?�� [?�드�?반영] 채팅�??��?�?"?�보 보기" 모달 ?�용 ?��???*/
 .partnerInfoAvatarImg {
   width: 72px;
   height: 72px;
@@ -589,7 +589,7 @@
   object-fit: cover;
   border: 2px solid var(--color-primary-light);
   margin-bottom: 10px;
-  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.25);
+  box-shadow: 0 4px 16px rgba(45, 106, 52, 0.25);
 }
 
 .partnerStatsArea {
@@ -624,7 +624,7 @@
   color: var(--color-brown);
 }
 
-/* 📝 [피드백 반영] 상대방 정보 모달 - 받은 리뷰 목록 */
+/* ?�� [?�드�?반영] ?��?�??�보 모달 - 받�? 리뷰 목록 */
 .partnerReviewsArea {
   width: 100%;
   text-align: left;
@@ -694,7 +694,7 @@
   text-align: left;
 }
 
-/* 📊 [피드백 반영] 청년 상대방 매칭 스탯 - "스탯보기" 토글 섹션 */
+/* ?�� [?�드�?반영] �?�� ?��?�?매칭 ?�탯 - "?�탯보기" ?��? ?�션 */
 .partnerStatsSection {
   width: 100%;
   display: flex;
@@ -710,7 +710,7 @@
   font-weight: 700;
   background: var(--color-primary-pale);
   color: var(--color-brown);
-  border: 1px solid rgba(255, 193, 7, 0.4);
+  border: 1px solid rgba(45, 106, 52, 0.4);
   border-radius: var(--radius-full);
   transition: all 0.2s;
 }
@@ -754,7 +754,7 @@
   margin-top: 2px;
 }
 
-/* ⛔ 상대방 퇴장 알림 뱃지 */
+/* ???��?�??�장 ?�림 뱃�? */
 .partnerLeftNoticeBox {
   display: flex;
   align-items: center;
@@ -769,3 +769,5 @@
   font-weight: 700;
   text-align: center;
 }
+
+

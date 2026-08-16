@@ -5,15 +5,25 @@ import { authAPI, matchingAPI } from '../../api'
 import { useToast } from '../../context/ToastContext'
 import StatHexagon from '../../components/StatHexagon'
 import styles from './Profile.module.css'
+import avatarYouth from '../../assets/icons/avatar_youth.png'
+import avatarFarmer from '../../assets/icons/avatar_farmer.png'
+import {
+  Zap,
+  Dumbbell,
+  Brain,
+  Flame,
+  Users,
+  Coins
+} from 'lucide-react'
 
-// [피드백 반영] 농업 특화 스텟 라벨 (컬럼명은 기존 그대로 유지, 표시 이름만 구체화)
+// [피드백 반영] 농업 특화 스텟 라벨 및 고유 테마 컬러
 const STAT_DISPLAY = [
-  { field: 'stamina', label: '체력', icon: '⚡' },
-  { field: 'strength', label: '근력', icon: '💪' },
-  { field: 'intelligence', label: '숙련도', icon: '🧠' },
-  { field: 'grit', label: '성실성', icon: '🔥' },
-  { field: 'personality', label: '협동심', icon: '🤝' },
-  { field: 'wage_pref', label: '급여민감도', icon: '💰' },
+  { field: 'stamina', label: '체력', Icon: Zap, bg: '#FEF3C7', color: '#D97706', border: '#FCD34D' },
+  { field: 'strength', label: '근력', Icon: Dumbbell, bg: '#FCEEE8', color: '#8B3913', border: '#F8B49B' },
+  { field: 'intelligence', label: '숙련도', Icon: Brain, bg: '#EBF4FA', color: '#2563EB', border: '#BFDBFE' },
+  { field: 'grit', label: '성실성', Icon: Flame, bg: '#FEE2E2', color: '#DC2626', border: '#FECACA' },
+  { field: 'personality', label: '협동심', Icon: Users, bg: '#EDF4EF', color: '#224836', border: '#A7F3D0' },
+  { field: 'wage_pref', label: '급여민감도', Icon: Coins, bg: '#FFFBEB', color: '#C48F29', border: '#FDE68A' },
 ]
 
 const PROFILE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
@@ -108,13 +118,11 @@ export default function Profile() {
             role="button"
             title="프로필 사진 등록/변경"
           >
-            {user?.profile_image ? (
-              <img src={user.profile_image} alt="프로필 사진" className={styles.avatarImg} />
-            ) : (
-              <span className={styles.avatarEmoji}>
-                {user?.role === '농부' ? '👨‍🌾' : '🌱'}
-              </span>
-            )}
+            <img
+              src={user?.profile_image || (isFarmer ? avatarFarmer : avatarYouth)}
+              alt="프로필 사진"
+              className={styles.avatarImg}
+            />
             <span className={styles.avatarEditBadge}>{uploadingPhoto ? '⏳' : '📷'}</span>
           </div>
           <input
@@ -175,13 +183,31 @@ export default function Profile() {
               />
               {/* 🔢 오른쪽: 숫자 지표 */}
               <div className={styles.statsNumeric}>
-                {STAT_DISPLAY.map((s) => (
-                  <div key={s.field} className={styles.statBox}>
-                    <span className={styles.statIcon}>{s.icon}</span>
-                    <span className={styles.statName}>{s.label}</span>
-                    <strong className={styles.statVal}>{user?.[s.field] ?? 0}</strong>
-                  </div>
-                ))}
+                {STAT_DISPLAY.map((s) => {
+                  const val = user?.[s.field] ?? 0
+                  const IconComp = s.Icon
+                  return (
+                    <div key={s.field} className={styles.statBox} style={{ borderTop: `3px solid ${s.border}` }}>
+                      <div style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '50%',
+                        backgroundColor: s.bg,
+                        border: `1.5px solid ${s.border}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 8px rgba(40, 55, 47, 0.08)',
+                      }}>
+                        <IconComp size={20} color={s.color} strokeWidth={2.4} />
+                      </div>
+                      <span className={styles.statName}>{s.label}</span>
+                      <strong className={styles.statVal} style={{ color: val > 0 ? s.color : 'var(--color-text-muted)', fontSize: '20px', fontWeight: 900 }}>
+                        {val}
+                      </strong>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </section>
