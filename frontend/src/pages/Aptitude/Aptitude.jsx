@@ -154,6 +154,13 @@ export default function Aptitude() {
       { key: 'wage_pref', label: '💰 급여민감도' },
     ]
 
+    // 🩹 [버그 수정] StatHexagon은 { label, value } 객체 배열을 담은 `items` prop을
+    // 받는데, 여기서는 prop 이름이 `stats`로 잘못되어 있었고(컴포넌트가 인식 못 해
+    // items가 항상 빈 배열로 처리됨) 값도 statData 객체를 그대로 넘기고 있어
+    // 배경 그리드만 보이고 실제 6각형 데이터/축선/라벨이 전혀 그려지지 않았다.
+    // STAT_KEYS 순서 그대로 { label, value } 배열로 변환해 올바른 prop 이름으로 전달한다.
+    const hexItems = STAT_KEYS.map(({ key, label }) => ({ label, value: statData[key] }))
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.bgOrb} />
@@ -181,7 +188,7 @@ export default function Aptitude() {
 
             {/* 📊 육각형 레이더 스탯 차트 */}
             <div className={styles.statHexagonWrapper}>
-              <StatHexagon stats={statData} size={280} />
+              <StatHexagon items={hexItems} size={280} />
             </div>
 
             {/* 6개 스탯 점수 상세 그리드 */}
